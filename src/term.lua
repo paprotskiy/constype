@@ -15,3 +15,17 @@ while true do
 	io.write(char)
 	os.execute("stty -cbreak </dev/tty >/dev/tty 2>&1")
 end
+
+cons.golc(1, 1)
+while true do
+	-- os.execute("stty cbreak </dev/tty >/dev/tty 2>&1")
+	-- local char = io.read(1)
+
+	local iterator = cons.rawinput()
+	local char = iterator()
+
+	-- io.write(char)
+	-- cons.right(1)
+
+	-- os.execute("stty -cbreak </dev/tty >/dev/tty 2>&1")
+end

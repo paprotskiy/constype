@@ -3,3 +3,6 @@ testTerminal:
 
 testChar:
 	cd src/action/ && lua ./char_test.lua
+
+testAll:
+	cd tests/ && lua ./all.lua

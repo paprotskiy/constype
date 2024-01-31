@@ -1,14 +1,21 @@
 # constype
 
-# plan
 
 
--- PLAN:
---
--- print out any text serialized from file as set of chars
--- overlay it on terminal
--- overlay it via serialization (save to file)
---
+# PLAN:
+
+* print out any text serialized from file as set of chars
+* overlay it on terminal
+* overlay it via serialization (save to file)
+
+
+# challenges
+
+- изменение размеров окна терминала должно приводить к заполнению по ширине с сохранением логической позиции курсора 
+- возможно потребуется отображение лигатур 
+- однозначно потребуется нормализация лигатур (enter -> \n )
+- 
+- 
 
 
 со стороны пользователя пока что будет интерфейс примерно на такое поведение (ActorContract)

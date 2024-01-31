@@ -52,6 +52,15 @@ return {
 		}
 	end,
 
+	Statuses = function()
+		-- todo extract to deepCopy package?
+		local res = {}
+		for k, v in pairs(overlayStatuses) do
+			res[k] = v
+		end
+		return res
+	end,
+
 	Overlay = function(char, overlayChar)
 		if overlayChar:len() ~= 1 then
 			error("overlayChar must be one symbol string")
