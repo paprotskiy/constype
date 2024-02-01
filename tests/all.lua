@@ -3,11 +3,11 @@ local core = require("tests.scaffold.scaffold")
 local char = require("tests.char_test")
 local pp = require("src.print.pretty")
 
-local tests = {}
 local testExecutor = {
+	tests = {},
 	Add = function(self, testFunc)
 		local name = testFunc.name
-		tests[name] = testFunc.exec
+		self.tests[name] = testFunc.exec
 
 		return self
 	end,
@@ -16,7 +16,7 @@ local testExecutor = {
 		print("run all tests:")
 
 		local failed = {}
-		for k, v in pairs(tests) do
+		for k, v in pairs(self.tests) do
 			local res = v()
 			local err = core.GetTestErrMessage(res, true)
 			if err ~= nil then
