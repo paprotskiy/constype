@@ -1,6 +1,6 @@
 package.path = package.path .. ";../?.lua"
-local topics = require("src.topics.example")
+local topic = require("src.topics.example")
 local lexic = require("src.lexic.char")
 
-local text = topics
+local text = topic
 print(text)

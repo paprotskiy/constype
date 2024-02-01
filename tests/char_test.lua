@@ -23,4 +23,66 @@ return {
 
 		return nil
 	end),
+
+	CheckStatusOnCreating = core.NewTest("check statuses check after overlays", function()
+		local sut = char.New("x")
+
+		local sets = {
+			{
+				Overlay = "x",
+				Expected = char.Statuses(),
+			},
+		}
+
+		local actual = char.Overlay(sut, "x")
+
+		return nil
+	end),
+
+	CheckStatusSwitching = core.NewTest("check statuses check after overlays", function()
+		local statuses = {
+			Nil = char.Statuses().Nil,
+			Succ = char.Statuses().Succ,
+			Fail = char.Statuses().Fail,
+			Fixed = char.Statuses().Fixed,
+		}
+
+		local sut = char.New("x")
+		local sets = {
+			{
+				Overlay = "x",
+				PreStatus = statuses.Nil,
+				PostStatus = statuses.Succ,
+			},
+			{
+				Overlay = "y",
+				PreStatus = statuses.Succ,
+				PostStatus = statuses.Fail,
+			},
+			{
+				Overlay = "x",
+				PreStatus = statuses.Fail,
+				PostStatus = statuses.Fixed,
+			},
+			{
+				Overlay = "x",
+				PreStatus = statuses.Fixed,
+				PostStatus = statuses.Fixed,
+			},
+		}
+
+		for idx, set in pairs(sets) do
+			if char.Display(sut).Status ~= set.PreStatus then
+				return core.NewTestErr("PreStatus wrong for checkup #" .. tostring(idx))
+			end
+
+			char.Overlay(sut, set.Overlay)
+
+			if char.Display(sut).Status ~= set.PostStatus then
+				return core.NewTestErr("PreStatus wrong for checkup #" .. tostring(idx))
+			end
+		end
+
+		return nil
+	end),
 }

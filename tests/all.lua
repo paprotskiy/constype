@@ -5,12 +5,14 @@ local pp = require("src.print.pretty")
 
 local tests = {}
 local testExecutor = {
-	Add = function(testFunc)
+	Add = function(self, testFunc)
 		local name = testFunc.name
 		tests[name] = testFunc.exec
+
+		return self
 	end,
 
-	RunAll = function()
+	RunAll = function(self)
 		print("run all tests:")
 
 		local failed = {}
@@ -30,9 +32,12 @@ local testExecutor = {
 			print("failed " .. tostring(#failed) .. " test(s):")
 			print(pp.PrettyPrint(failed))
 		end
+
+		return self
 	end,
 }
 
-testExecutor.Add(char.CheckStatuses)
-
-testExecutor.RunAll()
+testExecutor
+	:Add(char.CheckStatuses) -- commment for preventing autoformatter from linearizing
+	:Add(char.CheckStatusSwitching)
+	:RunAll()

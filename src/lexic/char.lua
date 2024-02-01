@@ -81,10 +81,14 @@ return {
 	end,
 
 	Display = function(char)
+		local val = char.__base
 		if char.__overlay ~= nil then
-			return char.__overlay
+			val = char.__overlay
 		end
 
-		return char.__base
+		return {
+			Value = val,
+			Status = char.__overlayStatus,
+		}
 	end,
 }
