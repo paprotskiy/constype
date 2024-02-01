@@ -16,7 +16,7 @@ local testExecutor = {
 		local failed = {}
 		for k, v in pairs(tests) do
 			local res = v()
-			local err = core.GetTestErrMessage(res)
+			local err = core.GetTestErrMessage(res, true)
 			if err ~= nil then
 				table.insert(failed, {
 					Idx = k,

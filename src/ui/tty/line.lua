@@ -32,3 +32,5 @@ local first = {
 }
 
 local second = {}
+
+return first

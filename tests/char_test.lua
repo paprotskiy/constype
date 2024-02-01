@@ -8,7 +8,7 @@ return {
 
 		local actual = sut()
 
-		if actual.Nil ~= "not-overlayeds" then
+		if actual.Nil ~= "not-overlayed" then
 			return core.NewTestErr("nil type not found")
 		end
 		if actual.Succ ~= "successfully-overlayed" then

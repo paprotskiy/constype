@@ -1,5 +1,6 @@
-local tty = require("line")
-local testExample = "some message."
+package.path = package.path .. ";../?.lua"
+-- local tty = require("src.ui.tty.line")
+local tty = require("src.ui.tty.line")
 
 local inSkippedDiapason = function(i)
 	return 50 < i and i < 85
