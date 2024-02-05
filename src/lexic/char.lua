@@ -6,8 +6,19 @@ local overlayStatuses = {
 	Fail = "failed-to-overlay",
 	Fixed = "overlay-fixed",
 
-	InRate = function(self, idx)
-		return idx == self.Nil or idx == self.Succ or idx == self.Fail or idx == self.Fixed
+	InRate = function(self, status)
+		return status == self.Nil or status == self.Succ or status == self.Fail or status == self.Fixed
+	end,
+
+	CompareStatuses = function(self, status1, status2)
+		if not self:InRate(status1) then
+			error("status1 is corrupted")
+		end
+		if not self:InRate(status2) then
+			error("status2 is corrupted")
+		end
+
+		return status1 == status2
 	end,
 }
 
@@ -44,6 +55,7 @@ local statusSwitches = {
 }
 
 return {
+	-- todo cover with tests
 	New = function(char)
 		return {
 			__base = char,
@@ -59,6 +71,14 @@ return {
 			res[k] = v
 		end
 		return res
+	end,
+
+	CompareStatuses = function(status1, status2)
+		return overlayStatuses:CompareStatuses(status1, status2)
+	end,
+
+	CompareCharStatus = function(self, char, status)
+		return self.CompareStatuses(char.__overlayStatus, status)
 	end,
 
 	Overlay = function(char, overlayChar)

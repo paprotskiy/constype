@@ -2,8 +2,15 @@ package.path = package.path .. ";../?.lua"
 local core = require("tests.scaffold.scaffold")
 local char = require("src.lexic.char")
 
+local charStatuses = {
+	Nil = char.Statuses().Nil,
+	Succ = char.Statuses().Succ,
+	Fail = char.Statuses().Fail,
+	Fixed = char.Statuses().Fixed,
+}
+
 return {
-	CheckStatuses = core.NewTest("check all statuses copied successfully", function()
+	Statuses = core.NewTest("check all statuses copied successfully", function()
 		local sut = char.Statuses
 
 		local actual = sut()
@@ -24,61 +31,127 @@ return {
 		return nil
 	end),
 
-	CheckStatusOnCreating = core.NewTest("check statuses check after overlays", function()
-		local sut = char.New("x")
+	StatusComparation = core.NewTest("check status comparation", function()
+		local sut = char.CompareStatuses
 
 		local sets = {
 			{
-				Overlay = "x",
-				Expected = char.Statuses(),
+				Status1 = charStatuses.Nil,
+				Status2 = charStatuses.Nil,
+				ValuesAreTheSame = true,
 			},
+			{
+				Status1 = charStatuses.Succ,
+				Status2 = charStatuses.Succ,
+				ValuesAreTheSame = true,
+			},
+			{
+				Status1 = charStatuses.Fail,
+				Status2 = charStatuses.Fail,
+				ValuesAreTheSame = true,
+			},
+			{
+				Status1 = charStatuses.Fixed,
+				Status2 = charStatuses.Fixed,
+				ValuesAreTheSame = true,
+			},
+			{
+				Status1 = charStatuses.Nil,
+				Status2 = charStatuses.Succ,
+				ValuesAreTheSame = false,
+			},
+			{
+				Status1 = charStatuses.Succ,
+				Status2 = charStatuses.Fail,
+				ValuesAreTheSame = false,
+			},
+			{
+				Status1 = charStatuses.Fail,
+				Status2 = charStatuses.Fixed,
+				ValuesAreTheSame = false,
+			},
+			-- todo add corrupted status
 		}
 
-		local actual = char.Overlay(sut, "x")
+		for idx, set in pairs(sets) do
+			local compareRes = sut(set.Status1, set.Status2)
+			if compareRes ~= set.ValuesAreTheSame then
+				return core.NewTestErr("wrong output: expected")
+			end
+		end
 
 		return nil
 	end),
 
-	CheckStatusSwitching = core.NewTest("check statuses check after overlays", function()
-		local statuses = {
-			Nil = char.Statuses().Nil,
-			Succ = char.Statuses().Succ,
-			Fail = char.Statuses().Fail,
-			Fixed = char.Statuses().Fixed,
-		}
-
-		local sut = char.New("x")
+	-- standard test pattern: AAA (Arrange Act Assert)
+	StatusSwitching = core.NewTest("check statuses check after overlays", function()
+		local sut = char.New("x") -- sut = SystemUnderTest
 		local sets = {
 			{
 				Overlay = "x",
-				PreStatus = statuses.Nil,
-				PostStatus = statuses.Succ,
+				PreStatus = charStatuses.Nil,
+				PostStatus = charStatuses.Succ,
 			},
 			{
 				Overlay = "y",
-				PreStatus = statuses.Succ,
-				PostStatus = statuses.Fail,
+				PreStatus = charStatuses.Succ,
+				PostStatus = charStatuses.Fail,
 			},
 			{
 				Overlay = "x",
-				PreStatus = statuses.Fail,
-				PostStatus = statuses.Fixed,
+				PreStatus = charStatuses.Fail,
+				PostStatus = charStatuses.Fixed,
 			},
 			{
 				Overlay = "x",
-				PreStatus = statuses.Fixed,
-				PostStatus = statuses.Fixed,
+				PreStatus = charStatuses.Fixed,
+				PostStatus = charStatuses.Fixed,
 			},
 		}
 
 		for idx, set in pairs(sets) do
-			if char.Display(sut).Status ~= set.PreStatus then
+			if not char:CompareCharStatus(sut, set.PreStatus) then
 				return core.NewTestErr("PreStatus wrong for checkup #" .. tostring(idx))
 			end
 
 			char.Overlay(sut, set.Overlay)
 
-			if char.Display(sut).Status ~= set.PostStatus then
+			if not char:CompareCharStatus(sut, set.PostStatus) then
+				return core.NewTestErr("PreStatus wrong for checkup #" .. tostring(idx))
+			end
+		end
+
+		return nil
+	end),
+
+	OutputDependingOnStatus = core.NewTest("check char values depending on it's status", function()
+		local sets = {
+			{
+				Char = char.New("x"),
+				OutputValue = "x",
+				ValuesAreTheSame = true,
+			},
+			{
+				Char = char.New("y"),
+				OutputValue = "y",
+				ValuesAreTheSame = true,
+			},
+			{
+				Char = char.New("y"),
+				OutputValue = "x",
+				ValuesAreTheSame = false,
+			},
+			{
+				Char = char.New("x"),
+				OutputValue = "y",
+				ValuesAreTheSame = false,
+			},
+		}
+
+		for idx, set in pairs(sets) do
+			local compareRes = char.Display(set.Char).Value == set.OutputValue
+
+			if set.ValuesAreTheSame ~= compareRes then
 				return core.NewTestErr("PreStatus wrong for checkup #" .. tostring(idx))
 			end
 		end
