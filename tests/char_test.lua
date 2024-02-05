@@ -83,6 +83,27 @@ return {
 		return nil
 	end),
 
+	CharStatusComparation = core.NewTest("check char's status comparation", function()
+		local sut = char.CompareCharStatus
+
+		local sets = {
+			{
+				Char = char.New("x"),
+				Status = charStatuses.Nil,
+				ValuesAreTheSame = true,
+			},
+		}
+
+		for idx, set in pairs(sets) do
+			local compareRes = sut(char, set.Char, set.Status)
+			if compareRes ~= set.ValuesAreTheSame then
+				return core.NewTestErr("wrong output: expected")
+			end
+		end
+
+		return nil
+	end),
+
 	-- standard test pattern: AAA (Arrange Act Assert)
 	StatusSwitching = core.NewTest("check statuses check after overlays", function()
 		local sut = char.New("x") -- sut = SystemUnderTest
