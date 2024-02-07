@@ -6,6 +6,8 @@ testExecutor
     :Add(char.Statuses)
     :Add(char.StatusComparation)
     :Add(char.CharStatusComparation)
+    :Add(char.StatusComparationFluent)
     :Add(char.StatusSwitching)
     :Add(char.OutputDependingOnStatus)
+    :Add(char.TstAAA)
     :RunAll()
