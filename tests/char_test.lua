@@ -68,7 +68,7 @@ return {
 			{
 				Status1 = charStatuses.Fail,
 				Status2 = charStatuses.Fixed,
-				ValuesAreTheSame = false,
+				ValuesAreTheSame = false, --error --false
 			},
 			-- todo add corrupted status
 		}
@@ -109,7 +109,7 @@ return {
 		local sut = char.New("x") -- sut = SystemUnderTest
 		local sets = {
 			{
-				Overlay = "x",
+				Overlay = "x", -- error -- x
 				PreStatus = charStatuses.Nil,
 				PostStatus = charStatuses.Succ,
 			},

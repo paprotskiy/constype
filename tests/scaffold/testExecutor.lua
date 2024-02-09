@@ -6,7 +6,7 @@ return {
    tests = {},
 
    Add = function(self, testFunc)
-      local key = tostring(testFunc)
+      local key = testFunc.name
       self.tests[key] = testFunc
 
       return self
@@ -16,12 +16,12 @@ return {
       print("run all tests:")
 
       local failed = {}
-      for _, test in pairs(self.tests) do
+      for key, test in pairs(self.tests) do
          local res = test.exec()
          local err = core.GetTestErrMessage(res, true)
          if err ~= nil then
             table.insert(failed, {
-               Idx = k,
+               test_name = key,
                Error = err,
             })
          end
@@ -30,7 +30,7 @@ return {
 
       if #failed > 0 then
          print("failed " .. tostring(#failed) .. " test(s):")
-         print(pp.PrettyPrint(failed))
+         print(pp.PrettyPrintTests(failed))
       end
 
       return self
