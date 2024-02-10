@@ -68,7 +68,7 @@ return {
 			{
 				Status1 = charStatuses.Fail,
 				Status2 = charStatuses.Fixed,
-				ValuesAreTheSame = false, --error --false
+				ValuesAreTheSame = false,
 			},
 			-- todo add corrupted status
 		}
@@ -76,7 +76,9 @@ return {
 		for idx, set in pairs(sets) do
 			local compareRes = sut(set.Status1, set.Status2)
 			if compareRes ~= set.ValuesAreTheSame then
-				return core.NewTestErr("wrong output: expected")
+				return core.NewTestErr(
+					string.format('wrong output: expected "%s", got "%s"', set.ValuesAreTheSame, compareRes)
+				)
 			end
 		end
 
@@ -85,21 +87,31 @@ return {
 
 	StatusComparationFluent = core.NewTest("check status comparation FLUENT", function()
 		return AAA.NewForSUT(char.CompareStatuses)
-			 :AssertSutWithParams(charStatuses.Nil, charStatuses.Nil)
-			 :Equal(true)
-			 :AssertSutWithParams(charStatuses.Succ, charStatuses.Succ)
-			 :Equal(true)
-			 :AssertSutWithParams(charStatuses.Fail, charStatuses.Fail)
-			 :Equal(true)
-			 :AssertSutWithParams(charStatuses.Fixed, charStatuses.Fixed)
-			 :Equal(true)
-			 :AssertSutWithParams(charStatuses.Nil, charStatuses.Succ)
-			 :Equal(false)
-			 :AssertSutWithParams(charStatuses.Succ, charStatuses.Fail)
-			 :Equal(false)
-			 :AssertSutWithParams(charStatuses.Fail, charStatuses.Fixed)
-			 :Equal(false)
-			 :Exec()
+			:AssertSutWithParams(charStatuses.Nil, charStatuses.Nil)
+			:Equal(true)
+			:AssertSutWithParams(charStatuses.Succ, charStatuses.Succ)
+			:Equal(true)
+			:AssertSutWithParams(charStatuses.Fail, charStatuses.Fail)
+			:Equal(true)
+			:AssertSutWithParams(charStatuses.Fixed, charStatuses.Fixed)
+			:Equal(true)
+			:AssertSutWithParams(charStatuses.Nil, charStatuses.Succ)
+			:Equal(false)
+			:AssertSutWithParams(charStatuses.Succ, charStatuses.Fail)
+			:Equal(false)
+			:AssertSutWithParams(charStatuses.Fail, charStatuses.Fixed)
+			:Equal(false)
+			:AssertSutWithParams(charStatuses.Nil, "not-overlayed")
+			:Equal(true)
+			:AssertSutWithParams(charStatuses.Nil, "non-existing-status")
+			:ThrowsError()
+			:AssertSutWithParams("non-existing-status", charStatuses.Nil)
+			:ThrowsError()
+			:AssertSutWithParams("non-existing-status", "non-existing-status")
+			:ThrowsError()
+			:AssertSutWithParams("non-existing-status", "non-existing-status2")
+			:ThrowsError()
+			:Exec()
 	end),
 
 	CharStatusComparation = core.NewTest("check char's status comparation", function()

@@ -16,12 +16,12 @@ return {
 		print("run all tests:")
 
 		local failed = {}
-		for key, test in pairs(self.tests) do
+		for _, test in pairs(self.tests) do
 			local res = test.exec()
 			local err = core.GetTestErrMessage(res, true)
 			if err ~= nil then
 				table.insert(failed, {
-					test_name = key,
+					test_name = test.name,
 					Error = err,
 				})
 			end
