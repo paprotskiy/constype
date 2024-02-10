@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  constype:
+    container_name: constype
+    build: .
+
+  # test-constype:
+  #   container_name: tests
+  #   build: ./Dockerfile-tests

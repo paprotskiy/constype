@@ -1,5 +1,5 @@
 autotests:
-	cd tests/ && lua ./all.lua
+	cd src/tests/ && lua ./all.lua
 
 testTerminal:
-	cd tests/ && lua ./line_test.lua
+	cd src/tests/ && lua ./line_test.lua

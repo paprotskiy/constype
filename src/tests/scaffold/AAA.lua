@@ -30,6 +30,14 @@ local defaultComparator = function(expectedOutput, expectedErr, actualOutput, ac
 	return nil
 end
 
+local errMustRaise = function(expectedOutput, expectedErr, actualOutput, actualErr)
+	if actualErr ~= nil then
+		return nil
+	end
+
+	return scaffold.NewTestErr("raising error expected, but not occurred")
+end
+
 local function NewSUT()
 	return {
 		__sut = nil,
@@ -55,6 +63,12 @@ local function NewSUT()
 			return nil
 		end,
 
+		Build = function(self)
+			return function()
+				return self:Exec()
+			end
+		end,
+
 		SetSUT = function(self, func)
 			self.__sut = func
 			return self
@@ -63,21 +77,18 @@ local function NewSUT()
 		AssertSutWithParams = function(self, ...)
 			local arg = { ... }
 			return {
-				Equal = function(_, expectedOutput)
-					addAssert(self.__asserts, defaultComparator, expectedOutput, nil, self.__sut, table.unpack(arg))
+				DetailedComparation = function(_, expectedOutput, expectedErr, comparator)
+					addAssert(self.__asserts, comparator, expectedOutput, expectedErr, self.__sut, table.unpack(arg))
 					return self
 				end,
 
-				ThrowsError = function()
-					table.insert(self.__asserts, function()
-						local failed = pcall(function() end)
+				Equal = function(selfCheck, expectedOutput, comparator)
+					comparator = comparator or defaultComparator
+					return selfCheck:DetailedComparation(expectedOutput, nil, comparator)
+				end,
 
-						if not failed then
-							return scaffold.NewTestErr("an error missed")
-						end
-					end)
-
-					return self
+				ThrowsError = function(selfCheck)
+					return selfCheck:DetailedComparation(nil, nil, errMustRaise)
 				end,
 			}
 		end,

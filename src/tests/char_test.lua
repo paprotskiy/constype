@@ -1,6 +1,6 @@
 local core = require("tests.scaffold.scaffold")
 local AAA = require("tests.scaffold.AAA")
-local char = require("src.lexic.char")
+local char = require("app.lexic.char")
 
 local charStatuses = {
 	Nil = char.Statuses().Nil,
@@ -31,62 +31,9 @@ return {
 		return nil
 	end),
 
-	StatusComparation = core.NewTest("check status comparation", function()
-		local sut = char.CompareStatuses
-
-		local sets = {
-			{
-				Status1 = charStatuses.Nil,
-				Status2 = charStatuses.Nil,
-				ValuesAreTheSame = true,
-			},
-			{
-				Status1 = charStatuses.Succ,
-				Status2 = charStatuses.Succ,
-				ValuesAreTheSame = true,
-			},
-			{
-				Status1 = charStatuses.Fail,
-				Status2 = charStatuses.Fail,
-				ValuesAreTheSame = true,
-			},
-			{
-				Status1 = charStatuses.Fixed,
-				Status2 = charStatuses.Fixed,
-				ValuesAreTheSame = true,
-			},
-			{
-				Status1 = charStatuses.Nil,
-				Status2 = charStatuses.Succ,
-				ValuesAreTheSame = false,
-			},
-			{
-				Status1 = charStatuses.Succ,
-				Status2 = charStatuses.Fail,
-				ValuesAreTheSame = false,
-			},
-			{
-				Status1 = charStatuses.Fail,
-				Status2 = charStatuses.Fixed,
-				ValuesAreTheSame = false,
-			},
-			-- todo add corrupted status
-		}
-
-		for idx, set in pairs(sets) do
-			local compareRes = sut(set.Status1, set.Status2)
-			if compareRes ~= set.ValuesAreTheSame then
-				return core.NewTestErr(
-					string.format('wrong output: expected "%s", got "%s"', set.ValuesAreTheSame, compareRes)
-				)
-			end
-		end
-
-		return nil
-	end),
-
-	StatusComparationFluent = core.NewTest("check status comparation FLUENT", function()
-		return AAA.NewForSUT(char.CompareStatuses)
+	StatusComparation = core.NewTest(
+		"check status comparation",
+		AAA.NewForSUT(char.CompareStatuses)
 			:AssertSutWithParams(charStatuses.Nil, charStatuses.Nil)
 			:Equal(true)
 			:AssertSutWithParams(charStatuses.Succ, charStatuses.Succ)
@@ -111,8 +58,8 @@ return {
 			:ThrowsError()
 			:AssertSutWithParams("non-existing-status", "non-existing-status2")
 			:ThrowsError()
-			:Exec()
-	end),
+			:Build()
+	),
 
 	CharStatusComparation = core.NewTest("check char's status comparation", function()
 		local sut = char.CompareCharStatus

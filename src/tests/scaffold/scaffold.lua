@@ -17,19 +17,4 @@ return {
 			ErrMessage = message,
 		}
 	end,
-
-	GetTestErrMessage = function(err, allowNil)
-		if err == nil and allowNil then
-			return nil
-		elseif err == nil and not allowNil then
-			error("nilNotAllowed")
-		end
-
-		local msg = err.ErrMessage
-		if msg == nil then
-			error("not an test error")
-		end
-
-		return msg
-	end,
 }
