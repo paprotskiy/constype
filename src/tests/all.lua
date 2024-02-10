@@ -2,6 +2,7 @@ package.path = package.path .. ";../?.lua"
 local testExecutor = require("tests.scaffold.testExecutor")
 local pp = require("utils.print.pretty")
 local char = require("tests.char_test")
+local os = require("tests.os")
 
 local report = testExecutor
 	:Add(char.Statuses)
@@ -32,3 +33,5 @@ end
 
 printBriefReportToTerminal(report)
 printVerboseReportToTerminal(report)
+
+os.CloseTestAppWithCode(report)
