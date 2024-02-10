@@ -1,5 +1,5 @@
-package.path = package.path .. ";../?.lua"
 local core = require("tests.scaffold.scaffold")
+local AAA = require("tests.scaffold.AAA")
 local char = require("src.lexic.char")
 
 local charStatuses = {
@@ -81,6 +81,25 @@ return {
 		end
 
 		return nil
+	end),
+
+	StatusComparationFluent = core.NewTest("check status comparation FLUENT", function()
+		return AAA.NewForSUT(char.CompareStatuses)
+			 :AssertSutWithParams(charStatuses.Nil, charStatuses.Nil)
+			 :Equal(true)
+			 :AssertSutWithParams(charStatuses.Succ, charStatuses.Succ)
+			 :Equal(true)
+			 :AssertSutWithParams(charStatuses.Fail, charStatuses.Fail)
+			 :Equal(true)
+			 :AssertSutWithParams(charStatuses.Fixed, charStatuses.Fixed)
+			 :Equal(true)
+			 :AssertSutWithParams(charStatuses.Nil, charStatuses.Succ)
+			 :Equal(false)
+			 :AssertSutWithParams(charStatuses.Succ, charStatuses.Fail)
+			 :Equal(false)
+			 :AssertSutWithParams(charStatuses.Fail, charStatuses.Fixed)
+			 :Equal(false)
+			 :Exec()
 	end),
 
 	CharStatusComparation = core.NewTest("check char's status comparation", function()
