@@ -57,7 +57,7 @@ local function NewSUT()
 
 		Build = function(self)
 			return function()
-				self:Exec()
+				return self:Exec()
 			end
 		end,
 
@@ -69,9 +69,9 @@ local function NewSUT()
 		AssertSutWithParams = function(self, ...)
 			local arg = { ... }
 			return {
-				Equal = function(_, expectedOutput, comparator)
-					comparator = comparator or defaultComparator
-					addAssert(self.__asserts, comparator, expectedOutput, nil, self.__sut, table.unpack(arg))
+				Equal = function(_, expectedOutput)
+					-- comparator = comparator or defaultComparator
+					addAssert(self.__asserts, defaultComparator, expectedOutput, nil, self.__sut, table.unpack(arg))
 					return self
 				end,
 

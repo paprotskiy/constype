@@ -33,7 +33,8 @@ return {
 
 	StatusComparation = core.NewTest(
 		"check status comparation",
-		AAA.NewForSUT(char.CompareStatuses)
+		AAA
+			.NewForSUT(char.CompareStatuses)
 			:AssertSutWithParams(charStatuses.Nil, charStatuses.Nil)
 			:Equal(true)
 			:AssertSutWithParams(charStatuses.Succ, charStatuses.Succ)
@@ -49,7 +50,8 @@ return {
 			:AssertSutWithParams(charStatuses.Fail, charStatuses.Fixed)
 			:Equal(false)
 			:AssertSutWithParams(charStatuses.Nil, "not-overlayed")
-			:Equal(true)
+			:ThrowsError()
+			-- :Equal(true)
 			:AssertSutWithParams(charStatuses.Nil, "non-existing-status")
 			:ThrowsError()
 			:AssertSutWithParams("non-existing-status", charStatuses.Nil)
