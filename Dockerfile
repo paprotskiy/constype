@@ -26,7 +26,8 @@ RUN cd /tmp \
     && cd /tmp \
     && rm -rf /tmp/*
 
-COPY ./src ./src
-COPY ./tests ./tests
+RUN luarocks install --server=https://luarocks.org/dev lua-hashings
 
-CMD ["lua", "./tests/all.lua"]
+COPY ./src ./src
+# WORKDIR src/tests
+# CMD ["lua", "./all.lua"]
