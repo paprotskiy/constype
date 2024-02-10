@@ -1,10 +1,23 @@
 version: '3'
 
 services:
+  constype-unit-tests:
+    container_name: constype-unit-tests
+    build: .
+    working_dir: /src/tests
+    command: lua ./all.lua 
+
+  constype-test-fonts:
+    container_name: constype-test-fonts
+    build: .
+    working_dir: /src/tests
+    command: lua ./line_test.lua 
+
   constype:
     container_name: constype
     build: .
-
+    working_dir: /src/app
+    command: lua ./main.lua 
   # test-constype:
   #   container_name: tests
   #   build: ./Dockerfile-tests

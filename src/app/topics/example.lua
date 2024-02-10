@@ -1,5 +1,5 @@
 package.path = package.path .. ";../?.lua"
-local file = require("src.io.fileSystem.file")
+local file = require("app.io.fileSystem.file")
 
 local relativePath = "./src/text.txt"
 local rows = file.ReadFile(relativePath)
