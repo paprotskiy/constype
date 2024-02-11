@@ -10,5 +10,5 @@ unittests:
 fonttests:
 	docker-compose up --build constype-test-fonts
 
-run:
-	docker-compose up --build constype
+launch:
+	docker-compose up --build --no-start constype && docker-compose run constype
