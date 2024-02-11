@@ -18,6 +18,7 @@ services:
     build: .
     working_dir: /src/app
     command: lua ./main.lua 
-  # test-constype:
-  #   container_name: tests
-  #   build: ./Dockerfile-tests
+    stdin_open: true
+    tty: true
+    volumes: 
+      - ./persistent/:/data/

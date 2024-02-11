@@ -1,12 +1,10 @@
-FROM alpine:latest
+FROM alpine:latest as constype-app
 
 ARG LUA_VER="5.4.0"
 ARG LUA_ROCKS_VER="3.9.2"
 
-# required packages to build lua and run luarocks
 RUN apk add libc-dev readline readline-dev gcc make wget git
 
-# install lua
 RUN cd /tmp \
     && wget https://www.lua.org/ftp/lua-${LUA_VER}.tar.gz \
     && tar zxf lua-${LUA_VER}.tar.gz \
@@ -15,7 +13,6 @@ RUN cd /tmp \
     && cd /tmp \
     && rm -rf /tmp/*
 
-# install luarocks
 RUN cd /tmp \
     && wget https://luarocks.org/releases/luarocks-${LUA_ROCKS_VER}.tar.gz \
     && tar zxf luarocks-${LUA_ROCKS_VER}.tar.gz \
@@ -27,7 +24,9 @@ RUN cd /tmp \
     && rm -rf /tmp/*
 
 RUN luarocks install --server=https://luarocks.org/dev lua-hashings
+RUN luarocks install lua-cjson 
+# RUN luarocks install plterm 
+RUN luarocks install lua-term 
+RUN luarocks install luaposix 
 
 COPY ./src ./src
-# WORKDIR src/tests
-# CMD ["lua", "./all.lua"]
