@@ -13,7 +13,16 @@ local function addAssert(asserts, comparator, expectedOutput, expectedErr, sut, 
 			actualOutput = sut(table.unpack(arg))
 		end)
 
-		return comparator(expectedOutput, expectedErr, actualOutput, actualErr)
+		local compareRes = nil
+		local _, compareErr = pcall(function()
+			compareRes = comparator(expectedOutput, expectedErr, actualOutput, actualErr)
+		end)
+
+		if compareErr ~= nil then
+			return scaffold.NewTestErr("comparator crashed: " .. compareErr)
+		end
+
+		return compareRes
 	end)
 end
 

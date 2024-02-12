@@ -25,7 +25,7 @@ RUN cd /tmp \
 
 RUN luarocks install --server=https://luarocks.org/dev lua-hashings
 RUN luarocks install lua-cjson 
-# RUN luarocks install plterm 
+RUN luarocks install plterm 
 RUN luarocks install lua-term 
 RUN luarocks install luaposix 
 

@@ -1,17 +1,19 @@
 package.path = package.path .. ";../?.lua"
-local testExecutor = require("tests.scaffold.testExecutor")
-local char = require("tests.char_test")
 local printReportToTerminal = require("tests.output.terminal")
+local testExecutor = require("tests.scaffold.testExecutor")
+local bashtools = require("tests.bashtools_test")
+local char = require("tests.char_test")
 local os = require("tests.os")
 
 local report = testExecutor
-	:Add(char.Statuses)
-	:Add(char.StatusComparation)
-	:Add(char.CharStatusComparation)
-	:Add(char.StatusSwitching)
-	:Add(char.OutputDependingOnStatus)
-	:Add(char.TstAAA)
-	:RunAll()
+    :Add(bashtools.TtySizeOutputParsing)
+    :Add(char.Statuses)
+    :Add(char.StatusComparation)
+    :Add(char.CharStatusComparation)
+    :Add(char.StatusSwitching)
+    :Add(char.OutputDependingOnStatus)
+    :Add(char.TstAAA)
+    :RunAll()
 
 printReportToTerminal.brief(report)
 printReportToTerminal.verbose(report)

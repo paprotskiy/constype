@@ -4,11 +4,4 @@ local file = require("app.io.fileSystem.file")
 local relativePath = "./text.txt"
 local rows = file.ReadFile(relativePath)
 
-print(#rows)
-
-local wholeText = ""
-for _, v in pairs(rows) do
-	wholeText = wholeText .. "\n" .. tostring(v)
-end
-
-return wholeText
+return table.concat(rows, "\n")
