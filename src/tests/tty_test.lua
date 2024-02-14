@@ -1,7 +1,7 @@
 local equal = require("utils.equal.deepEqual")
 local core = require("tests.scaffold.scaffold")
 local AAA = require("tests.scaffold.AAA")
-local tty = require("app.term.bashtools")
+local tty = require("app.ui.tty.tty")
 
 local function tableComparator(expectedOutput, expectedErr, actualOutput, actualErr)
    if actualErr ~= nil then
@@ -33,9 +33,9 @@ return {
       }, tableComparator)
       :AssertSutWithParams("")
       :ThrowsError()
-      :AssertSutWithParams("a b")
+      :AssertSutWithParams("0 1")
       :ThrowsError()
-      :AssertSutWithParams("-5 -2")
+      :AssertSutWithParams("1 0")
       :ThrowsError()
       :AssertSutWithParams("-5 2")
       :ThrowsError()
