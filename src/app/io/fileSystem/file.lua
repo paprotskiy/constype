@@ -21,4 +21,11 @@ return {
    ReadFile = function(filePath)
       return lines_from(filePath)
    end,
+
+   WriteFile = function(filePath, data)
+      local file = io.open(filePath, "w")
+      file:write(data)
+      file:flush()
+      file:close()
+   end,
 }

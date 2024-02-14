@@ -5,20 +5,20 @@ services:
     container_name: constype-unit-tests
     build: .
     working_dir: /src/tests
-    command: lua ./all.lua 
+    command: lua ./all.lua
 
   constype-test-fonts:
     container_name: constype-test-fonts
     build: .
     working_dir: /src/tests
-    command: lua ./line_test.lua 
+    command: lua ./line_test.lua
 
   constype:
     container_name: constype
     build: .
     working_dir: /src/app
-    command: lua ./main.lua 
+    command: lua ./main.lua
     stdin_open: true
     tty: true
-    volumes: 
-      - ./persistent/:/data/
+    volumes:
+      - ./persistent/:/pers
