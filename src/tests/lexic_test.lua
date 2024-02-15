@@ -1,6 +1,8 @@
+package.path = package.path .. ";../?.lua"
 local core = require("tests.scaffold.scaffold")
 local AAA = require("tests.scaffold.AAA")
 local char = require("app.lexic.char")
+local topic = require("app.lexic.topic")
 
 local charStatuses = {
 	Nil = char.Statuses().Nil,
@@ -10,7 +12,7 @@ local charStatuses = {
 }
 
 return {
-	Statuses = core.NewTest("check all statuses copied successfully", function()
+	core.NewTest("check all statuses copied successfully", function()
 		local sut = char.Statuses
 
 		local actual = sut()
@@ -31,7 +33,7 @@ return {
 		return nil
 	end),
 
-	StatusComparation = core.NewTest(
+	core.NewTest(
 		"check status comparation",
 		AAA.NewForSUT(char.CompareStatuses)
 			:AssertSutWithParams(charStatuses.Nil, charStatuses.Nil)
@@ -61,7 +63,7 @@ return {
 			:Build()
 	),
 
-	CharStatusComparation = core.NewTest("check char's status comparation", function()
+	core.NewTest("check char's status comparation", function()
 		local sut = char.CompareCharStatus
 
 		local sets = {
@@ -83,7 +85,7 @@ return {
 	end),
 
 	-- standard test pattern: AAA (Arrange Act Assert)
-	StatusSwitching = core.NewTest("check statuses check after overlays", function()
+	core.NewTest("check statuses check after overlays", function()
 		local sut = char.New("x") -- sut = SystemUnderTest
 		local sets = {
 			{
@@ -123,7 +125,7 @@ return {
 		return nil
 	end),
 
-	OutputDependingOnStatus = core.NewTest("check char values depending on it's status", function()
+	core.NewTest("check char values depending on it's status", function()
 		local sets = {
 			{
 				Char = char.New("x"),
@@ -154,7 +156,21 @@ return {
 				return core.NewTestErr("PreStatus wrong for checkup #" .. tostring(idx))
 			end
 		end
-
-		return nil
 	end),
+
+	core.NewTest(
+		"check test parsing to char sequence",
+		AAA
+			.NewForSUT(topic.NewTopic)
+			:AssertSutWithParams("a bB\nc") --
+			:Equal({
+				{ __base = "a", __overlayStatus = charStatuses.Nil },
+				{ __base = " ", __overlayStatus = charStatuses.Nil },
+				{ __base = "b", __overlayStatus = charStatuses.Nil },
+				{ __base = "B", __overlayStatus = charStatuses.Nil },
+				{ __base = "\n", __overlayStatus = charStatuses.Nil },
+				{ __base = "c", __overlayStatus = charStatuses.Nil },
+			}, AAA.TableComparator)
+			:Build()
+	),
 }
