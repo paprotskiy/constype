@@ -36,31 +36,31 @@ return {
 	core.NewTest(
 		"check status comparation",
 		AAA.NewForSUT(char.CompareStatuses)
-			:AssertSutWithParams(charStatuses.Nil, charStatuses.Nil)
-			:Equal(true)
-			:AssertSutWithParams(charStatuses.Succ, charStatuses.Succ)
-			:Equal(true)
-			:AssertSutWithParams(charStatuses.Fail, charStatuses.Fail)
-			:Equal(true)
-			:AssertSutWithParams(charStatuses.Fixed, charStatuses.Fixed)
-			:Equal(true)
-			:AssertSutWithParams(charStatuses.Nil, charStatuses.Succ)
-			:Equal(false)
-			:AssertSutWithParams(charStatuses.Succ, charStatuses.Fail)
-			:Equal(false)
-			:AssertSutWithParams(charStatuses.Fail, charStatuses.Fixed)
-			:Equal(false)
-			:AssertSutWithParams(charStatuses.Nil, "not-overlayed")
-			:Equal(true)
-			:AssertSutWithParams(charStatuses.Nil, "non-existing-status")
-			:ThrowsError()
-			:AssertSutWithParams("non-existing-status", charStatuses.Nil)
-			:ThrowsError()
-			:AssertSutWithParams("non-existing-status", "non-existing-status")
-			:ThrowsError()
-			:AssertSutWithParams("non-existing-status", "non-existing-status2")
-			:ThrowsError()
-			:Build()
+		:AssertSutWithParams(charStatuses.Nil, charStatuses.Nil)
+		:Equal(true)
+		:AssertSutWithParams(charStatuses.Succ, charStatuses.Succ)
+		:Equal(true)
+		:AssertSutWithParams(charStatuses.Fail, charStatuses.Fail)
+		:Equal(true)
+		:AssertSutWithParams(charStatuses.Fixed, charStatuses.Fixed)
+		:Equal(true)
+		:AssertSutWithParams(charStatuses.Nil, charStatuses.Succ)
+		:Equal(false)
+		:AssertSutWithParams(charStatuses.Succ, charStatuses.Fail)
+		:Equal(false)
+		:AssertSutWithParams(charStatuses.Fail, charStatuses.Fixed)
+		:Equal(false)
+		:AssertSutWithParams(charStatuses.Nil, "not-overlayed")
+		:Equal(true)
+		:AssertSutWithParams(charStatuses.Nil, "non-existing-status")
+		:ThrowsError()
+		:AssertSutWithParams("non-existing-status", charStatuses.Nil)
+		:ThrowsError()
+		:AssertSutWithParams("non-existing-status", "non-existing-status")
+		:ThrowsError()
+		:AssertSutWithParams("non-existing-status", "non-existing-status2")
+		:ThrowsError()
+		:Build()
 	),
 
 	core.NewTest("check char's status comparation", function()
@@ -161,16 +161,16 @@ return {
 	core.NewTest(
 		"check test parsing to char sequence",
 		AAA
-			.NewForSUT(topic.NewTopic)
-			:AssertSutWithParams("a bB\nc") --
-			:Equal({
-				{ __base = "a", __overlayStatus = charStatuses.Nil },
-				{ __base = " ", __overlayStatus = charStatuses.Nil },
-				{ __base = "b", __overlayStatus = charStatuses.Nil },
-				{ __base = "B", __overlayStatus = charStatuses.Nil },
-				{ __base = "\n", __overlayStatus = charStatuses.Nil },
-				{ __base = "c", __overlayStatus = charStatuses.Nil },
-			}, AAA.TableComparator)
-			:Build()
+		.NewForSUT(topic.NewTopic)
+		:AssertSutWithParams("a bB\nc") --
+		:Equal({
+			{ __base = "a",  __overlayStatus = charStatuses.Nil },
+			{ __base = " ",  __overlayStatus = charStatuses.Nil },
+			{ __base = "b",  __overlayStatus = charStatuses.Nil },
+			{ __base = "B",  __overlayStatus = charStatuses.Nil },
+			{ __base = "\n", __overlayStatus = charStatuses.Nil },
+			{ __base = "c",  __overlayStatus = charStatuses.Nil },
+		}, AAA.TableComparator)
+		:Build()
 	),
 }

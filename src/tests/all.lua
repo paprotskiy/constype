@@ -6,9 +6,9 @@ local tty = require("tests.tty_test")
 local os = require("tests.scaffold.os")
 
 local report = testExecutor
-	:AddTestSet(tty)
-	:AddTestSet(lexic) --
-	:RunAll()
+	 :AddTestSet(tty)
+	 :AddTestSet(lexic) --
+	 :RunAll()
 
 printReportToTerminal.brief(report)
 printReportToTerminal.verbose(report)
