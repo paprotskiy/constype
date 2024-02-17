@@ -56,9 +56,7 @@ return {
 		:ThrowsError()
 		:AssertSutWithParams("non-existing-status", charStatuses.Nil)
 		:ThrowsError()
-		:AssertSutWithParams("non-existing-status", "non-existing-status")
-		:ThrowsError()
-		:AssertSutWithParams("non-existing-status", "non-existing-status2")
+		:AssertSutWithParams("non-existing-status1", "non-existing-status2")
 		:ThrowsError()
 		:Build()
 	),
@@ -106,6 +104,16 @@ return {
 			{
 				Overlay = "x",
 				PreStatus = charStatuses.Fixed,
+				PostStatus = charStatuses.Fixed,
+			},
+			{
+				Overlay = nil,
+				PreStatus = charStatuses.Fixed,
+				PostStatus = charStatuses.Fail,
+			},
+			{
+				Overlay = "x",
+				PreStatus = charStatuses.Fail,
 				PostStatus = charStatuses.Fixed,
 			},
 		}
@@ -164,12 +172,18 @@ return {
 		.NewForSUT(topic.NewTopic)
 		:AssertSutWithParams("a bB\nc") --
 		:Equal({
-			{ __base = "a",  __overlayStatus = charStatuses.Nil },
-			{ __base = " ",  __overlayStatus = charStatuses.Nil },
-			{ __base = "b",  __overlayStatus = charStatuses.Nil },
-			{ __base = "B",  __overlayStatus = charStatuses.Nil },
-			{ __base = "\n", __overlayStatus = charStatuses.Nil },
-			{ __base = "c",  __overlayStatus = charStatuses.Nil },
+			__current = 1,
+			__data = {
+				{ __base = "a",  __overlayStatus = charStatuses.Nil },
+				{ __base = " ",  __overlayStatus = charStatuses.Nil },
+				{ __base = "b",  __overlayStatus = charStatuses.Nil },
+				{ __base = "B",  __overlayStatus = charStatuses.Nil },
+				{ __base = "\n", __overlayStatus = charStatuses.Nil },
+				{ __base = "c",  __overlayStatus = charStatuses.Nil },
+			},
+			Done = function() end, -- todo update table comparator to make possible ignoring such functions
+			Overlay = function() end, -- todo update table comparator to make possible ignoring such functions
+			Undo = function() end, -- todo update table comparator to make possible ignoring such functions
 		}, AAA.TableComparator)
 		:Build()
 	),

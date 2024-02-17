@@ -77,7 +77,7 @@ return {
 	end,
 
 	Overlay = function(char, overlayChar)
-		if overlayChar:len() ~= 1 then
+		if overlayChar ~= nil and overlayChar:len() ~= 1 then
 			error("overlayChar must be one symbol string")
 		end
 

@@ -17,6 +17,38 @@ return {
    ClearScreen = clearScreen,
    ClearLine = clearRestOfLine,
 
+   GoUp = function(x)
+      luaterm.cursor.goup(x)
+      io.flush()
+   end,
+
+   EraseLast = function(eraseChar)
+      luaterm.cursor.goleft(1)
+      io.flush()
+      io.write(eraseChar)
+      io.flush()
+      luaterm.cursor.goleft(1)
+      io.flush()
+   end,
+
+   EventDriver = function()
+      return io.read(1)
+   end,
+
+   PrintWithNoCursorShift = function(text)
+      -- local res = luaterm.cursor.save()
+      io.write("\027[s")
+      io.flush()
+      io.write(text)
+      io.flush()
+      io.write("\027[u")
+      io.flush()
+   end,
+
+   Jump = function(x, y)
+      luaterm.cursor.jump(x, y)
+   end,
+
    ParseTtySizeOutput = function(input)
       local parts = {}
 
@@ -42,7 +74,7 @@ return {
    end,
 
    WinSize = function(self)
-      for j = 1, 10, 1 do
+      for _ = 1, 10, 1 do
          local file = assert(io.popen("stty size", "r"))
          local output = file:read("*all")
 
@@ -68,10 +100,11 @@ return {
 
       os.execute("stty cbreak </dev/tty >/dev/tty 2>&1")
       while true do
-         local whole = ""
-         for i = 1, 20, 1 do
+         local whole = {}
+         for i = 1, 10, 1 do
             local rune = io.read(1)
-            whole = whole .. rune
+            table.insert(whole, string.byte(rune))
+            -- whole = whole .. rune
             -- local char = string.byte()
             -- io.flush()
             -- self.WinSize()
@@ -79,8 +112,11 @@ return {
             io.write()
             io.flush()
          end
-         io.write("\n" .. whole .. "++\n\n\n")
-         -- io.flush()
+
+         for k, v in pairs(whole) do
+            print()
+            print(v)
+         end
       end
       os.execute("stty -cbreak </dev/tty >/dev/tty 2>&1")
    end,

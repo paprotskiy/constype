@@ -23,9 +23,9 @@ return {
    end,
 
    WriteFile = function(filePath, data)
-      local file = io.open(filePath, "w")
-      file:write(data)
-      file:flush()
-      file:close()
+      local f = io.open(filePath, "w")
+      f:write(data)
+      f:flush()
+      f:close()
    end,
 }
