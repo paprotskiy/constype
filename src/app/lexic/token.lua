@@ -41,4 +41,18 @@ return {
 			overChar.New(symbol),
 		})
 	end,
+
+	NewSuperToken = function(tokens)
+		return {
+			__subtokens = tokens,
+
+			Length = function(self)
+				local len = 0
+				for _, v in pairs(self.__subtokens) do
+					len = len + v:Length()
+				end
+				return len
+			end,
+		}
+	end,
 }
