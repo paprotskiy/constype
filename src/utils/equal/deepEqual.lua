@@ -1,7 +1,17 @@
-local function tableSize(t)
+-- local function tableSize(t)
+--    local count = 0
+--    for k, v in pairs(t) do
+--       count = count + 1
+--    end
+--    return count
+-- end
+
+local function tableSizeWithoutFunc(t)
    local count = 0
    for k, v in pairs(t) do
-      count = count + 1
+      if type(v) ~= "function" then
+         count = count + 1
+      end
    end
    return count
 end
@@ -15,7 +25,7 @@ deepEqualIgnoreFuncs = function(a, b)
    if type(a) == "function" then
       return nil
    elseif type(a) == "table" then
-      local sizeA, sizeB = tableSize(a), tableSize(b)
+      local sizeA, sizeB = tableSizeWithoutFunc(a), tableSizeWithoutFunc(b)
       if sizeA ~= sizeB then
          return string.format('table sizes ("%s" and "%s") mismatch', sizeA, sizeB)
       end
