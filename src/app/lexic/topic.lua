@@ -2,24 +2,6 @@ local customAssert = require("utils.assert")
 local subquery = require("utils.subquery")
 local overlayableChar = require("app.lexic.char")
 
-local tokenToSubtokens
-tokenToSubtokens = function(rawText, primitive, ...)
-	local subTokenSplitters = { ... }
-
-	-- customAssert(#subTokenSplitters > 0, "subtoken splitters are not specified", 2)
-
-	if #subTokenSplitters == 0 then
-		return primitive(rawText)
-	end
-
-	local splitted = subquery.SplitByIndex(subTokenSplitters)
-	local subTexts = splitted.left[1](rawText)
-	local subTokens = {}
-	for _, subText in pairs(subTexts) do
-		table.insert(subTokens, tokenToSubtokens(subText, splitted.right))
-	end
-end
-
 function NewLine(chars)
 	return {
 		__chars = chars,
@@ -60,10 +42,10 @@ function ResizeLines(lines, width, splitToWords)
 end
 
 function NewPosition(lineNum, charNum)
-	customAssert(type(lineNum) ~= "number", "lineNum must be a number", 2)
-	customAssert(type(charNum) ~= "number", "charNum must be a number", 2)
-	customAssert(type(lineNum) > 1, "lineNum must be a more or equal to 1", 2)
-	customAssert(type(charNum) > 1, "charNum must be a more or equal to 1", 2)
+	customAssert(type(lineNum) == "number", "lineNum must be a number", 2)
+	customAssert(type(charNum) == "number", "charNum must be a number", 2)
+	customAssert(lineNum < 1, "lineNum must be a more or equal to 1", 2)
+	customAssert(charNum < 1, "charNum must be a more or equal to 1", 2)
 
 	return {
 		LineNum = lineNum,
@@ -120,7 +102,7 @@ return {
 			error("implement me")
 		end,
 
-		Prev = function(self)
+		GetPrev = function(self)
 			local p = self.__position
 
 			if p.LineNum == 1 and p.CharNum == 1 then
@@ -136,7 +118,7 @@ return {
 			return NewPosition(p.LineNum, p.CharNum - 1)
 		end,
 
-		Next = function(self)
+		GetNext = function(self)
 			local p = self.__position
 			local lastIdxForCurrLine = self.__lines[p.LineNum]:Length() == p.CharNum
 			local lastLine = p.LineNum == #self.__lines
@@ -152,7 +134,7 @@ return {
 		end,
 
 		MoveNext = function(self)
-			local position = self.Next()
+			local position = self.GetNext()
 			if position == nil then
 				return nil
 			end
