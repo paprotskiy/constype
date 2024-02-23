@@ -4,6 +4,7 @@
 package.path = package.path .. ";../?.lua"
 local scaffold = require("scaffold.scaffold")
 local equal = require("utils.equal.deepEqual")
+local pp = require("utils.print.pretty")
 
 local function addAssert(asserts, comparator, expectedOutput, expectedErr, sut, ...)
 	local arg = { ... }
@@ -50,6 +51,11 @@ local function tableComparator(expectedOutput, expectedErr, actualOutput, actual
 	if errMsg == nil then
 		return nil
 	end
+
+	print(pp.PrettyPrint({
+		ActualOutput = actualOutput,
+		ExpectedOutput = expectedOutput,
+	}))
 
 	return scaffold.NewTestErr(errMsg)
 end

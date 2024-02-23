@@ -2,7 +2,7 @@ package.path = package.path .. ";../?.lua"
 local core = require("tests.scaffold.scaffold")
 local AAA = require("tests.scaffold.AAA")
 local char = require("app.lexic.char")
-local topic = require("app.lexic.topic")
+local charset = require("app.lexic.charset")
 
 local charStatuses = {
 	Nil = char.Statuses().Nil,
@@ -36,29 +36,29 @@ return {
 	core.NewTest(
 		"check status comparation",
 		AAA.NewForSUT(char.CompareStatuses)
-			:AssertSutWithParams(charStatuses.Nil, charStatuses.Nil)
-			:Equal(true)
-			:AssertSutWithParams(charStatuses.Succ, charStatuses.Succ)
-			:Equal(true)
-			:AssertSutWithParams(charStatuses.Fail, charStatuses.Fail)
-			:Equal(true)
-			:AssertSutWithParams(charStatuses.Fixed, charStatuses.Fixed)
-			:Equal(true)
-			:AssertSutWithParams(charStatuses.Nil, charStatuses.Succ)
-			:Equal(false)
-			:AssertSutWithParams(charStatuses.Succ, charStatuses.Fail)
-			:Equal(false)
-			:AssertSutWithParams(charStatuses.Fail, charStatuses.Fixed)
-			:Equal(false)
-			:AssertSutWithParams(charStatuses.Nil, "not-overlayed")
-			:Equal(true)
-			:AssertSutWithParams(charStatuses.Nil, "non-existing-status")
-			:ThrowsError()
-			:AssertSutWithParams("non-existing-status", charStatuses.Nil)
-			:ThrowsError()
-			:AssertSutWithParams("non-existing-status1", "non-existing-status2")
-			:ThrowsError()
-			:Build()
+		:AssertSutWithParams(charStatuses.Nil, charStatuses.Nil)
+		:Equal(true)
+		:AssertSutWithParams(charStatuses.Succ, charStatuses.Succ)
+		:Equal(true)
+		:AssertSutWithParams(charStatuses.Fail, charStatuses.Fail)
+		:Equal(true)
+		:AssertSutWithParams(charStatuses.Fixed, charStatuses.Fixed)
+		:Equal(true)
+		:AssertSutWithParams(charStatuses.Nil, charStatuses.Succ)
+		:Equal(false)
+		:AssertSutWithParams(charStatuses.Succ, charStatuses.Fail)
+		:Equal(false)
+		:AssertSutWithParams(charStatuses.Fail, charStatuses.Fixed)
+		:Equal(false)
+		:AssertSutWithParams(charStatuses.Nil, "not-overlayed")
+		:Equal(true)
+		:AssertSutWithParams(charStatuses.Nil, "non-existing-status")
+		:ThrowsError()
+		:AssertSutWithParams("non-existing-status", charStatuses.Nil)
+		:ThrowsError()
+		:AssertSutWithParams("non-existing-status1", "non-existing-status2")
+		:ThrowsError()
+		:Build()
 	),
 
 	core.NewTest("check char's status comparation", function()
@@ -169,23 +169,89 @@ return {
 	core.NewTest(
 		"check test parsing to char sequence",
 		AAA
-			.NewForSUT(topic.NewTopic)
-			:AssertSutWithParams("a bB\nc") --
-			:Equal({
-				__current = 1,
-				__data = {
-					{ __base = "a", __overlayStatus = charStatuses.Nil },
-					{ __base = " ", __overlayStatus = charStatuses.Nil },
-					{ __base = "b", __overlayStatus = charStatuses.Nil },
-					{ __base = "B", __overlayStatus = charStatuses.Nil },
-					{ __base = "\n", __overlayStatus = charStatuses.Nil },
-					{ __base = "c", __overlayStatus = charStatuses.Nil },
-				},
+		.NewForSUT(charset.NewCharset)
+		:AssertSutWithParams("a bB\nc") --
+		:Equal({
+			{ __base = "a",  __overlayStatus = charStatuses.Nil },
+			{ __base = " ",  __overlayStatus = charStatuses.Nil },
+			{ __base = "b",  __overlayStatus = charStatuses.Nil },
+			{ __base = "B",  __overlayStatus = charStatuses.Nil },
+			{ __base = "\n", __overlayStatus = charStatuses.Nil },
+			{
+				__base = "c",
+				__overlayStatus = charStatuses.Nil,
 				-- Done = function() end, -- todo update table comparator to make possible ignoring such functions
 				-- Overlay = function() end, -- todo update table comparator to make possible ignoring such functions
 				-- Undo = function() end, -- todo update table comparator to make possible ignoring such functions
 				-- Undo2 = function() end, -- todo update table comparator to make possible ignoring such functions
-			}, AAA.TableComparator)
-			:Build()
+			},
+			-- Done = function() end, -- todo update table comparator to make possible ignoring such functions
+			-- Overlay = function() end, -- todo update table comparator to make possible ignoring such functions
+			-- Undo = function() end, -- todo update table comparator to make possible ignoring such functions
+			-- Undo2 = function() end, -- todo update table comparator to make possible ignoring such functions
+		}, AAA.TableComparator)
+		:Build()
+	),
+
+	core.NewTest(
+		"split chared text to words",
+		AAA
+		.NewForSUT(charset.SplitToWords)
+		:AssertSutWithParams(charset.NewCharset(""))
+		:Equal({}, AAA.TableComparator)
+		:AssertSutWithParams(charset.NewCharset("word word2,.!"))
+		:Equal({
+			{
+				{ __base = "w", __overlayStatus = charStatuses.Nil },
+				{ __base = "o", __overlayStatus = charStatuses.Nil },
+				{ __base = "r", __overlayStatus = charStatuses.Nil },
+				{ __base = "d", __overlayStatus = charStatuses.Nil },
+			},
+			{
+				{ __base = " ", __overlayStatus = charStatuses.Nil },
+			},
+			{
+				{ __base = "w", __overlayStatus = charStatuses.Nil },
+				{ __base = "o", __overlayStatus = charStatuses.Nil },
+				{ __base = "r", __overlayStatus = charStatuses.Nil },
+				{ __base = "d", __overlayStatus = charStatuses.Nil },
+				{ __base = "2", __overlayStatus = charStatuses.Nil },
+			},
+			{
+				{ __base = ",", __overlayStatus = charStatuses.Nil },
+			},
+			{
+				{ __base = ".", __overlayStatus = charStatuses.Nil },
+			},
+			{
+				{ __base = "!", __overlayStatus = charStatuses.Nil },
+			},
+		}, AAA.TableComparator)
+		:AssertSutWithParams(charset.NewCharset(" 234\n 098!")) --
+		:Equal({
+			{
+				{ __base = " ", __overlayStatus = charStatuses.Nil },
+			},
+			{
+				{ __base = "2", __overlayStatus = charStatuses.Nil },
+				{ __base = "3", __overlayStatus = charStatuses.Nil },
+				{ __base = "4", __overlayStatus = charStatuses.Nil },
+			},
+			{
+				{ __base = "\n", __overlayStatus = charStatuses.Nil },
+			},
+			{
+				{ __base = " ", __overlayStatus = charStatuses.Nil },
+			},
+			{
+				{ __base = "0", __overlayStatus = charStatuses.Nil },
+				{ __base = "9", __overlayStatus = charStatuses.Nil },
+				{ __base = "8", __overlayStatus = charStatuses.Nil },
+			},
+			{
+				{ __base = "!", __overlayStatus = charStatuses.Nil },
+			},
+		}, AAA.TableComparator)
+		:Build()
 	),
 }

@@ -1,5 +1,4 @@
 local customAssert = require("utils.assert")
-local subquery = require("utils.subquery")
 local overlayableChar = require("app.lexic.char")
 
 function NewLine(chars)
