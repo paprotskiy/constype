@@ -1,7 +1,7 @@
 local digest = require("hashings.sha256")
 
 local overlayStatuses = {
-	Nil = "not-overlayed", --error overlayed
+	Nil = "not-overlayed",
 	Succ = "successfully-overlayed",
 	Fail = "failed-to-overlay",
 	Fixed = "overlay-fixed",

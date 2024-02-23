@@ -89,10 +89,6 @@ return {
 			return {}
 		end,
 
-		Closed = function(self)
-			error("implement me")
-		end,
-
 		Move = function(self, LineNum, CharNum)
 			if self.Closed() then
 				error("cannot make move - topic is closed")
@@ -142,18 +138,35 @@ return {
 			return position
 		end,
 
-		Overlay = function(self, lineNum, charNum, char)
-			self.Move(self, lineNum, charNum)
-
-			local originChar = self.__lines[lineNum].__char[charNum]
+		Overlay = function(self, char)
+			local lineIdx = self.__currLineNum
+			local charIdx = self.__currCharNum
+			local originChar = self.__lines[lineIdx].__char[charIdx]
 			overlayableChar.Overlay(originChar, char)
 		end,
+
+		-- OverlayByCoord = function(self, lineNum, charNum, char)
+		-- 	self.Move(self, lineNum, charNum)
+		-- 	local originChar = self.__lines[lineNum].__char[charNum]
+		-- 	overlayableChar.Overlay(originChar, char)
+		-- end,
 
 		OverlayNext = function(self, char)
 			local position = self.MoveNext()
 			self.Overlay(self, position.LineNum, position.CharNum, char)
 
 			return self.Closed()
+		end,
+
+		-- todo tests needed
+		LastChar = function(self)
+			local lastLineIdx = #self.__lines
+			local lastLine = self.__lines[lastLineIdx]
+
+			local lastCharIdx = #lastLine
+			local lastChar = lastLine[lastCharIdx]
+
+			return lastChar
 		end,
 	},
 }
