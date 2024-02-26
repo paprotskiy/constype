@@ -11,13 +11,11 @@ local mainController = function(controllerInvoke)
 
 		HandleSignal = function(self, atomicSignal)
 			local action = self[atomicSignal]
-			if action == nil then
-				action = self.Default
-			end
 
-			return function(atomicSignal)
-				action(self, atomicSignal)
+			if action == nil then
+				return self.Default
 			end
+			return action
 		end,
 
 		-- todo make esc const

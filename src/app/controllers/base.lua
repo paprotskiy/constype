@@ -5,15 +5,15 @@ return {
 	end,
 
 	Start = function(self, signalStream, childController)
-		local sig = childController(self)
-		sig:Load()
+		local controller = childController(self)
+		controller:Load()
 
 		while not self.__closed do
 			local atomicSignal = signalStream()
-			local action = sig:HandleSignal(atomicSignal)
-			action(atomicSignal)
+			local action = controller:HandleSignal(atomicSignal)
+			action(controller, atomicSignal)
 		end
 
-		sig:Close()
+		controller:Close()
 	end,
 }
