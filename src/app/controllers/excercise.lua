@@ -14,13 +14,13 @@ return {
       os.execute("stty -echo cbreak </dev/tty >/dev/tty 2>&1")
 
       return {
-         Execute = function()
+         Excercise = function()
             -- todo move
             self.__view.ClearScreen()
             self.__view.PrintWithNoCursorShift(topic)
             io.flush()
-            self.__view.Jump(1, 1)
-            io.flush()
+            -- self.__view.Jump(1, 1)
+            -- io.flush()
             -- todo move
 
             while not self.__model:Done() do

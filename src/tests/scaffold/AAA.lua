@@ -52,11 +52,6 @@ local function tableComparator(expectedOutput, expectedErr, actualOutput, actual
 		return nil
 	end
 
-	print(pp.PrettyPrint({
-		ActualOutput = actualOutput,
-		ExpectedOutput = expectedOutput,
-	}))
-
 	return scaffold.NewTestErr(errMsg)
 end
 

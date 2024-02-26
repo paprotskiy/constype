@@ -13,6 +13,8 @@ return {
             local lastChar = self.__charedTopic:LastChar()
             return lastChar:CompareCharStatus(overlayableChar:Statuses().Nil)
          end,
+
+         Command = function(symbol) end,
       }
    end,
 }
