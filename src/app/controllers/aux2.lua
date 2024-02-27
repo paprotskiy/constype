@@ -1,13 +1,13 @@
-local viewMain = require("app.ui.view.main")
+local viewAux2 = require("app.ui.view.aux2")
 
-local mainController = function(baseControllerInvoke)
+local auxController = function(baseControllerInvoke)
 	return {
 		Load = function()
-			viewMain:Load()
+			viewAux2:Load()
 		end,
 
 		Close = function()
-			viewMain:Close()
+			viewAux2:Close()
 		end,
 
 		HandleSignal = function(self, atomicSignal)
@@ -21,11 +21,13 @@ local mainController = function(baseControllerInvoke)
 
 		-- todo make esc const
 		[string.char(27)] = function(self) end,
+
 		["l"] = function(_)
-			baseControllerInvoke:Aux()
+			viewAux2.Print("no way! ")
 		end,
+
 		["h"] = function(_)
-			viewMain.Print("no way ! ")
+			baseControllerInvoke:Aux()
 		end,
 		--  todo make backspace const
 		[string.char(127)] = function(_) end,
@@ -33,11 +35,11 @@ local mainController = function(baseControllerInvoke)
 		[string.char(10)] = function(_) end,
 
 		Default = function(_, signalChar)
-			-- viewMain.Print(signalChar)
+			-- viewAux2.Print(signalChar)
 		end,
 	}
 end
 
 return {
-	New = mainController,
+	New = auxController,
 }

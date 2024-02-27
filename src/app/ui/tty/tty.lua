@@ -104,7 +104,8 @@ return {
 				-- io.flush()
 				-- self.WinSize()
 				luaterm.cursor.goleft(1)
-				io.write()
+				io.write("\n")
+				io.write(string.byte(rune))
 				io.flush()
 			end
 
