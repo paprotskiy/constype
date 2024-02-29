@@ -7,21 +7,15 @@ return {
 	end,
 
 	Load = function()
-		tty.ClearScreen()
 		os.execute("stty -echo cbreak </dev/tty >/dev/tty 2>&1")
-		print()
-		print()
-		print("                    AUX")
-		print()
-		print()
-		tty.Jump(1, 1)
-	end,
 
-	Jump = function(x, y)
-		tty.Jump(x, y)
-	end,
+		tty.ClearScreen()
 
-	Print = function(txt)
-		tty.Print(txt)
+		local winsize = tty:WinSize()
+		local offsetY = winsize.MaxY // 2
+		local offsetX = winsize.MaxX // 2
+
+		tty.Jump(offsetX, offsetY)
+		tty.Print("shutting down")
 	end,
 }

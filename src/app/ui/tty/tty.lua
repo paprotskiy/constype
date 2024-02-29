@@ -16,11 +16,6 @@ return {
 	ClearScreen = clearScreen,
 	ClearLine = clearRestOfLine,
 
-	GoUp = function(x)
-		luaterm.cursor.goup(x)
-		io.flush()
-	end,
-
 	EraseLast = function(eraseChar)
 		luaterm.cursor.goleft(1)
 		io.flush()
@@ -115,15 +110,5 @@ return {
 			end
 		end
 		os.execute("stty -cbreak </dev/tty >/dev/tty 2>&1")
-	end,
-
-	NextWrittenChar = function()
-		return {
-			Char = string.byte(io.read(1)),
-		}
-	end,
-
-	MoveCaret = function(coord)
-		luaterm.cursor.jump(coord.X, coord.Y)
 	end,
 }

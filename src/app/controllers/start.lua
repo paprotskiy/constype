@@ -1,4 +1,4 @@
-local viewMain = require("app.ui.view.main")
+local viewMain = require("app.ui.view.start")
 
 local mainController = function(baseControllerInvoke)
 	return {
@@ -19,21 +19,20 @@ local mainController = function(baseControllerInvoke)
 			return action
 		end,
 
+		Default = function(_, signalChar) end,
+
 		-- todo make esc const
-		[string.char(27)] = function(self) end,
-		["l"] = function(_)
-			baseControllerInvoke:Aux()
-		end,
-		["h"] = function(_)
-			viewMain.Print("no way ! ")
+		[string.char(27)] = function(_, signalChar)
+			baseControllerInvoke:Close()
 		end,
 		--  todo make backspace const
-		[string.char(127)] = function(_) end,
-		--  todo make enter const
-		[string.char(10)] = function(_) end,
+		[string.char(127)] = function(_, signalChar)
+			baseControllerInvoke:Close()
+		end,
 
-		Default = function(_, signalChar)
-			-- viewMain.Print(signalChar)
+		--  todo make enter const
+		[string.char(10)] = function(_, signalChar)
+			baseControllerInvoke:Excercise()
 		end,
 	}
 end

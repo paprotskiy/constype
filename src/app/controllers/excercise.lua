@@ -1,43 +1,40 @@
-local storage = require("app.storage.storage")
-local modelExcercise = require("app.model.excercise")
+local viewMain = require("app.ui.view.excercise")
 
-local backspaceCode = 127
-local enterCode = 10
+local mainController = function(baseControllerInvoke)
+	return {
+		Load = function()
+			viewMain:Load()
+		end,
+
+		Close = function()
+			viewMain:Close()
+		end,
+
+		HandleSignal = function(self, atomicSignal)
+			local action = self[atomicSignal]
+
+			if action == nil then
+				return self.Default
+			end
+			return action
+		end,
+
+		Default = function(_, signalChar) end,
+
+		-- todo make esc const
+		[string.char(27)] = function(_, signalChar)
+			baseControllerInvoke:Close()
+		end,
+		--  todo make backspace const
+		[string.char(127)] = function(_, signalChar)
+			baseControllerInvoke:Close()
+		end,
+
+		--  todo make enter const
+		[string.char(10)] = function(_, signalChar) end,
+	}
+end
 
 return {
-   __view = nil,
-   __model = nil,
-
-   New = function(self, topic, view, viewParser)
-      self.__view = view
-      self.__model = modelExcercise.New(topic)
-      os.execute("stty -echo cbreak </dev/tty >/dev/tty 2>&1")
-
-      return {
-         Excercise = function()
-            -- todo move
-            self.__view.ClearScreen()
-            self.__view.PrintWithNoCursorShift(topic)
-            io.flush()
-            -- self.__view.Jump(1, 1)
-            -- io.flush()
-            -- todo move
-
-            while not self.__model:Done() do
-               local ch = self.__view.EventDriver()
-               local byte = string.byte(ch)
-               if byte == backspaceCode then
-                  self.__model:Undo()
-               else
-                  self.__model:Overlay(ch)
-               end
-
-               -- self.__view.PrintWithNoCursorShift(self.__model.__data)
-               -- io.flush()
-            end
-
-            -- serialize
-         end,
-      }
-   end,
+	New = mainController,
 }

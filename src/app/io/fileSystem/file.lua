@@ -24,6 +24,9 @@ return {
 
 	WriteFile = function(filePath, data)
 		local f = io.open(filePath, "w")
+
+		assert(f ~= nil, "failed to open file")
+
 		f:write(data)
 		f:flush()
 		f:close()

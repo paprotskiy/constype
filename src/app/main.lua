@@ -1,20 +1,18 @@
 package.path = package.path .. ";../?.lua"
-local example = require("app.topics.example")
 local tty = require("app.ui.tty.tty")
-local topic = require("app.lexic.topic")
 local signal = require("posix.signal")
-local storage = require("app.storage.storage")
-local pp = require("utils.print.pretty")
-local excercise = require("app.controllers.excercise")
-local mainController = require("app.controllers.main")
 local baseController = require("app.controllers.base")
-local fs = require("app.io.fileSystem.file")
 
 local baseControllerInstance = baseController.New(tty.EventDriver)
-signal.signal(signal.SIGINT, function()
-	tty.ClearScreen()
-	os.exit(0)
-	baseControllerInstance:Close()
-end)
 
+local function terminate()
+	baseControllerInstance:Bye(function()
+		os.execute("sleep 0.5")
+	end)
+
+	os.exit(0)
+end
+
+signal.signal(signal.SIGINT, terminate)
 baseControllerInstance:Start()
+terminate()

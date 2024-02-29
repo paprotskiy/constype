@@ -1,17 +1,20 @@
-local mainController = require("app.controllers.main")
-local aux1Controller = require("app.controllers.aux")
-local aux2Controller = require("app.controllers.aux2")
+local startController = require("app.controllers.start")
+local byeController = require("app.controllers.bye")
+local excerciseController = require("app.controllers.excercise")
 
-local mainControllerImpl = nil
-local aux1ControllerImpl = nil
-local aux2ControllerImpl = nil
+-- controllers with persistent state
+-- local startControllerImpl
+-- local excerciseControllerImpl
 local baseControllerFactory = function(signalStream)
 	return {
 		__signalStream = nil,
 		__currentController = nil,
 
 		Close = function(self)
-			self.__currentController:Close()
+			if self.__currentController ~= nil then
+				self.__currentController:Close()
+			end
+			self.__currentController = nil
 		end,
 
 		__switchAndRun = function(self, childController, ...)
@@ -31,19 +34,23 @@ local baseControllerFactory = function(signalStream)
 			controller:Close()
 		end,
 
+		--
+
 		Start = function(self)
-			mainControllerImpl = mainController.New
-			self:__switchAndRun(mainControllerImpl)
+			startControllerImpl = startController.New
+			self:__switchAndRun(startControllerImpl)
 		end,
 
-		Aux = function(self)
-			aux1ControllerImpl = aux1Controller.New
-			self:__switchAndRun(aux1ControllerImpl)
+		Excercise = function(self)
+			excerciseControllerImpl = excerciseController.New
+			self:__switchAndRun(excerciseControllerImpl)
 		end,
 
-		Aux2 = function(self)
-			aux2ControllerImpl = aux2Controller.New
-			self:__switchAndRun(aux2ControllerImpl)
+		Bye = function(self, stuffForShuttingDown)
+			local controller = byeController.New()
+			controller:Load()
+			stuffForShuttingDown()
+			controller:Close()
 		end,
 	}
 end
