@@ -11,12 +11,13 @@ return {
 
 		tty.ClearScreen()
 
+		local msg = "For Start Press Enter"
 		local winsize = tty:WinSize()
-		local offsetY = winsize.MaxY // 2
+		local offsetY = (winsize.MaxY - #msg) // 2
 		local offsetX = winsize.MaxX // 2
 
 		tty.Jump(offsetX, offsetY)
-		tty.Print("For Start Press Enter")
+		tty.Print(msg)
 	end,
 
 	Jump = function(x, y)

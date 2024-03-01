@@ -11,12 +11,16 @@ return {
 
 		tty.ClearScreen()
 
+		local msg = "Kinda excercise"
 		local winsize = tty:WinSize()
-		local offsetY = winsize.MaxY // 2
+		local offsetY = (winsize.MaxY - #msg) // 2
 		local offsetX = winsize.MaxX // 2
 
 		tty.Jump(offsetX, offsetY)
-		tty.Print("Kinda excercise")
+		tty.Print(msg)
+
+		tty.Jump(offsetX, offsetY)
+		tty.Print(msg)
 	end,
 
 	Jump = function(x, y)

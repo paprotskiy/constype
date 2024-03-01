@@ -11,11 +11,12 @@ return {
 
 		tty.ClearScreen()
 
+		local msg = "shutting down"
 		local winsize = tty:WinSize()
-		local offsetY = winsize.MaxY // 2
+		local offsetY = (winsize.MaxY - #msg) // 2
 		local offsetX = winsize.MaxX // 2
 
 		tty.Jump(offsetX, offsetY)
-		tty.Print("shutting down")
+		tty.Print(msg)
 	end,
 }
