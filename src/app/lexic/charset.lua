@@ -6,7 +6,8 @@ local alphabet = "abcdefghijklmnopqrstyvwxyzABCDEFGHIJKLMNOPQRSTYVWXYZ0123456789
 local function newCharset(rawText)
    local res = {}
 
-   for letter in rawText:gmatch(".") do
+   for
+    letter in rawText:gmatch(".") do
       table.insert(res, overlayableChar.New(letter))
    end
 
@@ -31,7 +32,7 @@ local function splitToWords(charedText)
    local res = {}
    local word = {}
 
-   for _, rune in pairs(charedText) do
+   for _z, rune in pairs(charedText) do
       if runeIsLetter(rune.__base) then
          table.insert(word, rune)
       else

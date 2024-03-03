@@ -18,16 +18,20 @@ end
 
 local deepEqualIgnoreFuncs
 deepEqualIgnoreFuncs = function(a, b)
-	if type(a) ~= type(b) then
-		return string.format("(nested) types mismatch")
-	end
 
+	local comparedTypesAreFuncOrNil = 
+		(type(a) == "function" or type(a) == "nil") and
+		(type(b) == "function" or type(b) == "nil")
+	if not comparedTypesAreFuncOrNil and type(a) ~= type(b) then
+			return string.format("(nested) types mismatch")
+	end
+	
 	if type(a) == "function" then
 		return nil
 	elseif type(a) == "table" then
-		local sizeA, sizeB = tableSize(a), tableSize(b)
+		-- local sizeA, sizeB = tableSize(a), tableSize(b)
 		-- todo
-		-- local sizeA, sizeB = tableSizeWithoutFunc(a), tableSizeWithoutFunc(b)
+		local sizeA, sizeB = tableSizeWithoutFunc(a), tableSizeWithoutFunc(b)
 		if sizeA ~= sizeB then
 			return string.format('table sizes ("%s" and "%s") mismatch', sizeA, sizeB)
 		end

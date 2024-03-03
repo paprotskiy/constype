@@ -180,15 +180,15 @@ return {
 			{
 				__base = "c",
 				__overlayStatus = charStatuses.Nil,
-				-- Done = function() end, -- todo update table comparator to make possible ignoring such functions
-				-- Overlay = function() end, -- todo update table comparator to make possible ignoring such functions
-				-- Undo = function() end, -- todo update table comparator to make possible ignoring such functions
-				-- Undo2 = function() end, -- todo update table comparator to make possible ignoring such functions
+				Done = function() end, -- todo update table comparator to make possible ignoring such functions
+				Overlay = function() end, -- todo update table comparator to make possible ignoring such functions
+				Undo = function() end, -- todo update table comparator to make possible ignoring such functions
+				Undo2 = function() end, -- todo update table comparator to make possible ignoring such functions
 			},
-			-- Done = function() end, -- todo update table comparator to make possible ignoring such functions
-			-- Overlay = function() end, -- todo update table comparator to make possible ignoring such functions
-			-- Undo = function() end, -- todo update table comparator to make possible ignoring such functions
-			-- Undo2 = function() end, -- todo update table comparator to make possible ignoring such functions
+			Done = function() end, -- todo update table comparator to make possible ignoring such functions
+			Overlay = function() end, -- todo update table comparator to make possible ignoring such functions
+			Undo = function() end, -- todo update table comparator to make possible ignoring such functions
+			Undo2 = function() end, -- todo update table comparator to make possible ignoring such functions
 		}, AAA.TableComparator)
 		:Build()
 	),
