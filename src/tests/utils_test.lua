@@ -53,6 +53,8 @@ return {
 		:Equal(nil)
 		:AssertSutWithParams(1, 1)
 		:Equal(nil)
+		:AssertSutWithParams(1, "1")
+		:Equal("(nested) types mismatch")
 		:AssertSutWithParams(1.2, 1.20)
 		:Equal(nil)
 		:AssertSutWithParams(1, 1.0)
@@ -69,28 +71,27 @@ return {
 		:Equal("(nested) types mismatch")
 		:AssertSutWithParams(false, nil)
 		:Equal("(nested) types mismatch")
-		--
-		-- todo func comparison vs nested func comparison?
 		:AssertSutWithParams(nil, function() end)
-		:Equal(nil)
+		:Equal("(nested) types mismatch")
 		:AssertSutWithParams(function() end, nil)
-		:Equal(nil)
-		-- todo func comparison vs nested func comparison?
-		--
+		:Equal("(nested) types mismatch")
 		:AssertSutWithParams(function() end, {})
 		:Equal("(nested) types mismatch")
 		:AssertSutWithParams({}, function() end)
-		:Equal("(nested) types mismatch")
-		:AssertSutWithParams({}, nil)
 		:Equal("(nested) types mismatch")
 		:AssertSutWithParams({}, {})
 		:Equal(nil)
 		:AssertSutWithParams({ 1 }, { 1 })
 		:Equal(nil)
 		:AssertSutWithParams({ 1 }, { "1" })
-		:Equal("(nested) types mismatch")
+		:Equal("[1]:(nested) types mismatch")
 		:AssertSutWithParams({ 1 }, 1)
 		:Equal("(nested) types mismatch")
+		:AssertSutWithParams(
+			{ "q", 1 }, --
+			{ 1, "q" }
+		)
+		:Equal("[1]:(nested) types mismatch")
 		:AssertSutWithParams(
 			{ Two = "q", One = 1 }, --
 			{ One = 1, Two = "q" }
@@ -136,7 +137,12 @@ return {
 			{ Val = " ", { 1, { 2 } } }, --
 			{ Val = " ", { 1, { function() end, 2 } } }
 		)
-		:Equal("(nested) types mismatch") -- !!! todo fix
+		:Equal("[1]:[2]:[1]:(nested) types mismatch")
+		:AssertSutWithParams(
+			{ 1, "q", "!", " ", nil, "a" },      -- todo buddy
+			{ 1, "q", "!", " ", function() end, "a" } -- todo buggy
+		)
+		:Equal(nil)
 		-- todo buggy behavior on previous 3 tests!!
 		:AssertSutWithParams(
 			{ 1, "q", " ", { 1, "\n", { 1, 2, "a" } }, "!" }, --
@@ -145,24 +151,14 @@ return {
 		:Equal(nil)
 		:AssertSutWithParams(
 			{ 1, "q", "!", " ", { 1, "\n", { 1, 2, "a" } } }, --
-			{ 1, "q", "!", " ", { 1, "\n", { 2, 1, "a" } } }
-		)
-		:Equal('(nested) values mismatch: "1" and "2"') -- todo more specifics needed
-		:AssertSutWithParams(
-			{ 1, "q", "!", " ", { 1, "\n", { 1, 2, "a" } } }, --
 			{ 1, "q", "!", { 1, "\n", { 1, 2, "a" } }, " " }
 		)
-		:Equal("(nested) types mismatch")       -- todo more specifics needed
-		:AssertSutWithParams(
-			{ 1, "q", "!", " ", nil, "a" },      -- todo buddy
-			{ 1, "q", "!", " ", function() end, "a" } -- todo buggy
-		)
-		:Equal(nil)
+		:Equal("[4]:(nested) types mismatch")
 		:AssertSutWithParams(
 			{ 1, 2, "!", " ", "a" }, --
 			{ 1, "q", "!", " ", "a" }
 		)
-		:Equal("(nested) types mismatch")
+		:Equal("[2]:(nested) types mismatch")
 		:Build()
 	),
 }

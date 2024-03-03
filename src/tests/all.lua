@@ -7,10 +7,10 @@ local utils = require("tests.utils_test")
 local os = require("tests.scaffold.os")
 
 local report = testExecutor
-	 :AddTestSet(tty)
-	 :AddTestSet(lexic) --
-	 :AddTestSet(utils)
-	 :RunAll()
+    :AddTestSet(tty)
+    :AddTestSet(lexic) --
+    :AddTestSet(utils)
+    :RunAll()
 
 printReportToTerminal.brief(report)
 printReportToTerminal.verbose(report)
