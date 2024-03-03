@@ -18,14 +18,12 @@ end
 
 local deepEqualIgnoreFuncs
 deepEqualIgnoreFuncs = function(a, b)
-
-	local comparedTypesAreFuncOrNil = 
-		(type(a) == "function" or type(a) == "nil") and
-		(type(b) == "function" or type(b) == "nil")
+	local comparedTypesAreFuncOrNil = (type(a) == "function" or type(a) == "nil")
+		 and (type(b) == "function" or type(b) == "nil")
 	if not comparedTypesAreFuncOrNil and type(a) ~= type(b) then
-			return string.format("(nested) types mismatch")
+		return string.format("(nested) types mismatch")
 	end
-	
+
 	if type(a) == "function" then
 		return nil
 	elseif type(a) == "table" then
