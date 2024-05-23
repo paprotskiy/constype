@@ -1,7 +1,7 @@
 local digest = require("hashings.sha256")
 
 local overlayStatuses = {
-	Nil = "not-overlayed", --error overlayed
+	Nil = "not-overlayed",
 	Succ = "successfully-overlayed",
 	Fail = "failed-to-overlay",
 	Fixed = "overlay-fixed",
@@ -24,13 +24,8 @@ local overlayStatuses = {
 
 local function patternForMatch(same, prevStatus)
 	local isBool = same == true or same == false
-	if not isBool then
-		error("same must be bool, actually " .. tostring(same))
-	end
-
-	if not overlayStatuses:InRate(prevStatus) then
-		error("unknown overlay type: " .. tostring(prevStatus))
-	end
+	assert(isBool, "same must be bool, actually " .. tostring(same), 2)
+	assert(overlayStatuses:InRate(prevStatus), "unknown overlay type: " .. tostring(prevStatus), 2)
 
 	return {
 		__same = same,
@@ -82,7 +77,7 @@ return {
 	end,
 
 	Overlay = function(char, overlayChar)
-		if overlayChar:len() ~= 1 then
+		if overlayChar ~= nil and overlayChar:len() ~= 1 then
 			error("overlayChar must be one symbol string")
 		end
 
@@ -110,5 +105,9 @@ return {
 			Value = val,
 			Status = char.__overlayStatus,
 		}
+	end,
+
+	ExtractStatus = function(char)
+		return char.__overlayStatus
 	end,
 }

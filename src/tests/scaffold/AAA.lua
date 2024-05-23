@@ -3,6 +3,8 @@
 --
 package.path = package.path .. ";../?.lua"
 local scaffold = require("scaffold.scaffold")
+local equal = require("utils.equal.deepEqual")
+local pp = require("utils.print.pretty")
 
 local function addAssert(asserts, comparator, expectedOutput, expectedErr, sut, ...)
 	local arg = { ... }
@@ -26,7 +28,7 @@ local function addAssert(asserts, comparator, expectedOutput, expectedErr, sut, 
 	end)
 end
 
-local defaultComparator = function(expectedOutput, expectedErr, actualOutput, actualErr)
+local function defaultComparator(expectedOutput, expectedErr, actualOutput, actualErr)
 	if actualErr ~= nil then
 		return scaffold.NewTestErr("an error was catched: " .. tostring(actualErr))
 	end
@@ -37,6 +39,20 @@ local defaultComparator = function(expectedOutput, expectedErr, actualOutput, ac
 	end
 
 	return nil
+end
+
+local function tableComparator(expectedOutput, expectedErr, actualOutput, actualErr)
+	if actualErr ~= nil then
+		return scaffold.NewTestErr("error not expected, but got " .. actualErr)
+	end
+
+	local errMsg = equal.DeepEqualIgnoreFuncs(expectedOutput, actualOutput)
+
+	if errMsg == nil then
+		return nil
+	end
+
+	return scaffold.NewTestErr(errMsg)
 end
 
 local errMustRaise = function(expectedOutput, expectedErr, actualOutput, actualErr)
@@ -108,4 +124,6 @@ return {
 	NewForSUT = function(sut)
 		return NewSUT():SetSUT(sut)
 	end,
+
+	TableComparator = tableComparator,
 }

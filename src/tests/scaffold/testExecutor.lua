@@ -1,9 +1,18 @@
 return {
 	tests = {},
 
-	Add = function(self, testFunc)
+	AddTest = function(self, testFunc)
 		local key = tostring(testFunc)
 		self.tests[key] = testFunc
+
+		return self
+	end,
+
+	AddTestSet = function(self, testFuncTable)
+		for _, testFunc in pairs(testFuncTable) do
+			local key = tostring(testFunc)
+			self.tests[key] = testFunc
+		end
 
 		return self
 	end,
