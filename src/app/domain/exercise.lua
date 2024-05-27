@@ -86,6 +86,10 @@ return {
 
 				return rewriteAndMove(ch, curr, jump)
 			end,
+
+			GetTopic = function(self)
+				return self.__charedTopic
+			end,
 		}
 	end,
 }

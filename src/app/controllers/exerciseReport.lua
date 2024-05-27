@@ -1,54 +1,13 @@
 local overlayableChar = require("app.domain.lexic.char")
-local view = require("app.ui.view.exercise")
-local model = require("app.domain.exercise")
+local view = require("app.ui.view.exerciseReport")
+local model = require("app.domain.exerciseReport")
 
-local mapStatusToColors = {}
-local function initTextColor(cfg)
-	mapStatusToColors[overlayableChar.Statuses().Nil] = view.WrapTextToColor(cfg.Default, cfg.Default)
-	mapStatusToColors[overlayableChar.Statuses().Succ] = view.WrapTextToColor(cfg.Succ, cfg.Default)
-	mapStatusToColors[overlayableChar.Statuses().Fail] = view.WrapTextToColor(cfg.Fail, cfg.Default)
-	mapStatusToColors[overlayableChar.Statuses().Fixed] = view.WrapTextToColor(cfg.Fixed, cfg.Default)
-end
-
-local function convertSymbolDTO(update)
-	local res = {}
-
-	if update == nil then
-		return res
-	end
-
-	local wrapper = mapStatusToColors[update.Status]
-
-	local val = update.Value
-	local failed = overlayableChar.CompareStatuses(update.Status, overlayableChar.Statuses().Fail)
-	local fixed = overlayableChar.CompareStatuses(update.Status, overlayableChar.Statuses().Fixed)
-	if val == " " and (failed or fixed) then
-		val = "·"
-	end
-
-	table.insert(res, {
-		x = update.Position.CharNum,
-		y = update.Position.LineNum,
-		data = wrapper(val),
-	})
-	table.insert(res, {
-		x = update.Jump.CharNum,
-		y = update.Jump.LineNum,
-		data = "",
-	})
-
-	return res
-end
-
-local exerciseController = function(baseControllerInvoke, cfg, text)
-	initTextColor(cfg)
-	local winsize = view:CurrentWinsize()
-	local exercise = model:New(text, winsize.MaxY)
+local exerciseController = function(baseControllerInvoke, topic)
+	local report = model.BuildReport(topic)
 
 	return {
 		Load = function()
-			-- todo leaking abstraction - connection via plain text
-			view:Load(exercise:PlainText())
+			view:Load(report)
 		end,
 
 		Close = function()
@@ -64,31 +23,22 @@ local exerciseController = function(baseControllerInvoke, cfg, text)
 			return action
 		end,
 
-		Default = function(_, signalChar)
-			local domainDTO = exercise:TypeSymbol(signalChar)
-			local viewDTO = convertSymbolDTO(domainDTO)
-			view:Refresh(viewDTO)
-
-			if exercise:Done() then
-				baseControllerInvoke:Close()
-				return
-			end
-		end,
+		Default = function(_, _) end,
 
 		--  todo make backspace const
 		[string.char(127)] = function(_, _)
-			local domainDTO = exercise:EraseSymbol()
-			local viewDTO = convertSymbolDTO(domainDTO)
-			view:Refresh(viewDTO)
+			baseControllerInvoke:Start()
 		end,
 
 		-- todo make esc const
-		[string.char(27)] = function(_, signalChar)
-			baseControllerInvoke:Close()
+		[string.char(27)] = function(_, _)
+			baseControllerInvoke:Start()
 		end,
 
 		--  todo make enter const
-		[string.char(10)] = function(_, _) end,
+		[string.char(10)] = function(_, _)
+			baseControllerInvoke:Start()
+		end,
 	}
 end
 

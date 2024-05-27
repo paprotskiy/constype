@@ -18,10 +18,10 @@ local baseControllerFactory = function(cfg, signalStream)
 			self.__currentController = nil
 		end,
 
-		__switchAndRun = function(self, childController, ...)
+		__switchAndRun = function(self, controllerConstructor, ...)
 			local arg = { ... }
 
-			local controller = childController(self, table.unpack(arg))
+			local controller = controllerConstructor(self, table.unpack(arg))
 			self.__currentController = controller
 
 			controller:Load()
@@ -38,18 +38,15 @@ local baseControllerFactory = function(cfg, signalStream)
 		--
 
 		Start = function(self)
-			local startControllerImpl = startController.New
-			self:__switchAndRun(startControllerImpl)
+			self:__switchAndRun(startController.New)
 		end,
 
 		Exercise = function(self, text)
-			local exerciseControllerImpl = exerciseController.New
-			self:__switchAndRun(exerciseControllerImpl, cfg.TerminalColors, text)
+			self:__switchAndRun(exerciseController.New, cfg.TerminalColors, text)
 		end,
 
-		ExerciseReport = function(self, text)
-			local exerciseControllerImpl = exerciseController.New
-			self:__switchAndRun(exerciseControllerImpl, cfg.TerminalColors, text)
+		ExerciseReport = function(self, topic)
+			self:__switchAndRun(exerciseReportController.New, topic)
 		end,
 
 		Bye = function(_, stuffForShuttingDown)

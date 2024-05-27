@@ -70,7 +70,8 @@ local exerciseController = function(baseControllerInvoke, cfg, text)
 			view:Refresh(viewDTO)
 
 			if exercise:Done() then
-				baseControllerInvoke:Close()
+				local topic = exercise:GetTopic()
+				baseControllerInvoke:ExerciseReport(topic)
 				return
 			end
 		end,
@@ -84,7 +85,7 @@ local exerciseController = function(baseControllerInvoke, cfg, text)
 
 		-- todo make esc const
 		[string.char(27)] = function(_, signalChar)
-			baseControllerInvoke:Close()
+			baseControllerInvoke:Start()
 		end,
 
 		--  todo make enter const
