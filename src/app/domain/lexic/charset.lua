@@ -1,5 +1,4 @@
 local overlayableChar = require("app.domain.lexic.char")
-local pp = require("utils.print.pretty")
 
 local alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 local digits = "0123456789"

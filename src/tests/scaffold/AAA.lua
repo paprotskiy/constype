@@ -4,7 +4,6 @@
 package.path = package.path .. ";../?.lua"
 local scaffold = require("scaffold.scaffold")
 local equal = require("utils.equal.deepEqual")
-local pp = require("utils.print.pretty")
 
 local function addAssert(asserts, comparator, expectedOutput, expectedErr, sut, ...)
 	local arg = { ... }

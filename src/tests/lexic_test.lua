@@ -4,7 +4,6 @@ local AAA = require("tests.scaffold.AAA")
 local char = require("app.domain.lexic.char")
 local charset = require("app.domain.lexic.charset")
 local lines = require("app.domain.lexic.lines")
-local pp = require("utils.print.pretty")
 
 local charStatuses = {
 	Nil = char.Statuses().Nil,

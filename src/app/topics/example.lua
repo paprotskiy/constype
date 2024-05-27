@@ -1,7 +1,7 @@
 package.path = package.path .. ";../?.lua"
 local file = require("app.io.fileSystem.file")
 
-local relativePath = "../texts/fromWiki.txt"
+local relativePath = "../../texts/parts/0005.txt"
 local rows = file.ReadFile(relativePath)
 
 return table.concat(rows, "\n")

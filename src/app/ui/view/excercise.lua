@@ -1,10 +1,9 @@
 local tty = require("app.ui.tty.tty")
-local pp = require("utils.print.pretty")
-local colors = require("term.colors")
 
 return {
 	Close = function()
 		tty.ClearScreen()
+		tty.Jump(1, 1)
 		os.execute("stty echo -cbreak </dev/tty >/dev/tty 2>&1")
 	end,
 

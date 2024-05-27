@@ -1,7 +1,6 @@
 local overlayableChar = require("app.domain.lexic.char")
 local view = require("app.ui.view.excercise")
 local model = require("app.domain.excercise")
-local pp = require("utils.print.pretty")
 
 local mapStatusToColors = {}
 local function initTextColor(cfg)

@@ -1,5 +1,3 @@
-version: '3'
-
 services:
   constype-unit-tests:
     container_name: constype-unit-tests
@@ -18,20 +16,20 @@ services:
     stdin_open: true
     tty: true
     volumes:
-      - ./persistent/:/pers
+      - ./persistent/:/texts
     environment:
       - COLOR_DEFAULT_IDX=0
-      - COLOR_SUCC_IDX=32
-      - COLOR_FAIL_IDX=33
-      - COLOR_FIXED_IDX=34
+      - COLOR_SUCC_IDX=92
+      - COLOR_FAIL_IDX=91
+      - COLOR_FIXED_IDX=93
 
 
-        # reset = 0
-        # black = 30
-        # red = 31
-        # green = 32
-        # yellow = 33
-        # blue = 34
-        # magenta = 35
-        # cyan = 36
-        # white = 37
+        # reset   = 0
+        # black   = 30 (90 for bright)
+        # red     = 31 (91 for bright)
+        # green   = 32 (92 for bright)
+        # yellow  = 33 (93 for bright)
+        # blue    = 34 (94 for bright)
+        # magenta = 35 (95 for bright)
+        # cyan    = 36 (96 for bright)
+        # white   = 37 (97 for bright)
