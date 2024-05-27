@@ -1,10 +1,11 @@
 local startController = require("app.controllers.start")
 local byeController = require("app.controllers.bye")
-local excerciseController = require("app.controllers.excercise")
+local exerciseController = require("app.controllers.exercise")
+local exerciseReportController = require("app.controllers.exerciseReport")
 
 -- controllers with persistent state
 -- local startControllerImpl
--- local excerciseControllerImpl
+-- local exerciseControllerImpl
 local baseControllerFactory = function(cfg, signalStream)
 	return {
 		__signalStream = nil,
@@ -41,9 +42,14 @@ local baseControllerFactory = function(cfg, signalStream)
 			self:__switchAndRun(startControllerImpl)
 		end,
 
-		Excercise = function(self, text)
-			local excerciseControllerImpl = excerciseController.New
-			self:__switchAndRun(excerciseControllerImpl, cfg.TerminalColors, text)
+		Exercise = function(self, text)
+			local exerciseControllerImpl = exerciseController.New
+			self:__switchAndRun(exerciseControllerImpl, cfg.TerminalColors, text)
+		end,
+
+		ExerciseReport = function(self, text)
+			local exerciseControllerImpl = exerciseController.New
+			self:__switchAndRun(exerciseControllerImpl, cfg.TerminalColors, text)
 		end,
 
 		Bye = function(_, stuffForShuttingDown)

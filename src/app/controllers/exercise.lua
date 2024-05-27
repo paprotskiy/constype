@@ -1,6 +1,6 @@
 local overlayableChar = require("app.domain.lexic.char")
-local view = require("app.ui.view.excercise")
-local model = require("app.domain.excercise")
+local view = require("app.ui.view.exercise")
+local model = require("app.domain.exercise")
 
 local mapStatusToColors = {}
 local function initTextColor(cfg)
@@ -40,15 +40,15 @@ local function convertSymbolDTO(update)
 	return res
 end
 
-local excerciseController = function(baseControllerInvoke, cfg, text)
+local exerciseController = function(baseControllerInvoke, cfg, text)
 	initTextColor(cfg)
 	local winsize = view:CurrentWinsize()
-	local excercise = model:New(text, winsize.MaxY)
+	local exercise = model:New(text, winsize.MaxY)
 
 	return {
 		Load = function()
 			-- todo leaking abstraction - connection via plain text
-			view:Load(excercise:PlainText())
+			view:Load(exercise:PlainText())
 		end,
 
 		Close = function()
@@ -65,11 +65,11 @@ local excerciseController = function(baseControllerInvoke, cfg, text)
 		end,
 
 		Default = function(_, signalChar)
-			local domainDTO = excercise:TypeSymbol(signalChar)
+			local domainDTO = exercise:TypeSymbol(signalChar)
 			local viewDTO = convertSymbolDTO(domainDTO)
 			view:Refresh(viewDTO)
 
-			if excercise:Done() then
+			if exercise:Done() then
 				baseControllerInvoke:Close()
 				return
 			end
@@ -77,7 +77,7 @@ local excerciseController = function(baseControllerInvoke, cfg, text)
 
 		--  todo make backspace const
 		[string.char(127)] = function(_, _)
-			local domainDTO = excercise:EraseSymbol()
+			local domainDTO = exercise:EraseSymbol()
 			local viewDTO = convertSymbolDTO(domainDTO)
 			view:Refresh(viewDTO)
 		end,
@@ -93,5 +93,5 @@ local excerciseController = function(baseControllerInvoke, cfg, text)
 end
 
 return {
-	New = excerciseController,
+	New = exerciseController,
 }

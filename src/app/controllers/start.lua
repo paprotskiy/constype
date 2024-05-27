@@ -33,7 +33,7 @@ local mainController = function(baseControllerInvoke)
 
 		--  todo make enter const
 		[string.char(10)] = function(_, signalChar)
-			baseControllerInvoke:Excercise(domainMain:Text())
+			baseControllerInvoke:Exercise(domainMain:Text())
 		end,
 	}
 end
