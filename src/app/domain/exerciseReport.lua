@@ -8,8 +8,10 @@ return {
 		return {
 			Good = 23,
 			Errors = 4,
-			TimeTotal = "45 seconds",
-			TimeLostOnErrors = "14 seconds",
+			TimeTotal = 45,
+			TimeLostOnErrors = 14,
+			ErrorsRatio = 0.2,
+			WastedTimeRatio = 0.3,
 		}
 	end,
 }

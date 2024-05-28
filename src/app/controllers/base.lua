@@ -46,7 +46,7 @@ local baseControllerFactory = function(cfg, signalStream)
 		end,
 
 		ExerciseReport = function(self, topic)
-			self:__switchAndRun(exerciseReportController.New, topic)
+			self:__switchAndRun(exerciseReportController.New, cfg.TerminalColors, topic)
 		end,
 
 		Bye = function(_, stuffForShuttingDown)

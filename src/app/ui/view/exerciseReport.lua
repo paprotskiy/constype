@@ -1,4 +1,72 @@
 local tty = require("app.ui.tty.tty")
+local elementCross = require("app.ui.view.elements.cross")
+
+local function splitBySubstring(str, substr)
+	local parts = {}
+	local pattern = "(.-)" .. substr
+	local lastIndex = 1
+
+	for part in str:gmatch(pattern) do
+		parts[#parts + 1] = part
+		lastIndex = lastIndex + #part + #substr
+	end
+
+	parts[#parts + 1] = str:sub(lastIndex)
+
+	return parts
+end
+
+local function drawStats(report)
+	local template = {
+		"╔══════════════════════════════════════════════════════╗",
+		"║                      Statistics                      ║",
+		"╠══════════════════════════════════════════════════════╣",
+		"║   ┌────────────────────────┬─────────────────────┐   ║",
+		"║   │      Correct symbol(s) │ $1                  │   ║",
+		"║   ├────────────────────────┼─────────────────────┤   ║",
+		"║   │       Errors symbol(s) │ $2                  │   ║",
+		"║   ├────────────────────────┼─────────────────────┤   ║",
+		"║   │    TimeTotal second(s) │ $3                  │   ║",
+		"║   ├────────────────────────┼─────────────────────┤   ║",
+		"║   │ LostOnErrors second(s) │ $4                  │   ║",
+		"║   ├────────────────────────┼─────────────────────┤   ║",
+		"║   │           Errors ratio │ $5                  │   ║",
+		"║   ├────────────────────────┼─────────────────────┤   ║",
+		"║   │      Wasted time ratio │ $6                  │   ║",
+		"║   └────────────────────────┴─────────────────────┘   ║",
+		"╚══════════════════════════════════════════════════════╝",
+	}
+
+	local function replace(pattern, replacement)
+		for idx, row in pairs(template) do
+			local value = tostring(replacement.Value)
+
+			while utf8.len(value) ~= utf8.len(pattern) do
+				if utf8.len(value) > utf8.len(pattern) then
+					pattern = pattern .. " "
+				else
+					value = value .. " "
+				end
+			end
+
+			if replacement.StyleWrap ~= nil then
+				value = replacement.StyleWrap(value)
+			end
+
+			local parts = splitBySubstring(row, pattern)
+			template[idx] = table.concat(parts, value)
+		end
+	end
+
+	replace("$1", report.Good)
+	replace("$2", report.Errors)
+	replace("$3", report.TimeTotal)
+	replace("$4", report.TimeLostOnErrors)
+	replace("$5", report.ErrorsRatio)
+	replace("$6", report.WastedTimeRatio)
+
+	return template
+end
 
 return {
 	Close = function()
@@ -12,19 +80,19 @@ return {
 		tty.ClearScreen()
 
 		local winsize = tty:WinSize()
-		local offsetX = winsize.MaxX // 2
-		local offsetY = winsize.MaxY // 3
 
-		tty.Jump(offsetY, offsetX)
-		tty.Print(report.Good)
+		local drawedStats = drawStats(report)
+		local offseted = elementCross.offsetRowPool(drawedStats, winsize)
 
-		tty.Jump(offsetY, offsetX + 1)
-		tty.Print(report.Errors)
+		for _, row in pairs(offseted) do
+			tty.Jump(row.X, row.Y)
+			tty.Print(row.line)
+		end
+	end,
 
-		tty.Jump(offsetY, offsetX + 2)
-		tty.Print(report.TimeTotal)
-
-		tty.Jump(offsetY, offsetX + 3)
-		tty.Print(report.TimeLostOnErrors)
+	WrapTextToColor = function(colorIdx, defaultIdx)
+		return function(text)
+			return tty.PrintWithColor(colorIdx, defaultIdx, text)
+		end
 	end,
 }

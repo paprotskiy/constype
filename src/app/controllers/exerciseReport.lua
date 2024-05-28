@@ -2,12 +2,65 @@ local overlayableChar = require("app.domain.lexic.char")
 local view = require("app.ui.view.exerciseReport")
 local model = require("app.domain.exerciseReport")
 
-local exerciseController = function(baseControllerInvoke, topic)
+local function designPostHandleOfReport(cfg, report)
+	local greenWrap = view.WrapTextToColor(cfg.Succ, cfg.Default)
+	local redWrap = view.WrapTextToColor(cfg.Fail, cfg.Default)
+
+	return {
+		Good = {
+			Value = report.Good,
+			StyleWrapp = nil,
+		},
+
+		Errors = {
+			Value = report.Errors,
+			StyleWrap = function(txt)
+				if report.Errors == 0 then
+					return greenWrap(txt)
+				end
+				return redWrap(txt)
+			end,
+		},
+
+		TimeTotal = {
+			Value = report.TimeTotal,
+			StyleWrap = nil,
+		},
+
+		TimeLostOnErrors = {
+			Value = report.TimeLostOnErrors,
+			StyleWrap = nil,
+		},
+
+		ErrorsRatio = {
+			Value = report.ErrorsRatio,
+			StyleWrap = function(txt)
+				if report.ErrorsRatio == 0 then
+					return greenWrap(txt)
+				end
+				return redWrap(txt)
+			end,
+		},
+
+		WastedTimeRatio = {
+			Value = report.WastedTimeRatio,
+			StyleWrap = function(txt)
+				if report.WastedTimeRatio == 0 then
+					return greenWrap(txt)
+				end
+				return redWrap(txt)
+			end,
+		},
+	}
+end
+
+local exerciseReportController = function(baseControllerInvoke, cfg, topic)
 	local report = model.BuildReport(topic)
+	local styledReport = designPostHandleOfReport(cfg, report)
 
 	return {
 		Load = function()
-			view:Load(report)
+			view:Load(styledReport)
 		end,
 
 		Close = function()
@@ -43,5 +96,5 @@ local exerciseController = function(baseControllerInvoke, topic)
 end
 
 return {
-	New = exerciseController,
+	New = exerciseReportController,
 }
