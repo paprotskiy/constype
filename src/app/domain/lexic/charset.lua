@@ -5,11 +5,11 @@ local digits = "0123456789"
 local signsIncludedInWords = '-".,'
 local all = alphabet .. digits .. signsIncludedInWords
 
-local function newCharset(rawText)
+local function newCharset(rawText, stopWatch)
 	local res = {}
 
 	for letter in rawText:gmatch(".") do
-		table.insert(res, overlayableChar.New(letter))
+		table.insert(res, overlayableChar.New(letter, stopWatch))
 	end
 
 	return res

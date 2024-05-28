@@ -1,5 +1,6 @@
 package.path = package.path .. ";../?.lua"
 local core = require("tests.scaffold.scaffold")
+local equal = require("utils.equal.deepEqual")
 local AAA = require("tests.scaffold.AAA")
 local char = require("app.domain.lexic.char")
 local charset = require("app.domain.lexic.charset")
@@ -11,6 +12,24 @@ local charStatuses = {
 	Fail = char.Statuses().Fail,
 	Fixed = char.Statuses().Fixed,
 }
+
+local function overlayableCharComparator(expectedOutput, expectedErr, actualOutput, actualErr)
+	if actualErr ~= nil then
+		return core.NewTestErr("error not expected, but got " .. actualErr)
+	end
+
+	local ignoredFields = {
+		"__okOverlayingTime",
+		"__badOverlayingTime",
+	}
+	local errMsg = equal.DeepEqualIgnoreFuncsAndFields(expectedOutput, actualOutput, table.unpack(ignoredFields))
+
+	if errMsg == nil then
+		return nil
+	end
+
+	return core.NewTestErr(errMsg)
+end
 
 return {
 	core.NewTest("check all statuses copied successfully", function()
@@ -182,7 +201,7 @@ return {
 				__base = "c",
 				__overlayStatus = charStatuses.Nil,
 			},
-		}, AAA.TableComparator)
+		}, overlayableCharComparator)
 		:Build()
 	),
 
@@ -215,7 +234,7 @@ return {
 			{
 				{ __base = "!", __overlayStatus = charStatuses.Nil },
 			},
-		}, AAA.TableComparator)
+		}, overlayableCharComparator)
 		:AssertSutWithParams(charset.NewCharset(" 234\n 098!")) --
 		:Equal({
 			{
@@ -240,7 +259,7 @@ return {
 			{
 				{ __base = "!", __overlayStatus = charStatuses.Nil },
 			},
-		}, AAA.TableComparator)
+		}, overlayableCharComparator)
 		:Build()
 	),
 
@@ -263,7 +282,7 @@ return {
 					 { __base = "l", __overlayStatus = charStatuses.Nil },
 					 { __base = "o", __overlayStatus = charStatuses.Nil },
 				 },
-			 }, AAA.TableComparator)
+			 }, overlayableCharComparator)
 			 :Exec()
 	end),
 

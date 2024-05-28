@@ -3,6 +3,7 @@ local overlayableChar = require("app.domain.lexic.char")
 local topic = require("app.domain.lexic.topic")
 local charset = require("app.domain.lexic.charset")
 local char = require("app.domain.lexic.char")
+local stopwatch = require("app.time.stopwatch")
 
 local function rewriteAndMove(val, position, nextPosition)
 	-- customAssert(type(val) == "string", "val must be a string", 2)
@@ -21,7 +22,7 @@ return {
 		text = (text):gsub("\n", "")
 		text = (text):gsub("\r", "")
 		-- todo move to text picker
-		local charedText = charset.NewCharset(text)
+		local charedText = charset.NewCharset(text, stopwatch.New())
 		local newTopic = topic:New(charedText, charset.SplitToWords)
 
 		newTopic:ResizeLines(textWidth)

@@ -21,19 +21,21 @@ local function drawStats(report)
 		"╔══════════════════════════════════════════════════════╗",
 		"║                      Statistics                      ║",
 		"╠══════════════════════════════════════════════════════╣",
-		"║   ┌────────────────────────┬─────────────────────┐   ║",
-		"║   │      Correct symbol(s) │ $1                  │   ║",
-		"║   ├────────────────────────┼─────────────────────┤   ║",
-		"║   │       Errors symbol(s) │ $2                  │   ║",
-		"║   ├────────────────────────┼─────────────────────┤   ║",
-		"║   │    TimeTotal second(s) │ $3                  │   ║",
-		"║   ├────────────────────────┼─────────────────────┤   ║",
-		"║   │ LostOnErrors second(s) │ $4                  │   ║",
-		"║   ├────────────────────────┼─────────────────────┤   ║",
-		"║   │           Errors ratio │ $5                  │   ║",
-		"║   ├────────────────────────┼─────────────────────┤   ║",
-		"║   │      Wasted time ratio │ $6                  │   ║",
-		"║   └────────────────────────┴─────────────────────┘   ║",
+		"║   ┌───────────────────────────────┬──────────────┐   ║",
+		"║   │             Correct symbol(s) │ $1           │   ║",
+		"║   ├───────────────────────────────┼──────────────┤   ║",
+		"║   │              Errors symbol(s) │ $2           │   ║",
+		"║   ├───────────────────────────────┼──────────────┤   ║",
+		"║   │       Missed Errors symbol(s) │ $3           │   ║",
+		"║   ├───────────────────────────────┼──────────────┤   ║",
+		"║   │           TimeTotal second(s) │ $4           │   ║",
+		"║   ├───────────────────────────────┼──────────────┤   ║",
+		"║   │        LostOnErrors second(s) │ $5           │   ║",
+		"║   ├───────────────────────────────┼──────────────┤   ║",
+		"║   │                  Errors ratio │ $6           │   ║",
+		"║   ├───────────────────────────────┼──────────────┤   ║",
+		"║   │             Wasted time ratio │ $7           │   ║",
+		"║   └───────────────────────────────┴──────────────┘   ║",
 		"╚══════════════════════════════════════════════════════╝",
 	}
 
@@ -59,11 +61,12 @@ local function drawStats(report)
 	end
 
 	replace("$1", report.Good)
-	replace("$2", report.Errors)
-	replace("$3", report.TimeTotal)
-	replace("$4", report.TimeLostOnErrors)
-	replace("$5", report.ErrorsRatio)
-	replace("$6", report.WastedTimeRatio)
+	replace("$2", report.Fixed)
+	replace("$3", report.Errors)
+	replace("$4", report.TimeTotal)
+	replace("$5", report.TimeLostOnErrors)
+	replace("$6", report.ErrorsRatio)
+	replace("$7", report.WastedTimeRatio)
 
 	return template
 end

@@ -18,6 +18,7 @@ return {
 	__lines = {},
 	__position = nil,
 	__splitToWords = nil,
+	__totalLen = 0,
 
 	New = function(self, charedText, splitToWords)
 		customAssert(self ~= nil, "self is not specified", 2)
@@ -25,19 +26,28 @@ return {
 		customAssert(charedText ~= nil, "charedText is not specified", 2)
 		customAssert(#charedText > 0, "charedText must be not empty", 2)
 
+		self.__totalLen = #charedText
 		self.__position = NewPosition(1, 1)
 		self.__splitToWords = splitToWords
 
 		local line = lines.NewLine()
 		line:AppendAll(charedText)
 		self.__lines = { line }
-		self.ResizeLines(self, #charedText + 1)
+		self.ResizeLines(self, self.__totalLen + 1)
 
 		return self
 	end,
 
 	ResizeLines = function(self, width)
-		self.__lines = lines.ResizeLines(width, self.__splitToWords, lines.NewLine, self.__lines)
+		self.__lines = self.ExportResizedLines(self, width)
+	end,
+
+	ExportResizedLines = function(self, width)
+		return lines.ResizeLines(width, self.__splitToWords, lines.NewLine, self.__lines)
+	end,
+
+	ExportAsSingleLine = function(self)
+		return self.ExportResizedLines(self, self.__totalLen + 1)[1]
 	end,
 
 	GetLines = function(self)

@@ -1,4 +1,5 @@
 local digest = require("hashings.sha256")
+local period = require("app.time.period")
 
 local overlayStatuses = {
 	Nil = "not-overlayed",
@@ -51,11 +52,14 @@ local statusSwitches = {
 
 return {
 	-- todo cover with tests
-	New = function(char)
+	New = function(char, ticker)
 		return {
 			__base = char,
 			__overlay = nil,
 			__overlayStatus = overlayStatuses.Nil,
+			__ticker = ticker,
+			__okOverlayingTime = period.New(0),
+			__badOverlayingTime = period.New(0),
 		}
 	end,
 
@@ -93,6 +97,17 @@ return {
 		end
 
 		char.__overlayStatus = newStatus
+
+		if char.__ticker == nil then
+			return
+		end
+
+		local interval = char.__ticker:ClickStopWatch()
+		if newStatus == overlayStatuses.Succ or newStatus == overlayStatuses.Fixed then
+			char.__okOverlayingTime = char.__okOverlayingTime:Add(interval)
+		else
+			char.__badOverlayingTime = char.__badOverlayingTime:Add(interval)
+		end
 	end,
 
 	Display = function(char)
@@ -109,5 +124,12 @@ return {
 
 	ExtractStatus = function(char)
 		return char.__overlayStatus
+	end,
+
+	Timing = function(char)
+		return {
+			Ok = char.__okOverlayingTime,
+			Bad = char.__badOverlayingTime,
+		}
 	end,
 }

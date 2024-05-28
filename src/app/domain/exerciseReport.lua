@@ -1,17 +1,50 @@
-local overlayableChar = require("app.domain.lexic.char")
-local charedTopic = require("app.domain.lexic.topic")
-local charset = require("app.domain.lexic.charset")
+-- local topic = require("app.domain.lexic.topic")
 local char = require("app.domain.lexic.char")
+local period = require("app.time.period")
+
+local function badRatio(good, bad)
+	return 1 - good / (good + bad)
+end
 
 return {
 	BuildReport = function(topic)
+		local chars = topic:ExportAsSingleLine():AllChars()
+		local statuses = char.Statuses()
+
+		local good = 0
+		local fixed = 0
+		local bad = 0
+		local goodTiming = period.New(0)
+		local errTiming = period.New(0)
+		for idx, ch in pairs(chars) do
+			local timing = char.Timing(ch)
+			goodTiming:Add(timing.Ok)
+			errTiming:Add(timing.Bad)
+
+			if char:CompareCharStatus(ch, statuses.Succ) then
+				good = good + 1
+			elseif char:CompareCharStatus(ch, statuses.Fixed) then
+				fixed = fixed + 1
+			else
+				bad = bad + 1
+			end
+		end
+
+		local errRatio = 1
+		local wastedTimeRatio = 1
+		if bad == 0 then
+			errRatio = badRatio(good, bad)
+			wastedTimeRatio = badRatio(goodTiming:Milliseconds(), errTiming:Milliseconds())
+		end
+
 		return {
-			Good = 23,
-			Errors = 4,
-			TimeTotal = 45,
-			TimeLostOnErrors = 14,
-			ErrorsRatio = 0.2,
-			WastedTimeRatio = 0.3,
+			Good = good,
+			Fixed = fixed,
+			Errors = bad,
+			TimeTotal = period.New(0):Add(goodTiming):Add(errTiming):Milliseconds() / 1000,
+			TimeLostOnErrors = errTiming:Milliseconds() / 1000,
+			ErrorsRatio = errRatio,
+			WastedTimeRatio = wastedTimeRatio,
 		}
 	end,
 }

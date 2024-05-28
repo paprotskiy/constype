@@ -1,4 +1,3 @@
-local overlayableChar = require("app.domain.lexic.char")
 local view = require("app.ui.view.exerciseReport")
 local model = require("app.domain.exerciseReport")
 
@@ -10,6 +9,16 @@ local function designPostHandleOfReport(cfg, report)
 		Good = {
 			Value = report.Good,
 			StyleWrapp = nil,
+		},
+
+		Fixed = {
+			Value = report.Fixed,
+			StyleWrap = function(txt)
+				if report.Fixed == 0 then
+					return greenWrap(txt)
+				end
+				return redWrap(txt)
+			end,
 		},
 
 		Errors = {
