@@ -3,7 +3,12 @@ local char = require("app.domain.lexic.char")
 local period = require("app.time.period")
 
 local function badRatio(good, bad)
-	return 1 - good / (good + bad)
+	local ratio = 1 - good / (good + bad)
+
+	local integerPart = math.floor(ratio)
+	local fractionalPart = ratio - integerPart
+	local firstThreeDigits = math.floor(fractionalPart * 100) / 100
+	return integerPart + firstThreeDigits
 end
 
 return {
@@ -33,7 +38,7 @@ return {
 		local errRatio = 1
 		local wastedTimeRatio = 1
 		if bad == 0 then
-			errRatio = badRatio(good, bad)
+			errRatio = badRatio(good, fixed + bad)
 			wastedTimeRatio = badRatio(goodTiming:Milliseconds(), errTiming:Milliseconds())
 		end
 

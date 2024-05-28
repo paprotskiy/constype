@@ -14,7 +14,7 @@ local function designPostHandleOfReport(cfg, report)
 		Fixed = {
 			Value = report.Fixed,
 			StyleWrap = function(txt)
-				if report.Fixed == 0 then
+				if report.Fixed == 0 and report.Errors == 0 then
 					return greenWrap(txt)
 				end
 				return redWrap(txt)
