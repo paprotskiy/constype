@@ -2,13 +2,14 @@
 local char = require("app.domain.lexic.char")
 local period = require("app.time.period")
 
-local function badRatio(good, bad)
-	local ratio = 1 - good / (good + bad)
-
-	local integerPart = math.floor(ratio)
-	local fractionalPart = ratio - integerPart
+local function setPrecision(value, numOfSymbolsAfterDot)
+	local integerPart = math.floor(value)
+	local fractionalPart = value - integerPart
 	local firstThreeDigits = math.floor(fractionalPart * 100) / 100
 	return integerPart + firstThreeDigits
+end
+local function badRatio(good, bad)
+	return 1 - good / (good + bad)
 end
 
 return {
@@ -41,15 +42,17 @@ return {
 			errRatio = badRatio(good, fixed + bad)
 			wastedTimeRatio = badRatio(goodTiming:Milliseconds(), errTiming:Milliseconds())
 		end
+		local timeTotal = period.New(0):Add(goodTiming):Add(errTiming):Milliseconds() / 1000
+		local timeLostOnErrors = errTiming:Milliseconds() / 1000
 
 		return {
 			Good = good,
 			Fixed = fixed,
 			Errors = bad,
-			TimeTotal = period.New(0):Add(goodTiming):Add(errTiming):Milliseconds() / 1000,
-			TimeLostOnErrors = errTiming:Milliseconds() / 1000,
-			ErrorsRatio = errRatio,
-			WastedTimeRatio = wastedTimeRatio,
+			TimeTotal = setPrecision(timeTotal, 2),
+			TimeLostOnErrors = setPrecision(timeLostOnErrors, 2),
+			ErrorsRatio = setPrecision(errRatio, 2),
+			WastedTimeRatio = setPrecision(wastedTimeRatio, 2),
 		}
 	end,
 }

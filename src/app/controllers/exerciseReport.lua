@@ -38,7 +38,12 @@ local function designPostHandleOfReport(cfg, report)
 
 		TimeLostOnErrors = {
 			Value = report.TimeLostOnErrors,
-			StyleWrap = nil,
+			StyleWrap = function(txt)
+				if report.TimeLostOnErrors == 0 then
+					return greenWrap(txt)
+				end
+				return redWrap(txt)
+			end,
 		},
 
 		ErrorsRatio = {

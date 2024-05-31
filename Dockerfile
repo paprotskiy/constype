@@ -3,8 +3,16 @@ FROM alpine:latest as constype-app
 ARG LUA_VER="5.4.0"
 ARG LUA_ROCKS_VER="3.9.2"
 
-RUN apk add libc-dev readline readline-dev gcc make wget git
-
+RUN apk add        \
+    libc-dev       \
+    openssl-dev    \
+    readline       \
+    readline-dev   \
+    gcc            \
+    make           \
+    wget           \
+    git
+                       
 RUN cd /tmp \
     && wget https://www.lua.org/ftp/lua-${LUA_VER}.tar.gz \
     && tar zxf lua-${LUA_VER}.tar.gz \
@@ -24,9 +32,12 @@ RUN cd /tmp \
     && rm -rf /tmp/*
 
 RUN luarocks install --server=https://luarocks.org/dev lua-hashings \
-    && luarocks install lua-cjson \
-    && luarocks install lua-term \
-    && luarocks install luasocket \
-    && luarocks install luaposix 
+    && luarocks install lua-cjson       \
+    && luarocks install lua-term        \
+    && luarocks install luasocket       \
+    && luarocks install luaposix        \
+    && luarocks install luasec          \
+    && luarocks install luaossl         \
+    && luarocks install pgmoon   
 
 COPY ./src ./src
