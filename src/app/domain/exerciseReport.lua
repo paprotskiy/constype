@@ -1,4 +1,5 @@
 -- local topic = require("app.domain.lexic.topic")
+local cjson = require("cjson")
 local char = require("app.domain.lexic.char")
 local period = require("app.time.period")
 
@@ -12,9 +13,21 @@ local function badRatio(good, bad)
 	return 1 - good / (good + bad)
 end
 
+local function tableCopyWithoutFunctions(data)
+	local res = {}
+	for k, v in pairs(data) do
+		if type(v) == "table" then
+			res[k] = tableCopyWithoutFunctions(v)
+		elseif type(v) ~= "function" then
+			res[k] = v
+		end
+	end
+	return res
+end
+
 return {
-	BuildReport = function(topic)
-		local chars = topic:ExportAsSingleLine():AllChars()
+	BuildReport = function(storage, topicData, topicWalkthrough)
+		local chars = topicWalkthrough:ExportAsSingleLine():AllChars()
 		local statuses = char.Statuses()
 
 		local good = 0
@@ -42,15 +55,26 @@ return {
 			errRatio = badRatio(good, fixed + bad)
 			wastedTimeRatio = badRatio(goodTiming:Milliseconds(), errTiming:Milliseconds())
 		end
-		local timeTotal = period.New(0):Add(goodTiming):Add(errTiming):Milliseconds() / 1000
-		local timeLostOnErrors = errTiming:Milliseconds() / 1000
+		local timeTotalMs = period.New(0):Add(goodTiming):Add(errTiming):Milliseconds()
+		local timeLostOnErrorsMs = errTiming:Milliseconds()
+
+		local saveToStorage = function()
+			local walkthroughWithoutFuncs = tableCopyWithoutFunctions(topicWalkthrough)
+			local json = cjson.encode(walkthroughWithoutFuncs)
+			local topicId = topicData.TopicId
+			local endTime = os.time()
+			local startTime = endTime - timeTotalMs / 1000
+			local success = fixed + bad == 0
+			storage.SaveTrainingRun(topicId, startTime, endTime, success, json)
+		end
+		saveToStorage()
 
 		return {
 			Good = good,
 			Fixed = fixed,
 			Errors = bad,
-			TimeTotal = setPrecision(timeTotal, 2),
-			TimeLostOnErrors = setPrecision(timeLostOnErrors, 2),
+			TimeTotal = setPrecision(timeTotalMs / 1000, 2),
+			TimeLostOnErrors = setPrecision(timeLostOnErrorsMs / 1000, 2),
 			ErrorsRatio = setPrecision(errRatio, 2),
 			WastedTimeRatio = setPrecision(wastedTimeRatio, 2),
 		}

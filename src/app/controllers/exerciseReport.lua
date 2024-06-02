@@ -68,8 +68,8 @@ local function designPostHandleOfReport(cfg, report)
 	}
 end
 
-local exerciseReportController = function(baseControllerInvoke, cfg, topic)
-	local report = model.BuildReport(topic)
+local exerciseReportController = function(baseControllerInvoke, cfg, storage, topicData, topicWalkthrough)
+	local report = model.BuildReport(storage, topicData, topicWalkthrough)
 	local styledReport = designPostHandleOfReport(cfg, report)
 
 	return {

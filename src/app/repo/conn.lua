@@ -37,7 +37,7 @@ local function createDatabase(conn, dbName)
 end
 
 return {
-	MigrateIfNotExists = function()
+	CreateDbIfNotExists = function()
 		assert(pgDefault:connect())
 
 		local dbName = pgConfig.PgDatabase

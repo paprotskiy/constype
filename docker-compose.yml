@@ -55,6 +55,17 @@ services:
       - ./persistent/:/texts
     env_file:
       - .env
+    # environment:
+    #   - PG_HOST=constype-db
+    #   - PG_PORT=5432
+    #   - PG_DATABASE=constype-db
+    #   - PG_USER=user
+    #   - PG_PASSWORD=password
+    #   - PG_SSL_MODE=disable
+    #   - COLOR_DEFAULT_IDX=0
+    #   - COLOR_SUCC_IDX=92
+    #   - COLOR_FAIL_IDX=91
+    #   - COLOR_FIXED_IDX=93
 
     # reset   = 0
     # black   = 30 (90 for bright)

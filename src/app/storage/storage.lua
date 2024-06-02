@@ -9,7 +9,7 @@ return {
    end,
 
    Deserialize = function()
-      local lines = fs.ReadFile(storage)
+      local lines = fs.ReadFileLines(storage)
       local line = table.concat(lines, "")
       if #line == 0 then
          return nil

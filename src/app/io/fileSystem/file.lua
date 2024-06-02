@@ -29,8 +29,13 @@ local function toFile(modifier, filePath, data)
 end
 
 return {
-	ReadFile = function(filePath)
+	ReadFileLines = function(filePath)
 		return lines_from(filePath)
+	end,
+
+	ReadFile = function(filePath)
+		local lines = lines_from(filePath)
+		return table.concat(lines, "\n")
 	end,
 
 	WriteFile = function(filePath, data)
