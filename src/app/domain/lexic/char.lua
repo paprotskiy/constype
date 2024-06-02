@@ -1,7 +1,8 @@
 local digest = require("hashings.sha256")
+local period = require("app.time.period")
 
 local overlayStatuses = {
-	Nil = "not-overlayed", --error overlayed
+	Nil = "not-overlayed",
 	Succ = "successfully-overlayed",
 	Fail = "failed-to-overlay",
 	Fixed = "overlay-fixed",
@@ -24,13 +25,8 @@ local overlayStatuses = {
 
 local function patternForMatch(same, prevStatus)
 	local isBool = same == true or same == false
-	if not isBool then
-		error("same must be bool, actually " .. tostring(same))
-	end
-
-	if not overlayStatuses:InRate(prevStatus) then
-		error("unknown overlay type: " .. tostring(prevStatus))
-	end
+	assert(isBool, "same must be bool, actually " .. tostring(same), 2)
+	assert(overlayStatuses:InRate(prevStatus), "unknown overlay type: " .. tostring(prevStatus), 2)
 
 	return {
 		__same = same,
@@ -56,11 +52,14 @@ local statusSwitches = {
 
 return {
 	-- todo cover with tests
-	New = function(char)
+	New = function(char, ticker)
 		return {
 			__base = char,
 			__overlay = nil,
 			__overlayStatus = overlayStatuses.Nil,
+			__ticker = ticker,
+			__okOverlayingTime = period.New(0),
+			__badOverlayingTime = period.New(0),
 		}
 	end,
 
@@ -82,7 +81,7 @@ return {
 	end,
 
 	Overlay = function(char, overlayChar)
-		if overlayChar:len() ~= 1 then
+		if overlayChar ~= nil and overlayChar:len() ~= 1 then
 			error("overlayChar must be one symbol string")
 		end
 
@@ -98,6 +97,17 @@ return {
 		end
 
 		char.__overlayStatus = newStatus
+
+		if char.__ticker == nil then
+			return
+		end
+
+		local interval = char.__ticker:ClickStopWatch()
+		if newStatus == overlayStatuses.Succ or newStatus == overlayStatuses.Fixed then
+			char.__okOverlayingTime = char.__okOverlayingTime:Add(interval)
+		else
+			char.__badOverlayingTime = char.__badOverlayingTime:Add(interval)
+		end
 	end,
 
 	Display = function(char)
@@ -109,6 +119,17 @@ return {
 		return {
 			Value = val,
 			Status = char.__overlayStatus,
+		}
+	end,
+
+	ExtractStatus = function(char)
+		return char.__overlayStatus
+	end,
+
+	Timing = function(char)
+		return {
+			Ok = char.__okOverlayingTime,
+			Bad = char.__badOverlayingTime,
 		}
 	end,
 }

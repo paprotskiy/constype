@@ -1,24 +1,78 @@
-version: '3'
-
 services:
+  userclient-db:
+    container_name: constype-db
+    image: postgres:alpine
+    restart: always
+    user: root
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 3s
+      timeout: 2s
+      retries: 10
+    ports:
+      - 15432:5432
+    environment:
+      - POSTGRES_DB=constype-db
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+
   constype-unit-tests:
     container_name: constype-unit-tests
     build: .
     working_dir: /src/tests
-    command: lua ./all.lua 
+    command: lua ./all.lua
 
-  constype-test-fonts:
-    container_name: constype-test-fonts
+  seeder:
+    container_name: seeder
     build: .
-    working_dir: /src/tests
-    command: lua ./line_test.lua 
+    depends_on:
+      constype-unit-tests:
+        condition: service_completed_successfully
+      userclient-db:
+        condition: service_healthy
+    working_dir: /src/app
+    command: lua ./seed.lua
+    # stdin_open: true
+    # tty: true
+    volumes:
+      - ./persistent/:/texts
+    env_file:
+      - .env
 
   constype:
     container_name: constype
     build: .
+    depends_on:
+      constype-unit-tests:
+        condition: service_completed_successfully
+      userclient-db:
+        condition: service_healthy
     working_dir: /src/app
-    command: lua ./main.lua 
+    command: lua ./main.lua
     stdin_open: true
     tty: true
-    volumes: 
-      - ./persistent/:/data/
+    volumes:
+      - ./persistent/:/texts
+    env_file:
+      - .env
+    # environment:
+    #   - PG_HOST=constype-db
+    #   - PG_PORT=5432
+    #   - PG_DATABASE=constype-db
+    #   - PG_USER=user
+    #   - PG_PASSWORD=password
+    #   - PG_SSL_MODE=disable
+    #   - COLOR_DEFAULT_IDX=0
+    #   - COLOR_SUCC_IDX=92
+    #   - COLOR_FAIL_IDX=91
+    #   - COLOR_FIXED_IDX=93
+
+    # reset   = 0
+    # black   = 30 (90 for bright)
+    # red     = 31 (91 for bright)
+    # green   = 32 (92 for bright)
+    # yellow  = 33 (93 for bright)
+    # blue    = 34 (94 for bright)
+    # magenta = 35 (95 for bright)
+    # cyan    = 36 (96 for bright)
+    # white   = 37 (97 for bright)
