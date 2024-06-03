@@ -6,8 +6,10 @@ local period = require("app.time.period")
 local function setPrecision(value, numOfSymbolsAfterDot)
 	local integerPart = math.floor(value)
 	local fractionalPart = value - integerPart
-	local firstThreeDigits = math.floor(fractionalPart * 100) / 100
-	return integerPart + firstThreeDigits
+
+	local k = 10 ^ numOfSymbolsAfterDot
+	local afterComma = math.floor(fractionalPart * k) / k
+	return integerPart + afterComma
 end
 local function badRatio(good, bad)
 	return 1 - good / (good + bad)
@@ -75,8 +77,8 @@ return {
 			Errors = bad,
 			TimeTotal = setPrecision(timeTotalMs / 1000, 2),
 			TimeLostOnErrors = setPrecision(timeLostOnErrorsMs / 1000, 2),
-			ErrorsRatio = setPrecision(errRatio, 2),
-			WastedTimeRatio = setPrecision(wastedTimeRatio, 2),
+			ErrorsRatio = setPrecision(errRatio, 3),
+			WastedTimeRatio = setPrecision(wastedTimeRatio, 3),
 		}
 	end,
 }

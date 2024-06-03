@@ -18,10 +18,6 @@ end
 
 return {
 	New = function(_, text, textWidth)
-		-- todo move to text picker
-		text = (text):gsub("\n", "")
-		text = (text):gsub("\r", "")
-		-- todo move to text picker
 		local charedText = charset.NewCharset(text, stopwatch.New())
 		local newTopic = topic:New(charedText, charset.SplitToWords)
 

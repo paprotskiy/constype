@@ -47,7 +47,7 @@ local function designPostHandleOfReport(cfg, report)
 		},
 
 		ErrorsRatio = {
-			Value = report.ErrorsRatio,
+			Value = tostring(report.ErrorsRatio * 100) .. "%",
 			StyleWrap = function(txt)
 				if report.ErrorsRatio == 0 then
 					return greenWrap(txt)
@@ -57,7 +57,7 @@ local function designPostHandleOfReport(cfg, report)
 		},
 
 		WastedTimeRatio = {
-			Value = report.WastedTimeRatio,
+			Value = tostring(report.WastedTimeRatio * 100) .. "%",
 			StyleWrap = function(txt)
 				if report.WastedTimeRatio == 0 then
 					return greenWrap(txt)

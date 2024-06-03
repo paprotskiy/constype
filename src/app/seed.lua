@@ -12,54 +12,42 @@ connBuilder.CreateDbIfNotExists()
 local conn = connBuilder.PgConnection()
 local repo = repoBuilder.New(conn)
 repo.ApplyMigrationsIfNotExists()
+-------------------------------------- create db and tables -------------------------------------
 
------------------------------------------ create topics -----------------------------------------
-local function getFilesInDirectory(directory)
-	local files = {}
-	local p = io.popen('find "' .. directory .. '" -type f')
-	for file in p:lines() do
-		table.insert(files, file)
+---------------------------------- read big text and get topics ---------------------------------
+local function getTopicsFromBigFile(address)
+	local function endsWithSymbol(str, symb)
+		return str:sub(- #symb) == symb
 	end
-	p:close()
 
-	return files
-end
+	local function trim(str)
+		str = str:gsub("\n", "")
+		str = str:gsub("\r", "")
+		return str
+	end
 
-local function trimString(str, delimiter)
-	local first = nil
-	local last = nil
-	local pattern = string.format("([^%s]+)", delimiter)
-	for part in string.gmatch(str, pattern) do
-		if first == nil then
-			first = part
+	local rows = file.ReadFileLines(address)
+
+	local par = ""
+	local paragraphs = {}
+	for _, part in ipairs(rows) do
+		par = par .. part .. "\n"
+		if endsWithSymbol(part, ".") then
+			table.insert(paragraphs, trim(par))
+			par = ""
+		elseif not endsWithSymbol(part, " ") then
+			par = par .. " "
 		end
-		last = part
 	end
-	return first, last
+
+	return paragraphs
 end
+---------------------------------- read big text and get topics ---------------------------------
 
-local function readAllTopicsFromDisc()
-	local parts = {}
-	local filePaths = getFilesInDirectory("../../texts/parts/")
-	for _, filePath in ipairs(filePaths) do
-		-- ../../texts/parts/1350.txt
-		local _, filename = trimString(filePath, "/")
-		local filenameNoExtention, _ = trimString(filename, ".")
-		local order = tonumber(filenameNoExtention)
-
-		local data = file.ReadFile(filePath)
-
-		parts[order] = toAscii.UnicodeToAscii(data)
-	end
-	os.execute("sleep 5")
-	return parts
-end
-
------------------------------------------- save topics ------------------------------------------
-
+------------------------------------------ seed tables ------------------------------------------
+local parts = getTopicsFromBigFile("../../texts/big.txt")
 local planId = repo.CreatePlan("book")
-
-local parts = readAllTopicsFromDisc()
 for k, v in ipairs(parts) do
 	repo.CreateTopic(planId, v, k)
 end
+------------------------------------------ seed tables ------------------------------------------
