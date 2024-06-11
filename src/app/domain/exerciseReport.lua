@@ -28,7 +28,10 @@ local function tableCopyWithoutFunctions(data)
 end
 
 return {
-	BuildReport = function(storage, topicData, topicWalkthrough)
+	BuildReport = function(cfgThreshold, storage, topicData, topicWalkthrough)
+		local errsThreshold = cfgThreshold.Errs
+		local fixedThreshold = cfgThreshold.Fixed
+
 		local chars = topicWalkthrough:ExportAsSingleLine():AllChars()
 		local statuses = char.Statuses()
 
@@ -37,7 +40,7 @@ return {
 		local bad = 0
 		local goodTiming = period.New(0)
 		local errTiming = period.New(0)
-		for idx, ch in pairs(chars) do
+		for _, ch in pairs(chars) do
 			local timing = char.Timing(ch)
 			goodTiming:Add(timing.Ok)
 			errTiming:Add(timing.Bad)
@@ -53,7 +56,7 @@ return {
 
 		local errRatio = 1
 		local wastedTimeRatio = 1
-		if bad == 0 then
+		if bad <= errsThreshold then
 			errRatio = badRatio(good, fixed + bad)
 			wastedTimeRatio = badRatio(goodTiming:Milliseconds(), errTiming:Milliseconds())
 		end
@@ -66,7 +69,7 @@ return {
 			local topicId = topicData.TopicId
 			local endTime = os.time()
 			local startTime = endTime - timeTotalMs / 1000
-			local success = fixed + bad < 10
+			local success = (fixed + bad) / (fixed + bad + good) < fixedThreshold
 			storage.SaveTrainingRun(topicId, startTime, endTime, success, json)
 		end
 		saveToStorage()
