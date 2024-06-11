@@ -8,7 +8,6 @@ local exerciseReportController = require("app.controllers.exerciseReport")
 -- local exerciseControllerImpl
 local baseControllerFactory = function(cfg, signalStream, storage)
 	return {
-		__signalStream = nil,
 		__currentController = nil,
 
 		Close = function(self)

@@ -2,7 +2,7 @@ local viewMain = require("app.ui.view.start")
 local domainMain = require("app.domain.main")
 
 local mainController = function(baseControllerInvoke, storage)
-	local planId = "43ac17df-0532-4180-a997-c0850c6dd0b4"
+	local planId = "6d464649-9a5b-4750-97fd-3418834e296b"
 
 	return {
 		Load = function()

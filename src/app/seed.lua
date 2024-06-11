@@ -23,7 +23,7 @@ local function getTopicsFromBigFile(address)
 	local function trim(str)
 		str = str:gsub("\n", "")
 		str = str:gsub("\r", "")
-		return str
+		return toAscii.UnicodeToAscii(str)
 	end
 
 	local rows = file.ReadFileLines(address)

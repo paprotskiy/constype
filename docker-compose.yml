@@ -1,5 +1,5 @@
 services:
-  userclient-db:
+  constype-db:
     container_name: constype-db
     image: postgres:alpine
     restart: always
@@ -28,7 +28,7 @@ services:
     depends_on:
       constype-unit-tests:
         condition: service_completed_successfully
-      userclient-db:
+      constype-db:
         condition: service_healthy
     working_dir: /src/app
     command: lua ./seed.lua
@@ -45,7 +45,7 @@ services:
     depends_on:
       constype-unit-tests:
         condition: service_completed_successfully
-      userclient-db:
+      constype-db:
         condition: service_healthy
     working_dir: /src/app
     command: lua ./main.lua
