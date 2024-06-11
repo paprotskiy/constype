@@ -66,7 +66,7 @@ return {
 			local topicId = topicData.TopicId
 			local endTime = os.time()
 			local startTime = endTime - timeTotalMs / 1000
-			local success = fixed + bad == 0
+			local success = fixed + bad < 10
 			storage.SaveTrainingRun(topicId, startTime, endTime, success, json)
 		end
 		saveToStorage()
