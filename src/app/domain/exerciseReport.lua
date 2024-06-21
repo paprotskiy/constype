@@ -69,7 +69,7 @@ return {
 			local topicId = topicData.TopicId
 			local endTime = os.time()
 			local startTime = endTime - timeTotalMs / 1000
-			local success = (fixed + bad) / (fixed + bad + good) < fixedThreshold
+			local success = (fixed + bad) / (fixed + bad + good) <= fixedThreshold
 			storage.SaveTrainingRun(topicId, startTime, endTime, success, json)
 		end
 		saveToStorage()
