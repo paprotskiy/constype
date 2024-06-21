@@ -11,6 +11,17 @@ local function readEnv(key)
 	return val
 end
 
+local function readNumEnv(key)
+	local val = os.getenv(key)
+	local num = tonumber(val)
+	if num == nil then
+		table.insert(errs, 'env "' .. key .. '" not found')
+		return nil
+	end
+
+	return num
+end
+
 local function fillEnvs()
 	local config = {
 		TerminalColors = {
@@ -18,6 +29,10 @@ local function fillEnvs()
 			Succ = readEnv("COLOR_SUCC_IDX"),
 			Fail = readEnv("COLOR_FAIL_IDX"),
 			Fixed = readEnv("COLOR_FIXED_IDX"),
+		},
+		thresholds = {
+			Errs = readNumEnv("ERRS_THRESHOLD"),
+			Fixed = readNumEnv("FIXED_THRESHOLD"),
 		},
 		pg = {
 			PgHost = readEnv("PG_HOST"),
