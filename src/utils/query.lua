@@ -1,5 +1,4 @@
 local customAssert = require("utils.assert")
-local pp = require("utils.print.pretty")
 
 local function splitByIndex(arr, idx)
 	local left, right = {}, {}
@@ -10,12 +9,11 @@ local function splitByIndex(arr, idx)
 			table.insert(right, arr[i])
 		end
 	end
-	local res = {
+
+	return {
 		left = left,
 		right = right,
 	}
-
-	return res
 end
 
 local function joinTables(main, aux)
@@ -38,9 +36,37 @@ local function joinTables(main, aux)
 	return res
 end
 
+local function deepCopy(orig)
+	if type(orig) == "table" then
+		local copy = {}
+		for key, value in next, orig, nil do
+			copy[deepCopy(key)] = deepCopy(value)
+		end
+
+		return copy
+	end
+
+	return orig
+end
+
+local function sortTable(t, compareFunc)
+	local res = deepCopy(t)
+
+	for i = 1, #res - 1, 1 do
+		for j = i + 1, #res, 1 do
+			if compareFunc(res[i], res[j]) then
+				res[i], res[j] = res[j], res[i]
+			end
+		end
+	end
+
+	return res
+end
+
 local subquery = {
 	SplitByIndex = splitByIndex,
 	JoinTables = joinTables,
+	SortTable = sortTable,
 }
 
 return subquery

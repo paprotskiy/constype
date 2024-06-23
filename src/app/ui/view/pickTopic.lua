@@ -13,20 +13,12 @@ return {
 
 		tty.ClearScreen()
 
-		local msg = "For Start Press Enter"
+		local msg = "picking the first unfinished topic in plan"
 		local winsize = tty:WinSize()
-		local offsetX = (winsize.MaxX - #msg) // 2
-		local offsetY = winsize.MaxY // 2
+		local offsetX = winsize.MaxX // 2
+		local offsetY = (winsize.MaxY - #msg) // 2
 
 		tty.Jump(offsetX, offsetY)
 		tty.Print(msg)
-	end,
-
-	Jump = function(x, y)
-		tty.Jump(x, y)
-	end,
-
-	Print = function(txt)
-		tty.Print(txt)
 	end,
 }

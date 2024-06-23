@@ -13,18 +13,13 @@ local function getStorage()
 end
 local storage = getStorage()
 
-local baseControllerInstance = baseController.New(cfg, tty.EventDriver, storage)
+local baseControllerInstance = baseController.New(cfg, tty.EventDriver, storage, function()
+   os.execute("sleep 0.5")
+end)
 
-local function terminate()
-   baseControllerInstance:Bye(function()
-      os.execute("sleep 0.5")
-   end)
-
+signal.signal(signal.SIGINT, function()
+   baseControllerInstance:Bye()
    os.exit(0)
-end
-
-signal.signal(signal.SIGINT, terminate)
+end)
 
 baseControllerInstance:Start()
-
-terminate()

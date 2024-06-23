@@ -1,7 +1,7 @@
 package.path = package.path .. ";../?.lua"
 local pgmoon = require("pgmoon")
 local cfg = require("app.cfg.config")
-local pgConfig = cfg.pg
+local pgConfig = cfg.PG
 
 local pg = pgmoon.new({
 	host = pgConfig.PgHost,

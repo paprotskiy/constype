@@ -1,9 +1,6 @@
 local viewMain = require("app.ui.view.start")
-local domainMain = require("app.domain.main")
 
-local mainController = function(baseControllerInvoke, storage)
-	local planId = "6d464649-9a5b-4750-97fd-3418834e296b"
-
+local mainController = function(baseControllerInvoke)
 	return {
 		Load = function()
 			viewMain:Load()
@@ -26,17 +23,16 @@ local mainController = function(baseControllerInvoke, storage)
 
 		-- todo make esc const
 		[string.char(27)] = function(_, signalChar)
-			baseControllerInvoke:Close()
+			baseControllerInvoke:Bye()
 		end,
 		--  todo make backspace const
 		[string.char(127)] = function(_, signalChar)
-			baseControllerInvoke:Close()
+			baseControllerInvoke:Bye()
 		end,
 
 		--  todo make enter const
 		[string.char(10)] = function(_, signalChar)
-			local topicData = domainMain:FirstUnfinished(storage, planId)
-			baseControllerInvoke:Exercise(topicData)
+			baseControllerInvoke:PickPlan()
 		end,
 	}
 end

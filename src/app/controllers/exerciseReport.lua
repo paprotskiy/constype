@@ -68,9 +68,9 @@ local function designPostHandleOfReport(cfg, report)
 	}
 end
 
-local exerciseReportController = function(baseControllerInvoke, cfg, storage, topicData, topicWalkthrough)
-	local report = model.BuildReport(cfg.thresholds, storage, topicData, topicWalkthrough)
-	local styledReport = designPostHandleOfReport(cfg, report)
+local exerciseReportController = function(baseControllerInvoke, cfg, storage, topicData, topicWalkthrough, planId)
+	local report = model.BuildReport(cfg.Thresholds, storage, topicData, topicWalkthrough)
+	local styledReport = designPostHandleOfReport(cfg.TerminalColors, report)
 
 	return {
 		Load = function()
@@ -94,17 +94,17 @@ local exerciseReportController = function(baseControllerInvoke, cfg, storage, to
 
 		--  todo make backspace const
 		[string.char(127)] = function(_, _)
-			baseControllerInvoke:Start()
+			baseControllerInvoke:PickPlan()
 		end,
 
 		-- todo make esc const
 		[string.char(27)] = function(_, _)
-			baseControllerInvoke:Start()
+			baseControllerInvoke:PickPlan()
 		end,
 
 		--  todo make enter const
 		[string.char(10)] = function(_, _)
-			baseControllerInvoke:Start()
+			baseControllerInvoke:PickTopic(planId)
 		end,
 	}
 end

@@ -1,7 +1,7 @@
 local equal = require("utils.equal.deepEqual")
 local core = require("tests.scaffold.scaffold")
 local AAA = require("tests.scaffold.AAA")
-local subquery = require("utils.subquery")
+local subquery = require("utils.query")
 
 return {
 

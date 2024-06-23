@@ -1,5 +1,5 @@
 local tty = require("app.ui.tty.tty")
-local elementCross = require("app.ui.view.elements.cross")
+local elementCross = require("app.ui.view.standardComponents.cross")
 
 local function splitBySubstring(str, substr)
 	local parts = {}
@@ -75,17 +75,19 @@ return {
 	Close = function()
 		tty.ClearScreen()
 		tty.Jump(1, 1)
+		os.execute("tput cnorm")
 		os.execute("stty echo -cbreak </dev/tty >/dev/tty 2>&1")
 	end,
 
 	Load = function(_, report)
+		os.execute("tput civis")
 		os.execute("stty -echo cbreak </dev/tty >/dev/tty 2>&1")
 		tty.ClearScreen()
 
 		local winsize = tty:WinSize()
 
 		local drawedStats = drawStats(report)
-		local offseted = elementCross.offsetRowPool(drawedStats, winsize)
+		local offseted = elementCross.OffsetRowPool(drawedStats, winsize)
 
 		for _, row in pairs(offseted) do
 			tty.Jump(row.X, row.Y)

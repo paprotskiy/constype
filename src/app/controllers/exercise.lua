@@ -40,11 +40,11 @@ local function convertSymbolDTO(update)
 	return res
 end
 
-local exerciseController = function(baseControllerInvoke, cfg, topicData)
+local exerciseController = function(baseControllerInvoke, cfg, planId, topicData)
 	initTextColor(cfg)
 
 	local winsize = view:CurrentWinsize()
-	local exercise = model:New(topicData.Topic, winsize.MaxY)
+	local exercise = model:New(topicData.Topic, winsize.MaxX)
 
 	return {
 		Load = function()
@@ -72,7 +72,7 @@ local exerciseController = function(baseControllerInvoke, cfg, topicData)
 
 			if exercise:Done() then
 				local topicWalkthrough = exercise:GetTopic()
-				baseControllerInvoke:ExerciseReport(topicData, topicWalkthrough)
+				baseControllerInvoke:ExerciseReport(topicData, topicWalkthrough, planId)
 				return
 			end
 		end,
@@ -86,7 +86,7 @@ local exerciseController = function(baseControllerInvoke, cfg, topicData)
 
 		-- todo make esc const
 		[string.char(27)] = function(_, signalChar)
-			baseControllerInvoke:Start()
+			baseControllerInvoke:PickPlan()
 		end,
 
 		--  todo make enter const

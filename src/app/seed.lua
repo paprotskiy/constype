@@ -4,7 +4,7 @@ local file = require("app.io.fileSystem.file")
 local connBuilder = require("app.repo.conn")
 local repoBuilder = require("app.repo.repo")
 local toAscii = require("utils.ascii")
-local sqlDir = "./repo-sql"
+local sqlDir = "./repo/sql"
 
 -------------------------------------- create db and tables -------------------------------------
 connBuilder.CreateDbIfNotExists()
@@ -45,6 +45,15 @@ end
 ---------------------------------- read big text and get topics ---------------------------------
 
 ------------------------------------------ seed tables ------------------------------------------
+local testId = repo.CreatePlan("test")
+repo.CreateTopic(testId, "test", 1)
+
+local testId = repo.CreatePlan("test-2")
+repo.CreateTopic(testId, "test2", 1)
+
+local testId = repo.CreatePlan("test-3")
+repo.CreateTopic(testId, "test3", 1)
+
 local parts = getTopicsFromBigFile("../../texts/big.txt")
 local planId = repo.CreatePlan("book")
 for k, v in ipairs(parts) do

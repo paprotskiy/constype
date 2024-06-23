@@ -29,12 +29,13 @@ local function fillEnvs()
 			Succ = readEnv("COLOR_SUCC_IDX"),
 			Fail = readEnv("COLOR_FAIL_IDX"),
 			Fixed = readEnv("COLOR_FIXED_IDX"),
+			Active = readEnv("COLOR_ACTIVE_IDX"),
 		},
-		thresholds = {
+		Thresholds = {
 			Errs = readNumEnv("ERRS_THRESHOLD"),
 			Fixed = readNumEnv("FIXED_THRESHOLD"),
 		},
-		pg = {
+		PG = {
 			PgHost = readEnv("PG_HOST"),
 			PgPort = readEnv("PG_PORT"),
 			PgDatabase = readEnv("PG_DATABASE"),

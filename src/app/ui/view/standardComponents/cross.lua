@@ -1,26 +1,42 @@
-local pp = require("utils.print.pretty")
+local tty = require("app.ui.tty.tty")
 
 -- todo testing needed
 local function centerRowPool(winsize, twoDimTable)
 	local heigth = #twoDimTable
 	local width = 0
 	for _, row in pairs(twoDimTable) do
-		local len = utf8.len(row)
+		local unwrapped = tty.DropColorWrap(row)
+		local len = utf8.len(unwrapped)
 		if len > width then
 			width = len
 		end
 	end
 
 	return {
-
-		OffsetY = (winsize.MaxX - heigth) // 3,
-		OffsetX = (winsize.MaxY - width) // 2,
+		OffsetX = (winsize.MaxX - width) // 2,
+		OffsetY = (winsize.MaxY - heigth) * 3 // 7,
 	}
 end
 
 local function offsetRowPool(lines, winsize)
 	local offset = centerRowPool(winsize, lines)
 	local res = {}
+
+	for idx = 1, winsize.MaxY, 1 do
+		table.insert(res, {
+			X = winsize.MaxX // 2,
+			Y = idx,
+			line = "│",
+		})
+	end
+
+	for idx = 1, winsize.MaxX, 1 do
+		table.insert(res, {
+			X = idx,
+			Y = offset.OffsetY + #lines // 2 + 1,
+			line = "─",
+		})
+	end
 
 	for idx, raw in pairs(lines) do
 		table.insert(res, {
@@ -34,5 +50,5 @@ local function offsetRowPool(lines, winsize)
 end
 
 return {
-	offsetRowPool = offsetRowPool,
+	OffsetRowPool = offsetRowPool,
 }

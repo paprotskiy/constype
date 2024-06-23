@@ -9,13 +9,13 @@ return {
 		AAA.NewForSUT(tty.ParseTtySizeOutput)
 		:AssertSutWithParams("1 2")
 		:Equal({
-			MaxX = 1,
-			MaxY = 2,
+			MaxX = 2,
+			MaxY = 1,
 		}, AAA.TableComparator)
 		:AssertSutWithParams(" 1   2 ")
 		:Equal({
-			MaxX = 1,
-			MaxY = 2,
+			MaxX = 2,
+			MaxY = 1,
 		}, AAA.TableComparator)
 		:AssertSutWithParams("")
 		:ThrowsError()

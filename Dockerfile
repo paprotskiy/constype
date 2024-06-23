@@ -4,6 +4,7 @@ ARG LUA_VER="5.4.0"
 ARG LUA_ROCKS_VER="3.9.2"
 
 RUN apk add            \
+    ncurses            \
     libc-dev           \
     openssl-dev        \
     libffi-dev         \

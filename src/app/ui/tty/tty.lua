@@ -33,8 +33,8 @@ return {
 			error(string.format("wrong input composition: contains %s parts, expected %s", #parts, 2))
 		end
 
-		local maxX = tonumber(parts[1])
-		local maxY = tonumber(parts[2])
+		local maxX = tonumber(parts[2])
+		local maxY = tonumber(parts[1])
 
 		if maxX == nil or maxY == nil or maxX <= 0 or maxY <= 0 then
 			error(string.format('failed to parse "%s" to number pair', input))
@@ -72,5 +72,11 @@ return {
 		local prefix = "\27[" .. colorIdx .. "m"
 		local postfix = "\27[" .. defaultIdx .. "m"
 		return prefix .. text .. postfix
+	end,
+
+	-- todo proper testing required
+	DropColorWrap = function(text)
+		local ansiEscapePattern = "\27%[[%d;]*m"
+		return text:gsub(ansiEscapePattern, "")
 	end,
 }

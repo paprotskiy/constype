@@ -9,6 +9,8 @@ services:
       interval: 3s
       timeout: 2s
       retries: 10
+    volumes:
+      - ./persistent/constype-db-data:/var/lib/postgresql/data
     ports:
       - 15432:5432
     environment:

@@ -1,12 +1,15 @@
 local startController = require("app.controllers.start")
 local byeController = require("app.controllers.bye")
+local pickPlanController = require("app.controllers.pickPlan")
+local pickTopicController = require("app.controllers.pickTopic")
 local exerciseController = require("app.controllers.exercise")
 local exerciseReportController = require("app.controllers.exerciseReport")
+local planReportController = require("app.controllers.planReport")
 
 -- controllers with persistent state
 -- local startControllerImpl
 -- local exerciseControllerImpl
-local baseControllerFactory = function(cfg, signalStream, storage)
+local baseControllerFactory = function(cfg, signalStream, storage, stuffForShuttingDown)
 	return {
 		__currentController = nil,
 
@@ -19,6 +22,7 @@ local baseControllerFactory = function(cfg, signalStream, storage)
 
 		__switchAndRun = function(self, controllerConstructor, ...)
 			local arg = { ... }
+			self:Close() -- for guaranteed shutdown of previous controller
 
 			local controller = controllerConstructor(self, table.unpack(arg))
 			self.__currentController = controller
@@ -31,7 +35,7 @@ local baseControllerFactory = function(cfg, signalStream, storage)
 				action(controller, atomicSignal)
 			end
 
-			controller:Close()
+			-- controller:Close()
 		end,
 
 		--
@@ -40,19 +44,28 @@ local baseControllerFactory = function(cfg, signalStream, storage)
 			self:__switchAndRun(startController.New, storage)
 		end,
 
-		Exercise = function(self, topicData)
-			self:__switchAndRun(exerciseController.New, cfg.TerminalColors, topicData)
+		PickPlan = function(self)
+			self:__switchAndRun(pickPlanController.New, cfg.TerminalColors, storage)
 		end,
 
-		ExerciseReport = function(self, topicData, topicWalkthrough)
-			self:__switchAndRun(exerciseReportController.New, cfg.TerminalColors, storage, topicData, topicWalkthrough)
+		PickTopic = function(self, planId)
+			self:__switchAndRun(pickTopicController.New, storage, planId)
 		end,
 
-		Bye = function(_, stuffForShuttingDown)
-			local controller = byeController.New()
-			controller:Load()
-			stuffForShuttingDown()
-			controller:Close()
+		Exercise = function(self, planId, topicData)
+			self:__switchAndRun(exerciseController.New, cfg.TerminalColors, planId, topicData)
+		end,
+
+		ExerciseReport = function(self, topicData, topicWalkthrough, planId)
+			self:__switchAndRun(exerciseReportController.New, cfg, storage, topicData, topicWalkthrough, planId)
+		end,
+
+		PlanReport = function(self, wholePlanReport)
+			self:__switchAndRun(planReportController.New, cfg, wholePlanReport)
+		end,
+
+		Bye = function(self)
+			self:__switchAndRun(byeController.New, stuffForShuttingDown)
 		end,
 	}
 end

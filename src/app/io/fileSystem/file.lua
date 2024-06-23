@@ -7,9 +7,7 @@ local function file_exists(file)
 end
 
 local function lines_from(file)
-	if not file_exists(file) then
-		return {}
-	end
+	assert(file_exists(file), "file " .. file .. " does not exist")
 
 	local lines = {}
 	for line in io.lines(file) do

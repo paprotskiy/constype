@@ -1,9 +1,12 @@
 local viewMain = require("app.ui.view.bye")
 
-local byeController = function(baseControllerInvoke)
+local byeController = function(baseControllerInvoke, stuffForShuttingDown)
 	return {
-		Load = function()
+		Load = function(_)
+			baseControllerInvoke:Close()
 			viewMain:Load()
+			stuffForShuttingDown()
+			viewMain:Close()
 		end,
 
 		Close = function()
