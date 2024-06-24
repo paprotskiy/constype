@@ -42,7 +42,8 @@ local function render(trimmedList)
 		"╚══════════════════════════════════════════════════╝",
 	}
 
-	local lines = templateTop
+	local lines = {}
+	table.move(templateTop, 1, #templateTop, 1, lines)
 	for _, v in ipairs(list) do
 		table.insert(lines, insertIntoTemplate(templateRow[1], v, 5))
 		table.insert(lines, templateRow[2])
@@ -83,7 +84,7 @@ return {
 		end
 
 		if listOfPlans == nil then
-			listOfPlans = elementList.NewTrimmedList(colorsCfg.Active, colorsCfg.Default, list, 3)
+			listOfPlans = elementList.NewTrimmedList(colorsCfg.Active, colorsCfg.Default, list, 2)
 		end
 
 		render(listOfPlans)

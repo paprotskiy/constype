@@ -1,6 +1,12 @@
 local tty = require("app.ui.tty.tty")
 
-local substitutionForSkipped = "..."
+local function outOfVisibleRange(elem)
+   -- todo factory method required
+   return {
+      Key = elem.Key,
+      Value = "...",
+   }
+end
 
 local function prepareSubSet(rawList, topIdx, currIdx, bottIdx)
    local res = {}
@@ -9,10 +15,10 @@ local function prepareSubSet(rawList, topIdx, currIdx, bottIdx)
    end
 
    if topIdx ~= 1 then
-      res[1] = substitutionForSkipped
+      res[1] = outOfVisibleRange(res[1])
    end
    if bottIdx ~= #rawList then
-      res[#res] = substitutionForSkipped
+      res[#res] = outOfVisibleRange(res[#res])
    end
 
    return res, currIdx - topIdx + 1
@@ -28,7 +34,7 @@ local function shouldBreak(rawList, topIdx, bottIdx, maxSize)
    return onLimits or bothBorders
 end
 
-local function extendContext(rawList, currIdx, maxSize)
+local function extendContext(rawList, currIdx, maxSize, replacerForOutOfRange)
    local topIdx, bottIdx = currIdx, currIdx
 
    while true do
@@ -49,7 +55,7 @@ local function extendContext(rawList, currIdx, maxSize)
       end
    end
 
-   return prepareSubSet(rawList, topIdx, currIdx, bottIdx)
+   return prepareSubSet(rawList, topIdx, currIdx, bottIdx, replacerForOutOfRange)
 end
 
 return {
