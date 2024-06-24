@@ -25,7 +25,7 @@ local function prepareSubSet(rawList, topIdx, currIdx, bottIdx)
 end
 
 local function shouldBreak(rawList, topIdx, bottIdx, maxSize)
-   local onLimits = bottIdx - topIdx >= maxSize
+   local onLimits = maxSize == bottIdx - topIdx + 1
 
    local onTop = topIdx == 1
    local onBott = bottIdx == #rawList
@@ -34,7 +34,7 @@ local function shouldBreak(rawList, topIdx, bottIdx, maxSize)
    return onLimits or bothBorders
 end
 
-local function extendContext(rawList, currIdx, maxSize, replacerForOutOfRange)
+local function extendContext(rawList, currIdx, maxSize)
    local topIdx, bottIdx = currIdx, currIdx
 
    while true do
@@ -55,7 +55,7 @@ local function extendContext(rawList, currIdx, maxSize, replacerForOutOfRange)
       end
    end
 
-   return prepareSubSet(rawList, topIdx, currIdx, bottIdx, replacerForOutOfRange)
+   return prepareSubSet(rawList, topIdx, currIdx, bottIdx)
 end
 
 return {

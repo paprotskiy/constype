@@ -84,7 +84,7 @@ return {
 		end
 
 		if listOfPlans == nil then
-			listOfPlans = elementList.NewTrimmedList(colorsCfg.Active, colorsCfg.Default, list, 2)
+			listOfPlans = elementList.NewTrimmedList(colorsCfg.Active, colorsCfg.Default, list, 7)
 		end
 
 		render(listOfPlans)

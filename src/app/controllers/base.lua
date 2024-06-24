@@ -34,8 +34,6 @@ local baseControllerFactory = function(cfg, signalStream, storage, stuffForShutt
 				local action = controller:HandleSignal(atomicSignal)
 				action(controller, atomicSignal)
 			end
-
-			-- controller:Close()
 		end,
 
 		--

@@ -54,6 +54,24 @@ repo.CreateTopic(testId, "test2", 1)
 local testId = repo.CreatePlan("test-3")
 repo.CreateTopic(testId, "test3", 1)
 
+local testId = repo.CreatePlan("test-4")
+repo.CreateTopic(testId, "test4", 1)
+
+local testId = repo.CreatePlan("test-5")
+repo.CreateTopic(testId, "test5", 1)
+
+local testId = repo.CreatePlan("test-6")
+repo.CreateTopic(testId, "test6", 1)
+
+local testId = repo.CreatePlan("test-7")
+repo.CreateTopic(testId, "test7", 1)
+
+local testId = repo.CreatePlan("test-8")
+repo.CreateTopic(testId, "test8", 1)
+
+local testId = repo.CreatePlan("test-9")
+repo.CreateTopic(testId, "test9", 1)
+
 local parts = getTopicsFromBigFile("../../texts/big.txt")
 local planId = repo.CreatePlan("book")
 for k, v in ipairs(parts) do
