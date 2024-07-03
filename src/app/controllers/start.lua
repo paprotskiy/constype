@@ -32,7 +32,7 @@ local mainController = function(baseControllerInvoke)
 
 		--  todo make enter const
 		[string.char(10)] = function(_, signalChar)
-			baseControllerInvoke:PickPlan()
+			baseControllerInvoke:Menu()
 		end,
 	}
 end

@@ -5,6 +5,7 @@ local pickTopicController = require("app.controllers.pickTopic")
 local exerciseController = require("app.controllers.exercise")
 local exerciseReportController = require("app.controllers.exerciseReport")
 local planReportController = require("app.controllers.planReport")
+local menuController = require("app.controllers.menu")
 
 -- controllers with persistent state
 -- local startControllerImpl
@@ -40,6 +41,10 @@ local baseControllerFactory = function(cfg, signalStream, storage, stuffForShutt
 
 		Start = function(self)
 			self:__switchAndRun(startController.New, storage)
+		end,
+
+		Menu = function(self)
+			self:__switchAndRun(menuController.New, cfg.TerminalColors)
 		end,
 
 		PickPlan = function(self)
