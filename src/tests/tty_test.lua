@@ -4,18 +4,18 @@ local AAA = require("tests.scaffold.AAA")
 local tty = require("app.ui.tty.tty")
 
 return {
-	core.NewTest(
+	core.newTest(
 		'check "tty size" command output parsing',
-		AAA.NewForSUT(tty.ParseTtySizeOutput)
+		AAA.newForSUT(tty.parse_tty_size_output)
 		:AssertSutWithParams("1 2")
 		:Equal({
-			MaxX = 2,
-			MaxY = 1,
+			max_x = 2,
+			max_y = 1,
 		}, AAA.TableComparator)
 		:AssertSutWithParams(" 1   2 ")
 		:Equal({
-			MaxX = 2,
-			MaxY = 1,
+			max_x = 2,
+			max_y = 1,
 		}, AAA.TableComparator)
 		:AssertSutWithParams("")
 		:ThrowsError()

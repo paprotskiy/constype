@@ -1,22 +1,22 @@
-local viewMain = require("app.ui.view.bye")
+local view_bye = require("app.ui.view.bye")
 
-local byeController = function(baseControllerInvoke, stuffForShuttingDown)
+local bye_controller = function(base_controller_invoke, stuff_for_shutting_down)
 	return {
-		Load = function(_)
-			baseControllerInvoke:Close()
-			viewMain:Load()
-			stuffForShuttingDown()
-			viewMain:Close()
+		load = function(_)
+			base_controller_invoke:close()
+			view_bye:load()
+			stuff_for_shutting_down()
+			view_bye:close()
 		end,
 
-		Close = function()
-			viewMain:Close()
+		close = function()
+			view_bye:close()
 		end,
 
-		HandleSignal = function(_, signalChar) end,
+		handle_signal = function(_, signal_char) end,
 	}
 end
 
 return {
-	New = byeController,
+	new = bye_controller,
 }

@@ -1,6 +1,7 @@
 return {
-	FirstUnfinished = function(_, storage, planId)
-		local firstUnfinished = storage.GetFirstUnfinishedTopic(planId)
-		return firstUnfinished
+	first_unfinished = function(_, storage, plan_id)
+		local res = storage.get_first_unfinished_topic(plan_id)
+		os.execute("echo " .. res.Order)
+		return res
 	end,
 }

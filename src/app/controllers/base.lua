@@ -1,73 +1,73 @@
-local startController = require("app.controllers.start")
-local byeController = require("app.controllers.bye")
-local pickPlanController = require("app.controllers.pickPlan")
-local pickTopicController = require("app.controllers.pickTopic")
-local exerciseController = require("app.controllers.exercise")
-local exerciseReportController = require("app.controllers.exerciseReport")
-local planReportController = require("app.controllers.planReport")
+local start_controller = require("app.controllers.start")
+local bye_controller = require("app.controllers.bye")
+local pick_plan_controller = require("app.controllers.pickPlan")
+local pick_topic_controller = require("app.controllers.pickTopic")
+local exercise_controller = require("app.controllers.exercise")
+local exercise_report_controller = require("app.controllers.exerciseReport")
+local plan_report_controller = require("app.controllers.planReport")
 
 -- controllers with persistent state
 -- local startControllerImpl
 -- local exerciseControllerImpl
-local baseControllerFactory = function(cfg, signalStream, storage, stuffForShuttingDown)
+local base_controller_factory = function(cfg, signal_stream, storage, stuff_for_shutting_down)
 	return {
-		__currentController = nil,
+		__current_controller = nil,
 
-		Close = function(self)
-			if self.__currentController ~= nil then
-				self.__currentController:Close()
+		close = function(self)
+			if self.__current_controller ~= nil then
+				self.__current_controller:close()
 			end
-			self.__currentController = nil
+			self.__current_controller = nil
 		end,
 
-		__switchAndRun = function(self, controllerConstructor, ...)
+		__switch_and_run = function(self, controller_constructor, ...)
 			local arg = { ... }
-			self:Close() -- for guaranteed shutdown of previous controller
+			self:close() -- for guaranteed shutdown of previous controller
 
-			local controller = controllerConstructor(self, table.unpack(arg))
-			self.__currentController = controller
+			local controller = controller_constructor(self, table.unpack(arg))
+			self.__current_controller = controller
 
-			controller:Load()
+			controller:load()
 
-			while self.__currentController == controller do
-				local atomicSignal = signalStream()
-				local action = controller:HandleSignal(atomicSignal)
-				action(controller, atomicSignal)
+			while self.__current_controller == controller do
+				local atomic_signal = signal_stream()
+				local action = controller:handle_signal(atomic_signal)
+				action(controller, atomic_signal)
 			end
 		end,
 
 		--
 
-		Start = function(self)
-			self:__switchAndRun(startController.New, storage)
+		start = function(self)
+			self:__switch_and_run(start_controller.new, storage)
 		end,
 
-		PickPlan = function(self)
-			self:__switchAndRun(pickPlanController.New, cfg.TerminalColors, storage)
+		pick_plan = function(self)
+			self:__switch_and_run(pick_plan_controller.new, cfg.terminal_colors, storage)
 		end,
 
-		PickTopic = function(self, planId)
-			self:__switchAndRun(pickTopicController.New, storage, planId)
+		pick_topic = function(self, plan_id)
+			self:__switch_and_run(pick_topic_controller.new, storage, plan_id)
 		end,
 
-		Exercise = function(self, planId, topicData)
-			self:__switchAndRun(exerciseController.New, cfg.TerminalColors, planId, topicData)
+		exercise = function(self, plan_id, topic_data)
+			self:__switch_and_run(exercise_controller.new, cfg.terminal_colors, plan_id, topic_data)
 		end,
 
-		ExerciseReport = function(self, topicData, topicWalkthrough, planId)
-			self:__switchAndRun(exerciseReportController.New, cfg, storage, topicData, topicWalkthrough, planId)
+		exercise_report = function(self, topic_data, topic_walkthrough, plan_id)
+			self:__switch_and_run(exercise_report_controller.new, cfg, storage, topic_data, topic_walkthrough, plan_id)
 		end,
 
-		PlanReport = function(self, wholePlanReport)
-			self:__switchAndRun(planReportController.New, cfg, wholePlanReport)
+		plan_report = function(self, wholeplan_report)
+			self:__switch_and_run(plan_report_controller.new, cfg, wholeplan_report)
 		end,
 
-		Bye = function(self)
-			self:__switchAndRun(byeController.New, stuffForShuttingDown)
+		bye = function(self)
+			self:__switch_and_run(bye_controller.new, stuff_for_shutting_down)
 		end,
 	}
 end
 
 return {
-	New = baseControllerFactory,
+	new = base_controller_factory,
 }

@@ -1,14 +1,14 @@
 return {
 	tests = {},
 
-	AddTest = function(self, testFunc)
+	addTest = function(self, testFunc)
 		local key = tostring(testFunc)
 		self.tests[key] = testFunc
 
 		return self
 	end,
 
-	AddTestSet = function(self, testFuncTable)
+	addTestSet = function(self, testFuncTable)
 		for _, testFunc in pairs(testFuncTable) do
 			local key = tostring(testFunc)
 			self.tests[key] = testFunc

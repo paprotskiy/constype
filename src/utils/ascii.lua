@@ -9,7 +9,7 @@ local function simple(text)
 			ascii_text = ascii_text .. string.char(char_code)
 		else
 			-- Non-ASCII characters, transliterate or remove
-			-- Add custom transliteration logic as needed
+			-- add custom transliteration logic as needed
 			-- Here, we're simply removing non-ASCII characters
 			ascii_text = ascii_text .. "?"
 		end
@@ -18,5 +18,5 @@ local function simple(text)
 end
 
 return {
-	UnicodeToAscii = simple,
+	unicode_to_ascii = simple,
 }

@@ -1,12 +1,12 @@
 return {
-	NewTest = function(name, test)
+	newTest = function(name, test)
 		return {
 			name = name,
 			exec = test,
 		}
 	end,
 
-	NewTestErr = function(message)
+	newTestErr = function(message)
 		return {
 			ErrMessage = message,
 		}

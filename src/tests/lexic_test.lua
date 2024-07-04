@@ -6,21 +6,21 @@ local char = require("app.domain.lexic.char")
 local charset = require("app.domain.lexic.charset")
 local lines = require("app.domain.lexic.lines")
 
-local charStatuses = {
-	Nil = char.Statuses().Nil,
-	Succ = char.Statuses().Succ,
-	Fail = char.Statuses().Fail,
-	Fixed = char.Statuses().Fixed,
+local charstatuses = {
+	null = char.statuses().null,
+	succ = char.statuses().succ,
+	fail = char.statuses().fail,
+	fixed = char.statuses().fixed,
 }
 
-local function overlayableCharComparator(expectedOutput, expectedErr, actualOutput, actualErr)
+local function overlayable_charComparator(expectedOutput, expectedErr, actualOutput, actualErr)
 	if actualErr ~= nil then
-		return core.NewTestErr("error not expected, but got " .. actualErr)
+		return core.newTestErr("error not expected, but got " .. actualErr)
 	end
 
 	local ignoredFields = {
-		"__okOverlayingTime",
-		"__badOverlayingTime",
+		"__ok_overlaying_time",
+		"__bad_overlaying_time",
 	}
 	local errMsg = equal.DeepEqualIgnoreFuncsAndFields(expectedOutput, actualOutput, table.unpack(ignoredFields))
 
@@ -28,74 +28,74 @@ local function overlayableCharComparator(expectedOutput, expectedErr, actualOutp
 		return nil
 	end
 
-	return core.NewTestErr(errMsg)
+	return core.newTestErr(errMsg)
 end
 
 return {
-	core.NewTest("check all statuses copied successfully", function()
-		local sut = char.Statuses
+	core.newTest("check all statuses copied successfully", function()
+		local sut = char.statuses
 
 		local actual = sut()
 
-		if actual.Nil ~= "not-overlayed" then
-			return core.NewTestErr("nil type not found")
+		if actual.null ~= "not-overlayed" then
+			return core.newTestErr("nil type not found")
 		end
-		if actual.Succ ~= "successfully-overlayed" then
-			return core.NewTestErr("Succ type not found")
+		if actual.succ ~= "successfully-overlayed" then
+			return core.newTestErr("succ type not found")
 		end
-		if actual.Fail ~= "failed-to-overlay" then
-			return core.NewTestErr("Fail type not found")
+		if actual.fail ~= "failed-to-overlay" then
+			return core.newTestErr("fail type not found")
 		end
-		if actual.Fixed ~= "overlay-fixed" then
-			return core.NewTestErr("Fixed type not found")
+		if actual.fixed ~= "overlay-fixed" then
+			return core.newTestErr("fixed type not found")
 		end
 
 		return nil
 	end),
 
-	core.NewTest(
+	core.newTest(
 		"check status comparation",
-		AAA.NewForSUT(char.CompareStatuses)
-		:AssertSutWithParams(charStatuses.Nil, charStatuses.Nil)
+		AAA.newForSUT(char.compare_statuses)
+		:AssertSutWithParams(charstatuses.null, charstatuses.null)
 		:Equal(true)
-		:AssertSutWithParams(charStatuses.Succ, charStatuses.Succ)
+		:AssertSutWithParams(charstatuses.succ, charstatuses.succ)
 		:Equal(true)
-		:AssertSutWithParams(charStatuses.Fail, charStatuses.Fail)
+		:AssertSutWithParams(charstatuses.fail, charstatuses.fail)
 		:Equal(true)
-		:AssertSutWithParams(charStatuses.Fixed, charStatuses.Fixed)
+		:AssertSutWithParams(charstatuses.fixed, charstatuses.fixed)
 		:Equal(true)
-		:AssertSutWithParams(charStatuses.Nil, charStatuses.Succ)
+		:AssertSutWithParams(charstatuses.null, charstatuses.succ)
 		:Equal(false)
-		:AssertSutWithParams(charStatuses.Succ, charStatuses.Fail)
+		:AssertSutWithParams(charstatuses.succ, charstatuses.fail)
 		:Equal(false)
-		:AssertSutWithParams(charStatuses.Fail, charStatuses.Fixed)
+		:AssertSutWithParams(charstatuses.fail, charstatuses.fixed)
 		:Equal(false)
-		:AssertSutWithParams(charStatuses.Nil, "not-overlayed")
+		:AssertSutWithParams(charstatuses.null, "not-overlayed")
 		:Equal(true)
-		:AssertSutWithParams(charStatuses.Nil, "non-existing-status")
+		:AssertSutWithParams(charstatuses.null, "non-existing-status")
 		:ThrowsError()
-		:AssertSutWithParams("non-existing-status", charStatuses.Nil)
+		:AssertSutWithParams("non-existing-status", charstatuses.null)
 		:ThrowsError()
 		:AssertSutWithParams("non-existing-status1", "non-existing-status2")
 		:ThrowsError()
 		:Build()
 	),
 
-	core.NewTest("check char's status comparation", function()
-		local sut = char.CompareCharStatus
+	core.newTest("check char's status comparation", function()
+		local sut = char.compare_char_status
 
 		local sets = {
 			{
-				Char = char.New("x"),
-				Status = charStatuses.Nil,
-				ValuesAreTheSame = true,
+				char = char.new("x"),
+				status = charstatuses.null,
+				values_are_the_same = true,
 			},
 		}
 
 		for idx, set in pairs(sets) do
-			local compareRes = sut(char, set.Char, set.Status)
-			if compareRes ~= set.ValuesAreTheSame then
-				return core.NewTestErr("wrong output: expected")
+			local compareRes = sut(char, set.char, set.status)
+			if compareRes ~= set.values_are_the_same then
+				return core.newTestErr("wrong output: expected")
 			end
 		end
 
@@ -103,206 +103,206 @@ return {
 	end),
 
 	-- standard test pattern: AAA (Arrange Act Assert)
-	core.NewTest("check statuses check after overlays", function()
-		local sut = char.New("x") -- sut = SystemUnderTest
+	core.newTest("check statuses check after overlays", function()
+		local sut = char.new("x") -- sut = SystemUnderTest
 		local sets = {
 			{
-				Overlay = "x", -- error -- x
-				PreStatus = charStatuses.Nil,
-				PostStatus = charStatuses.Succ,
+				overlay = "x", -- error -- x
+				pre_status = charstatuses.null,
+				post_status = charstatuses.succ,
 			},
 			{
-				Overlay = "y",
-				PreStatus = charStatuses.Succ,
-				PostStatus = charStatuses.Fail,
+				overlay = "y",
+				pre_status = charstatuses.succ,
+				post_status = charstatuses.fail,
 			},
 			{
-				Overlay = "x",
-				PreStatus = charStatuses.Fail,
-				PostStatus = charStatuses.Fixed,
+				overlay = "x",
+				pre_status = charstatuses.fail,
+				post_status = charstatuses.fixed,
 			},
 			{
-				Overlay = "x",
-				PreStatus = charStatuses.Fixed,
-				PostStatus = charStatuses.Fixed,
+				overlay = "x",
+				pre_status = charstatuses.fixed,
+				post_status = charstatuses.fixed,
 			},
 			{
-				Overlay = nil,
-				PreStatus = charStatuses.Fixed,
-				PostStatus = charStatuses.Fail,
+				overlay = nil,
+				pre_status = charstatuses.fixed,
+				post_status = charstatuses.fail,
 			},
 			{
-				Overlay = "x",
-				PreStatus = charStatuses.Fail,
-				PostStatus = charStatuses.Fixed,
+				overlay = "x",
+				pre_status = charstatuses.fail,
+				post_status = charstatuses.fixed,
 			},
 		}
 
 		for idx, set in pairs(sets) do
-			if not char:CompareCharStatus(sut, set.PreStatus) then
-				return core.NewTestErr("PreStatus wrong for checkup #" .. tostring(idx))
+			if not char:compare_char_status(sut, set.pre_status) then
+				return core.newTestErr("pre_status wrong for checkup #" .. tostring(idx))
 			end
 
-			char.Overlay(sut, set.Overlay)
+			char.overlay(sut, set.overlay)
 
-			if not char:CompareCharStatus(sut, set.PostStatus) then
-				return core.NewTestErr("PreStatus wrong for checkup #" .. tostring(idx))
+			if not char:compare_char_status(sut, set.post_status) then
+				return core.newTestErr("pre_status wrong for checkup #" .. tostring(idx))
 			end
 		end
 
 		return nil
 	end),
 
-	core.NewTest("check char values depending on it's status", function()
+	core.newTest("check char values depending on it's status", function()
 		local sets = {
 			{
-				Char = char.New("x"),
-				OutputValue = "x",
-				ValuesAreTheSame = true,
+				char = char.new("x"),
+				output_value = "x",
+				values_are_the_same = true,
 			},
 			{
-				Char = char.New("y"),
-				OutputValue = "y",
-				ValuesAreTheSame = true,
+				char = char.new("y"),
+				output_value = "y",
+				values_are_the_same = true,
 			},
 			{
-				Char = char.New("y"),
-				OutputValue = "x",
-				ValuesAreTheSame = false,
+				char = char.new("y"),
+				output_value = "x",
+				values_are_the_same = false,
 			},
 			{
-				Char = char.New("x"),
-				OutputValue = "y",
-				ValuesAreTheSame = false,
+				char = char.new("x"),
+				output_value = "y",
+				values_are_the_same = false,
 			},
 		}
 
 		for idx, set in pairs(sets) do
-			local compareRes = char.Display(set.Char).Value == set.OutputValue
+			local compareRes = char.display(set.char).value == set.output_value
 
-			if set.ValuesAreTheSame ~= compareRes then
-				return core.NewTestErr("PreStatus wrong for checkup #" .. tostring(idx))
+			if set.values_are_the_same ~= compareRes then
+				return core.newTestErr("pre_status wrong for checkup #" .. tostring(idx))
 			end
 		end
 	end),
 
-	core.NewTest(
+	core.newTest(
 		"check test parsing to char sequence",
 		AAA
-		.NewForSUT(charset.NewCharset)
+		.newForSUT(charset.new_charset)
 		:AssertSutWithParams("a bB\nc") --
 		:Equal({
-			{ __base = "a",  __overlayStatus = charStatuses.Nil },
-			{ __base = " ",  __overlayStatus = charStatuses.Nil },
-			{ __base = "b",  __overlayStatus = charStatuses.Nil },
-			{ __base = "B",  __overlayStatus = charStatuses.Nil },
-			{ __base = "\n", __overlayStatus = charStatuses.Nil },
+			{ __base = "a",  __overlay_status = charstatuses.null },
+			{ __base = " ",  __overlay_status = charstatuses.null },
+			{ __base = "b",  __overlay_status = charstatuses.null },
+			{ __base = "B",  __overlay_status = charstatuses.null },
+			{ __base = "\n", __overlay_status = charstatuses.null },
 			{
 				__base = "c",
-				__overlayStatus = charStatuses.Nil,
+				__overlay_status = charstatuses.null,
 			},
-		}, overlayableCharComparator)
+		}, overlayable_charComparator)
 		:Build()
 	),
 
-	core.NewTest(
+	core.newTest(
 		"split chared text to words",
 		AAA
-		.NewForSUT(charset.SplitToWords)
-		:AssertSutWithParams(charset.NewCharset(""))
+		.newForSUT(charset.split_to_words)
+		:AssertSutWithParams(charset.new_charset(""))
 		:Equal({}, AAA.TableComparator)
-		:AssertSutWithParams(charset.NewCharset("word word2,.!"))
+		:AssertSutWithParams(charset.new_charset("word word2,.!"))
 		:Equal({
 			{
-				{ __base = "w", __overlayStatus = charStatuses.Nil },
-				{ __base = "o", __overlayStatus = charStatuses.Nil },
-				{ __base = "r", __overlayStatus = charStatuses.Nil },
-				{ __base = "d", __overlayStatus = charStatuses.Nil },
+				{ __base = "w", __overlay_status = charstatuses.null },
+				{ __base = "o", __overlay_status = charstatuses.null },
+				{ __base = "r", __overlay_status = charstatuses.null },
+				{ __base = "d", __overlay_status = charstatuses.null },
 			},
 			{
-				{ __base = " ", __overlayStatus = charStatuses.Nil },
+				{ __base = " ", __overlay_status = charstatuses.null },
 			},
 			{
-				{ __base = "w", __overlayStatus = charStatuses.Nil },
-				{ __base = "o", __overlayStatus = charStatuses.Nil },
-				{ __base = "r", __overlayStatus = charStatuses.Nil },
-				{ __base = "d", __overlayStatus = charStatuses.Nil },
-				{ __base = "2", __overlayStatus = charStatuses.Nil },
-				{ __base = ",", __overlayStatus = charStatuses.Nil },
-				{ __base = ".", __overlayStatus = charStatuses.Nil },
+				{ __base = "w", __overlay_status = charstatuses.null },
+				{ __base = "o", __overlay_status = charstatuses.null },
+				{ __base = "r", __overlay_status = charstatuses.null },
+				{ __base = "d", __overlay_status = charstatuses.null },
+				{ __base = "2", __overlay_status = charstatuses.null },
+				{ __base = ",", __overlay_status = charstatuses.null },
+				{ __base = ".", __overlay_status = charstatuses.null },
 			},
 			{
-				{ __base = "!", __overlayStatus = charStatuses.Nil },
+				{ __base = "!", __overlay_status = charstatuses.null },
 			},
-		}, overlayableCharComparator)
-		:AssertSutWithParams(charset.NewCharset(" 234\n 098!")) --
+		}, overlayable_charComparator)
+		:AssertSutWithParams(charset.new_charset(" 234\n 098!")) --
 		:Equal({
 			{
-				{ __base = " ", __overlayStatus = charStatuses.Nil },
+				{ __base = " ", __overlay_status = charstatuses.null },
 			},
 			{
-				{ __base = "2", __overlayStatus = charStatuses.Nil },
-				{ __base = "3", __overlayStatus = charStatuses.Nil },
-				{ __base = "4", __overlayStatus = charStatuses.Nil },
+				{ __base = "2", __overlay_status = charstatuses.null },
+				{ __base = "3", __overlay_status = charstatuses.null },
+				{ __base = "4", __overlay_status = charstatuses.null },
 			},
 			{
-				{ __base = "\n", __overlayStatus = charStatuses.Nil },
+				{ __base = "\n", __overlay_status = charstatuses.null },
 			},
 			{
-				{ __base = " ", __overlayStatus = charStatuses.Nil },
+				{ __base = " ", __overlay_status = charstatuses.null },
 			},
 			{
-				{ __base = "0", __overlayStatus = charStatuses.Nil },
-				{ __base = "9", __overlayStatus = charStatuses.Nil },
-				{ __base = "8", __overlayStatus = charStatuses.Nil },
+				{ __base = "0", __overlay_status = charstatuses.null },
+				{ __base = "9", __overlay_status = charstatuses.null },
+				{ __base = "8", __overlay_status = charstatuses.null },
 			},
 			{
-				{ __base = "!", __overlayStatus = charStatuses.Nil },
+				{ __base = "!", __overlay_status = charstatuses.null },
 			},
-		}, overlayableCharComparator)
+		}, overlayable_charComparator)
 		:Build()
 	),
 
-	core.NewTest("build new line", function()
-		local line = lines.NewLine()
+	core.newTest("build new line", function()
+		local line = lines.newLine()
 		local sut = function(additionalWord)
 			for _, v in pairs(additionalWord) do
-				line:Append(v)
+				line:append(v)
 			end
 			return line
 		end
 
-		return AAA.NewForSUT(sut)
-			 :AssertSutWithParams(charset.NewCharset("hello"))
+		return AAA.newForSUT(sut)
+			 :AssertSutWithParams(charset.new_charset("hello"))
 			 :Equal({
 				 __chars = {
-					 { __base = "h", __overlayStatus = charStatuses.Nil },
-					 { __base = "e", __overlayStatus = charStatuses.Nil },
-					 { __base = "l", __overlayStatus = charStatuses.Nil },
-					 { __base = "l", __overlayStatus = charStatuses.Nil },
-					 { __base = "o", __overlayStatus = charStatuses.Nil },
+					 { __base = "h", __overlay_status = charstatuses.null },
+					 { __base = "e", __overlay_status = charstatuses.null },
+					 { __base = "l", __overlay_status = charstatuses.null },
+					 { __base = "l", __overlay_status = charstatuses.null },
+					 { __base = "o", __overlay_status = charstatuses.null },
 				 },
-			 }, overlayableCharComparator)
+			 }, overlayable_charComparator)
 			 :Exec()
 	end),
 
-	core.NewTest("split to lines", function()
+	core.newTest("split to lines", function()
 		local buildWordLine = function(text)
-			local line = lines.NewLine()
+			local line = lines.newLine()
 			for letter in text:gmatch(".") do
-				line:Append(char.New(letter))
+				line:append(char.new(letter))
 			end
 			return line
 		end
 
-		return AAA.NewForSUT(lines.ResizeLines)
-			 :AssertSutWithParams(25, charset.SplitToWords, lines.NewLine, {
+		return AAA.newForSUT(lines.resize_lines)
+			 :AssertSutWithParams(25, charset.split_to_words, lines.newLine, {
 				 buildWordLine("split to lines"),
 			 })
 			 :Equal({
 				 buildWordLine("split to lines"),
 			 }, AAA.TableComparator)
-			 :AssertSutWithParams(5, charset.SplitToWords, lines.NewLine, {
+			 :AssertSutWithParams(5, charset.split_to_words, lines.newLine, {
 				 buildWordLine("split to lines"),
 			 })
 			 :Equal({
@@ -310,7 +310,7 @@ return {
 				 buildWordLine(" to "),
 				 buildWordLine("lines"),
 			 }, AAA.TableComparator)
-			 :AssertSutWithParams(6, charset.SplitToWords, lines.NewLine, {
+			 :AssertSutWithParams(6, charset.split_to_words, lines.newLine, {
 				 buildWordLine("split to lines"),
 			 })
 			 :Equal({
@@ -318,7 +318,7 @@ return {
 				 buildWordLine("to "),
 				 buildWordLine("lines"),
 			 }, AAA.TableComparator)
-			 :AssertSutWithParams(1, charset.SplitToWords, lines.NewLine, {
+			 :AssertSutWithParams(1, charset.split_to_words, lines.newLine, {
 				 buildWordLine("split to lines"),
 			 })
 			 :Equal({
@@ -328,7 +328,7 @@ return {
 				 buildWordLine(" "),
 				 buildWordLine("lines"),
 			 }, AAA.TableComparator)
-			 :AssertSutWithParams(0, charset.SplitToWords, lines.NewLine, {
+			 :AssertSutWithParams(0, charset.split_to_words, lines.newLine, {
 				 buildWordLine("split to lines"),
 			 })
 			 :ThrowsError()

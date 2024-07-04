@@ -3,13 +3,13 @@ local cjson = require("cjson")
 local storage = "/pers/topic.json"
 
 return {
-   Serialize = function(obj)
+   serialize = function(obj)
       local enc = cjson.encode(obj)
-      fs.WriteFile(storage, enc)
+      fs.write_file(storage, enc)
    end,
 
-   Deserialize = function()
-      local lines = fs.ReadFileLines(storage)
+   deserialize = function()
+      local lines = fs.read_file_lines(storage)
       local line = table.concat(lines, "")
       if #line == 0 then
          return nil

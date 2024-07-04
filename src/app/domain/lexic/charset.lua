@@ -1,21 +1,21 @@
-local overlayableChar = require("app.domain.lexic.char")
+local overlayable_char = require("app.domain.lexic.char")
 
 local alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 local digits = "0123456789"
 local signsIncludedInWords = '-".,'
 local all = alphabet .. digits .. signsIncludedInWords
 
-local function newCharset(rawText, stopWatch)
+local function new_charset(rawText, stopWatch)
 	local res = {}
 
 	for letter in rawText:gmatch(".") do
-		table.insert(res, overlayableChar.New(letter, stopWatch))
+		table.insert(res, overlayable_char.new(letter, stopWatch))
 	end
 
 	return res
 end
 
-local function runeIsLetter(rune)
+local function rune_is_letter(rune)
 	for letter in all:gmatch(".") do
 		if rune == letter then
 			return true
@@ -25,16 +25,16 @@ local function runeIsLetter(rune)
 	return false
 end
 
-local function splitToWords(charedText)
-	if #charedText == 0 then
+local function split_to_words(chared_text)
+	if #chared_text == 0 then
 		return {}
 	end
 
 	local res = {}
 	local word = {}
 
-	for _, rune in pairs(charedText) do
-		if runeIsLetter(rune.__base) then
+	for _, rune in pairs(chared_text) do
+		if rune_is_letter(rune.__base) then
 			table.insert(word, rune)
 		else
 			if #word > 0 then
@@ -53,6 +53,6 @@ local function splitToWords(charedText)
 end
 
 return {
-	NewCharset = newCharset,
-	SplitToWords = splitToWords,
+	new_charset = new_charset,
+	split_to_words = split_to_words,
 }

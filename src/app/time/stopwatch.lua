@@ -3,11 +3,11 @@ local period = require("app.time.period")
 
 -- todo threadsafe welcomed
 return {
-   New = function()
+   new = function()
       return {
          __currTime = nil,
 
-         ClickStopWatch = function(self)
+         click_stop_watch = function(self)
             local curr = socket.gettime() * 1000
 
             local res = 0
@@ -16,7 +16,7 @@ return {
             end
 
             self.__currTime = curr
-            return period.New(res)
+            return period.new(res)
          end,
       }
    end,

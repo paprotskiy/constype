@@ -3,17 +3,17 @@ local subquery = require("utils.query")
 return {
 	__plans = nil,
 
-	New = function(self, storage)
-		local plans = storage.GetPlans()
+	new = function(self, storage)
+		local plans = storage.get_plans()
 
-		self.__plans = subquery.SortTable(plans, function(a, b)
-			return a.Title > b.Title
+		self.__plans = subquery.sort_table(plans, function(a, b)
+			return a.title > b.title
 		end)
 
 		return self
 	end,
 
-	List = function(self)
+	list = function(self)
 		return self.__plans
 	end,
 }

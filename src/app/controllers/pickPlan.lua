@@ -1,68 +1,66 @@
-local overlayableChar = require("app.domain.lexic.char")
 local view = require("app.ui.view.pickPlan")
 local model = require("app.domain.pickPlan")
-local pp = require("utils.print.pretty")
 
-local pickPlanController = function(baseControllerInvoke, cfg, storage)
-	local planList = model:New(storage)
+local pick_plan_controller = function(base_controller_invoke, cfg, storage)
+	local plan_list = model:new(storage)
 
 	return {
-		Load = function()
-			local plans = planList:List()
+		load = function()
+			local plans = plan_list:list()
 
 			-- todo DTO layer required
 			local keyval = {}
 			for _, v in ipairs(plans) do
 				table.insert(keyval, {
 					Key = v.Id,
-					Value = v.Title,
+					value = v.title,
 				})
 			end
 
-			view:Load(cfg, keyval)
+			view:load(cfg, keyval)
 		end,
 
-		Close = function()
-			view:Close()
+		close = function()
+			view:close()
 		end,
 
-		HandleSignal = function(self, atomicSignal)
-			local action = self[atomicSignal]
+		handle_signal = function(self, atomic_signal)
+			local action = self[atomic_signal]
 
 			if action == nil then
-				return self.Default
+				return self.default
 			end
 			return action
 		end,
 
-		Default = function(_, signalChar) end,
+		default = function(_, signal_char) end,
 
 		["j"] = function(_, _)
-			view:PickNext()
+			view:pick_next()
 		end,
 
 		["k"] = function(_, _)
-			view:PickPrev()
+			view:pick_prev()
 		end,
 
 		--  todo make backspace const
 		[string.char(127)] = function(_, _)
-			baseControllerInvoke:Bye()
+			base_controller_invoke:bye()
 		end,
 
 		-- todo make esc const
 		[string.char(27)] = function(_, _)
-			baseControllerInvoke:Bye()
+			base_controller_invoke:bye()
 		end,
 
 		--  todo make enter const
 		[string.char(10)] = function(_, _)
-			local curr = view:GetCurrent()
-			baseControllerInvoke:PickTopic(curr.Key)
+			local curr = view:get_current()
+			base_controller_invoke:pick_topic(curr.Key)
 		end,
 	}
 end
 
 return {
-	New = pickPlanController,
+	new = pick_plan_controller,
 }

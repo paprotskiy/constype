@@ -20,7 +20,7 @@ local function addAssert(asserts, comparator, expectedOutput, expectedErr, sut, 
 		end)
 
 		if compareErr ~= nil then
-			return scaffold.NewTestErr("comparator crashed: " .. compareErr)
+			return scaffold.newTestErr("comparator crashed: " .. compareErr)
 		end
 
 		return compareRes
@@ -29,12 +29,12 @@ end
 
 local function defaultComparator(expectedOutput, expectedErr, actualOutput, actualErr)
 	if actualErr ~= nil then
-		return scaffold.NewTestErr("an error was catched: " .. tostring(actualErr))
+		return scaffold.newTestErr("an error was catched: " .. tostring(actualErr))
 	end
 
 	if expectedOutput ~= actualOutput then
 		local msg = string.format('expected "%s", got "%s"', expectedOutput, actualOutput)
-		return scaffold.NewTestErr(msg)
+		return scaffold.newTestErr(msg)
 	end
 
 	return nil
@@ -42,7 +42,7 @@ end
 
 local function tableComparator(expectedOutput, expectedErr, actualOutput, actualErr)
 	if actualErr ~= nil then
-		return scaffold.NewTestErr("error not expected, but got " .. actualErr)
+		return scaffold.newTestErr("error not expected, but got " .. actualErr)
 	end
 
 	local errMsg = equal.DeepEqualIgnoreFuncs(expectedOutput, actualOutput)
@@ -51,7 +51,7 @@ local function tableComparator(expectedOutput, expectedErr, actualOutput, actual
 		return nil
 	end
 
-	return scaffold.NewTestErr(errMsg)
+	return scaffold.newTestErr(errMsg)
 end
 
 local errMustRaise = function(expectedOutput, expectedErr, actualOutput, actualErr)
@@ -59,28 +59,28 @@ local errMustRaise = function(expectedOutput, expectedErr, actualOutput, actualE
 		return nil
 	end
 
-	return scaffold.NewTestErr("raising error expected, but not occurred")
+	return scaffold.newTestErr("raising error expected, but not occurred")
 end
 
-local function NewSUT()
+local function newSUT()
 	return {
 		__sut = nil,
 		__asserts = {},
 
 		Exec = function(self)
 			if type(self.__sut) ~= "function" then
-				return scaffold.NewTestErr("SUT is not specified or not a function")
+				return scaffold.newTestErr("SUT is not specified or not a function")
 			end
 
 			if #self.__asserts == 0 then
-				return scaffold.NewTestErr("asserts are not specified")
+				return scaffold.newTestErr("asserts are not specified")
 			end
 
 			for idx, assert in pairs(self.__asserts) do
 				local err = assert()
 				if err ~= nil then
 					-- todo implement wrapping
-					return scaffold.NewTestErr("assert #" .. tostring(idx) .. " failed: " .. err.ErrMessage)
+					return scaffold.newTestErr("assert #" .. tostring(idx) .. " failed: " .. err.ErrMessage)
 				end
 			end
 
@@ -120,8 +120,8 @@ local function NewSUT()
 end
 
 return {
-	NewForSUT = function(sut)
-		return NewSUT():SetSUT(sut)
+	newForSUT = function(sut)
+		return newSUT():SetSUT(sut)
 	end,
 
 	TableComparator = tableComparator,

@@ -1,4 +1,4 @@
-local customAssert = require("utils.assert")
+local custom_assert = require("utils.assert")
 
 local function splitByIndex(arr, idx)
 	local left, right = {}, {}
@@ -17,8 +17,8 @@ local function splitByIndex(arr, idx)
 end
 
 local function joinTables(main, aux)
-	customAssert(type(main) == "table", "first element must be the table", 2)
-	customAssert(type(aux) == "table", "second element must be the table", 2)
+	custom_assert(type(main) == "table", "first element must be the table", 2)
+	custom_assert(type(aux) == "table", "second element must be the table", 2)
 
 	local res = {}
 	for k, v in pairs(main) do
@@ -66,7 +66,7 @@ end
 local subquery = {
 	SplitByIndex = splitByIndex,
 	JoinTables = joinTables,
-	SortTable = sortTable,
+	sort_table = sortTable,
 }
 
 return subquery

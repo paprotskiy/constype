@@ -1,97 +1,97 @@
 local tty = require("app.ui.tty.tty")
 
-local function outOfVisibleRange(elem)
+local function out_of_visible_range(elem)
    -- todo factory method required
    return {
       Key = elem.Key,
-      Value = "...",
+      value = "...",
    }
 end
 
-local function prepareSubSet(rawList, topIdx, currIdx, bottIdx)
+local function prepare_subset(raw_list, top_idx, curr_idx, bottom_idx)
    local res = {}
-   for idx = topIdx, bottIdx, 1 do
-      table.insert(res, rawList[idx])
+   for idx = top_idx, bottom_idx, 1 do
+      table.insert(res, raw_list[idx])
    end
 
-   if topIdx ~= 1 then
-      res[1] = outOfVisibleRange(res[1])
+   if top_idx ~= 1 then
+      res[1] = out_of_visible_range(res[1])
    end
-   if bottIdx ~= #rawList then
-      res[#res] = outOfVisibleRange(res[#res])
+   if bottom_idx ~= #raw_list then
+      res[#res] = out_of_visible_range(res[#res])
    end
 
-   return res, currIdx - topIdx + 1
+   return res, curr_idx - top_idx + 1
 end
 
-local function shouldBreak(rawList, topIdx, bottIdx, maxSize)
-   local onLimits = maxSize == bottIdx - topIdx + 1
+local function should_break(raw_list, top_idx, bottom_idx, max_size)
+   local on_limits = max_size == bottom_idx - top_idx + 1
 
-   local onTop = topIdx == 1
-   local onBott = bottIdx == #rawList
-   local bothBorders = onTop and onBott
+   local on_top = top_idx == 1
+   local on_bottom = bottom_idx == #raw_list
+   local both_borders = on_top and on_bottom
 
-   return onLimits or bothBorders
+   return on_limits or both_borders
 end
 
-local function extendContext(rawList, currIdx, maxSize)
-   local topIdx, bottIdx = currIdx, currIdx
+local function extend_context(raw_list, curr_idx, max_size)
+   local top_idx, bottom_idx = curr_idx, curr_idx
 
    while true do
-      if shouldBreak(rawList, topIdx, bottIdx, maxSize) then
+      if should_break(raw_list, top_idx, bottom_idx, max_size) then
          break
       end
 
-      if topIdx > 1 then
-         topIdx = topIdx - 1
+      if top_idx > 1 then
+         top_idx = top_idx - 1
       end
 
-      if shouldBreak(rawList, topIdx, bottIdx, maxSize) then
+      if should_break(raw_list, top_idx, bottom_idx, max_size) then
          break
       end
 
-      if bottIdx < #rawList then
-         bottIdx = bottIdx + 1
+      if bottom_idx < #raw_list then
+         bottom_idx = bottom_idx + 1
       end
    end
 
-   return prepareSubSet(rawList, topIdx, currIdx, bottIdx)
+   return prepare_subset(raw_list, top_idx, curr_idx, bottom_idx)
 end
 
 return {
-   NewTrimmedList = function(colorActive, colorDefault, rawList, maxSize)
-      local currIdx = 1
+   new_trimmed_list = function(color_active, color_default, raw_list, max_size)
+      local curr_idx = 1
 
       return {
-         PickNext = function()
-            if currIdx < #rawList then
-               currIdx = currIdx + 1
+         pick_next = function()
+            if curr_idx < #raw_list then
+               curr_idx = curr_idx + 1
             end
          end,
 
-         PickPrev = function()
-            if currIdx > 1 then
-               currIdx = currIdx - 1
+         pick_prev = function()
+            if curr_idx > 1 then
+               curr_idx = curr_idx - 1
             end
          end,
 
-         ToLines = function()
+         to_lines = function()
             local lines = {}
-            local list, newCurrIdx = extendContext(rawList, currIdx, maxSize)
+            local list, new_curr_idx = extend_context(raw_list, curr_idx, max_size)
 
             for idx, v in ipairs(list) do
-               if idx == newCurrIdx then
-                  table.insert(lines, tty.PrintWithColor(colorActive, colorDefault, v.Value))
+               if idx == new_curr_idx then
+                  table.insert(lines, tty.print_with_color(color_active, color_default, v.value))
                else
-                  table.insert(lines, tty.PrintWithColor(colorDefault, colorDefault, v.Value))
+                  table.insert(lines, tty.print_with_color(color_default, color_default, v.value))
                end
             end
 
             return lines
          end,
 
-         GetCurrent = function()
-            return rawList[currIdx]
+         get_current = function()
+            return raw_list[curr_idx]
          end,
       }
    end,
