@@ -67,12 +67,16 @@ return {
             if currIdx < #rawList then
                currIdx = currIdx + 1
             end
+
+            print(currIdx) --todo remove
          end,
 
          PickPrev = function()
             if currIdx > 1 then
                currIdx = currIdx - 1
             end
+
+            print(currIdx) --todo remove
          end,
 
          ToLines = function()

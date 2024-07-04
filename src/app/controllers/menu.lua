@@ -1,4 +1,4 @@
-local view = require("app.ui.view.pickPlan")
+local view = require("app.ui.view.menu")
 local model = require("app.domain.menu")
 
 local MenuController = function(baseControllerInvoke, cfg)
@@ -56,11 +56,11 @@ local MenuController = function(baseControllerInvoke, cfg)
 		[string.char(10)] = function(_, _)
 			local curr = view:GetCurrent()
 
-            if curr.Title == "pick-plan" then
+            if curr.Value == "pick-plan" then
                 baseControllerInvoke:PickPlan()
-            elseif curr.TItle == "import-as-plan" then
-                baseControllerInvoke:ImportAsPlan()                
-            end			
+            elseif curr.Value == "import-as-plan" then
+                baseControllerInvoke:ImportAsPlan()
+            end
 		end,
 	}
 end

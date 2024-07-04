@@ -6,6 +6,7 @@ local exerciseController = require("app.controllers.exercise")
 local exerciseReportController = require("app.controllers.exerciseReport")
 local planReportController = require("app.controllers.planReport")
 local menuController = require("app.controllers.menu")
+local importAsPlanController = require("app.controllers.importAsPlan")
 
 -- controllers with persistent state
 -- local startControllerImpl
@@ -45,6 +46,10 @@ local baseControllerFactory = function(cfg, signalStream, storage, stuffForShutt
 
 		Menu = function(self)
 			self:__switchAndRun(menuController.New, cfg.TerminalColors)
+		end,
+
+		ImportAsPlan = function(self)
+			self:__switchAndRun(importAsPlanController.New, cfg.TerminalColors, storage)
 		end,
 
 		PickPlan = function(self)

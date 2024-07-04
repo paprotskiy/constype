@@ -27,7 +27,7 @@ local function render(trimmedList)
 
 	local templateTop = {
 		"╔══════════════════════════════════════════════════╗",
-		"║ ---------------       Menu       --------------- ║",
+		"║ --------------------- Menu --------------------- ║",
 		"╠══════════════════════════════════════════════════╣",
 		"║ ┌──────────────────────────────────────────────┐ ║",
 	}
@@ -84,7 +84,7 @@ return {
 		end
 
 		if menuList == nil then
-			menuList = elementList.NewTrimmedList(colorsCfg.Active, colorsCfg.Default, list, 7)
+			menuList = elementList.NewTrimmedList(colorsCfg.Active, colorsCfg.Default, list, 2)
 		end
 
 		render(menuList)
