@@ -1,42 +1,44 @@
-local viewMain = require("app.ui.view.start")
+local view_main = require("app.ui.view.start")
 
-local mainController = function(baseControllerInvoke)
+local start_controller = function(base_controller_invoke)
 	return {
-		Load = function()
-			viewMain:Load()
+		load = function()
+			view_main:load()
 		end,
 
-		Close = function()
-			viewMain:Close()
+		close = function()
+			view_main:close()
 		end,
 
-		HandleSignal = function(self, atomicSignal)
-			local action = self[atomicSignal]
+		handle_signal = function(self, atomic_signal)
+			local action = self[atomic_signal]
 
 			if action == nil then
-				return self.Default
+				return self.default
 			end
 			return action
 		end,
 
-		Default = function(_, signalChar) end,
+		default = function(_, signal_char) end,
 
 		-- todo make esc const
-		[string.char(27)] = function(_, signalChar)
-			baseControllerInvoke:Bye()
+		[string.char(27)] = function(_, signal_char)
+			base_controller_invoke:bye()
 		end,
+
 		--  todo make backspace const
-		[string.char(127)] = function(_, signalChar)
-			baseControllerInvoke:Bye()
+		[string.char(127)] = function(_, signal_char)
+			base_controller_invoke:bye()
 		end,
 
 		--  todo make enter const
 		[string.char(10)] = function(_, signalChar)
-			baseControllerInvoke:Menu()
+			base_controller_invoke:menu()
+
 		end,
 	}
 end
 
 return {
-	New = mainController,
+	new = start_controller,
 }

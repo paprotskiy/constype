@@ -1,5 +1,5 @@
-local prettyPrint
-prettyPrint = function(val, intendance, offset)
+local pretty_print
+pretty_print = function(val, intendance, offset)
 	intendance = intendance or ""
 	offset = offset or "\t"
 
@@ -7,7 +7,7 @@ prettyPrint = function(val, intendance, offset)
 		local fields = ""
 		for k, v in pairs(val) do
 			local newIntendance = intendance .. offset
-			local subprint = prettyPrint(v, newIntendance)
+			local subprint = pretty_print(v, newIntendance)
 			fields = fields .. newIntendance .. "[" .. k .. "]: " .. subprint .. "\n" -- todo make prettier
 		end
 		return "{\n" .. fields .. intendance .. "}"
@@ -17,5 +17,5 @@ prettyPrint = function(val, intendance, offset)
 end
 
 return {
-	PrettyPrint = prettyPrint,
+	pretty_print = pretty_print,
 }

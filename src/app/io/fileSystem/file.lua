@@ -16,7 +16,7 @@ local function lines_from(file)
 	return lines
 end
 
-local function toFile(modifier, filePath, data)
+local function to_file(modifier, filePath, data)
 	local f = io.open(filePath, modifier)
 
 	assert(f ~= nil, "failed to open file")
@@ -27,20 +27,20 @@ local function toFile(modifier, filePath, data)
 end
 
 return {
-	ReadFileLines = function(filePath)
+	read_file_lines = function(filePath)
 		return lines_from(filePath)
 	end,
 
-	ReadFile = function(filePath)
+	read_file = function(filePath)
 		local lines = lines_from(filePath)
 		return table.concat(lines, "\n")
 	end,
 
-	WriteFile = function(filePath, data)
-		toFile("w", filePath, data)
+	write_file = function(filePath, data)
+		to_file("w", filePath, data)
 	end,
 
-	AppendFile = function(filePath, data)
-		toFile("w", filePath, data)
+	append_file = function(filePath, data)
+		to_file("w", filePath, data)
 	end,
 }

@@ -1,32 +1,32 @@
 local tty = require("app.ui.tty.tty")
 
 return {
-	Close = function()
-		tty.ClearScreen()
+	close = function()
+		tty.clear_screen()
 		os.execute("tput cnorm")
 		os.execute("stty echo -cbreak </dev/tty >/dev/tty 2>&1")
 	end,
 
-	Load = function()
+	load = function()
 		os.execute("tput civis")
 		os.execute("stty -echo cbreak </dev/tty >/dev/tty 2>&1")
 
-		tty.ClearScreen()
+		tty.clear_screen()
 
 		local msg = "For Start Press Enter"
-		local winsize = tty:WinSize()
-		local offsetX = (winsize.MaxX - #msg) // 2
-		local offsetY = winsize.MaxY // 2
+		local winsize = tty:wins_size()
+		local offsetX = (winsize.max_x - #msg) // 2
+		local offsetY = winsize.max_y // 2
 
-		tty.Jump(offsetX, offsetY)
-		tty.Print(msg)
+		tty.jump(offsetX, offsetY)
+		tty.print(msg)
 	end,
 
-	Jump = function(x, y)
-		tty.Jump(x, y)
+	jump = function(x, y)
+		tty.jump(x, y)
 	end,
 
-	Print = function(txt)
-		tty.Print(txt)
+	print = function(txt)
+		tty.print(txt)
 	end,
 }

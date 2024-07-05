@@ -1,5 +1,5 @@
 return {
-	CloseTestAppWithCode = function(report)
+	closeTestAppWithCode = function(report)
 		local total = #report
 		local okCount = 0
 		local failCount = 0

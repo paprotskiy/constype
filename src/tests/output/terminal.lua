@@ -1,7 +1,7 @@
 package.path = package.path .. ";../?.lua"
 local pp = require("utils.print.pretty")
 
-local function printBriefReportToTerminal(report)
+local function print_brief_report_to_terminal(report)
 	local total = #report
 	local okCount = 0
 	local failed = {}
@@ -28,21 +28,21 @@ local function printBriefReportToTerminal(report)
 	end
 end
 
-local function printVerboseReportToTerminal(reportRecords)
-	local namedReports = {}
+local function print_verbose_report_to_terminal(reportRecords)
+	local named_reports = {}
 	for _, r in pairs(reportRecords) do
 		if not r.ok then
 			local msg = string.format('"%s": %s', r.testName, r.errMessage)
-			table.insert(namedReports, msg)
+			table.insert(named_reports, msg)
 		end
 	end
 
-	if #namedReports > 0 then
-		print(pp.PrettyPrint(namedReports))
+	if #named_reports > 0 then
+		print(pp.pretty_print(named_reports))
 	end
 end
 
 return {
-	brief = printBriefReportToTerminal,
-	verbose = printVerboseReportToTerminal,
+	brief = print_brief_report_to_terminal,
+	verbose = print_verbose_report_to_terminal,
 }

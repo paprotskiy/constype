@@ -1,24 +1,24 @@
 local tty = require("app.ui.tty.tty")
 
 return {
-	Close = function()
-		tty.ClearScreen()
+	close = function()
+		tty.clear_screen()
 		os.execute("tput cnorm")
 		os.execute("stty echo -cbreak </dev/tty >/dev/tty 2>&1")
 	end,
 
-	Load = function()
+	load = function()
 		os.execute("tput civis")
 		os.execute("stty -echo cbreak </dev/tty >/dev/tty 2>&1")
 
-		tty.ClearScreen()
+		tty.clear_screen()
 
 		local msg = "shutting down"
-		local winsize = tty:WinSize()
-		local offsetX = (winsize.MaxX - #msg) // 2
-		local offsetY = winsize.MaxY // 2
+		local winsize = tty:wins_size()
+		local offset_x = (winsize.max_x - #msg) // 2
+		local offset_y = winsize.max_y // 2
 
-		tty.Jump(offsetX, offsetY)
-		tty.Print(msg)
+		tty.jump(offset_x, offset_y)
+		tty.print(msg)
 	end,
 }

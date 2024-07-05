@@ -5,8 +5,8 @@ local subquery = require("utils.query")
 
 return {
 
-	core.NewTest("check subquery (table splitting by index)", function()
-		return AAA.NewForSUT(subquery.SplitByIndex)
+	core.newTest("check subquery (table splitting by index)", function()
+		return AAA.newForSUT(subquery.SplitByIndex)
 			:AssertSutWithParams({}, 1)
 			:Equal({
 				left = {},
@@ -40,8 +40,8 @@ return {
 			:Exec()
 	end),
 
-	core.NewTest("check table extending", function()
-		return AAA.NewForSUT(subquery.JoinTables)
+	core.newTest("check table extending", function()
+		return AAA.newForSUT(subquery.JoinTables)
 			:AssertSutWithParams({}, {})
 			:Equal({}, AAA.TableComparator)
 			:AssertSutWithParams({ 1, 2, 3 }, {})
@@ -71,9 +71,9 @@ return {
 			:Exec()
 	end),
 
-	core.NewTest("check deepEqual function", function()
+	core.newTest("check deepEqual function", function()
 		return AAA
-			.NewForSUT(equal.DeepEqualIgnoreFuncs)
+			.newForSUT(equal.DeepEqualIgnoreFuncs)
 			:AssertSutWithParams(nil, nil)
 			:Equal(nil)
 			:AssertSutWithParams("a", "a")

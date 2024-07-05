@@ -12,8 +12,8 @@ local function tableSizeWithoutFuncAndFields(targetTable, ...)
 
 	local count = 0
 	for k, v in pairs(targetTable) do
-		local inIgnoreList = tableContainsElement(args, k)
-		if (not inIgnoreList) and type(v) ~= "function" then
+		local in_ignore_list = tableContainsElement(args, k)
+		if (not in_ignore_list) and type(v) ~= "function" then
 			count = count + 1
 		end
 	end
@@ -41,12 +41,12 @@ local function deleteKeysFromTable(targetTable, ...)
 end
 
 local function funcInTheTable(a, b)
-	local typeFunc = "function"
-	local typeNil = "nil"
+	local type_func = "function"
+	local typenil = "nil"
 
-	local bothFuncs = type(a) == typeFunc and type(b) == typeFunc
-	local firstFunc = type(a) == typeFunc and type(b) == typeNil
-	local secondFunc = type(a) == typeNil and type(b) == typeFunc
+	local bothFuncs = type(a) == type_func and type(b) == type_func
+	local firstFunc = type(a) == type_func and type(b) == typenil
+	local secondFunc = type(a) == typenil and type(b) == type_func
 
 	return bothFuncs or firstFunc or secondFunc
 end

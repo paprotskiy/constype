@@ -7,35 +7,35 @@ local toAscii = require("utils.ascii")
 local sqlDir = "./repo/sql"
 
 -------------------------------------- create db and tables -------------------------------------
-connBuilder.CreateDbIfNotExists()
+connBuilder.create_db_if_not_exists()
 
-local conn = connBuilder.PgConnection()
-local repo = repoBuilder.New(conn)
-repo.ApplyMigrationsIfNotExists()
+local conn = connBuilder.pg_connection()
+local repo = repoBuilder.new(conn)
+repo.apply_migrations_if_not_exists()
 -------------------------------------- create db and tables -------------------------------------
 
 ---------------------------------- read big text and get topics ---------------------------------
-local function getTopicsFromBigFile(address)
-	local function endsWithSymbol(str, symb)
-		return str:sub(- #symb) == symb
-	end
+local function ends_with_symbols(str, symb)
+	return str:sub(- #symb) == symb
+end
 
+local function get_topics_from_big_file(address)
 	local function trim(str)
 		str = str:gsub("\n", "")
 		str = str:gsub("\r", "")
-		return toAscii.UnicodeToAscii(str)
+		return toAscii.unicode_to_ascii(str)
 	end
 
-	local rows = file.ReadFileLines(address)
+	local rows = file.read_file_lines(address)
 
 	local par = ""
 	local paragraphs = {}
 	for _, part in ipairs(rows) do
 		par = par .. part .. "\n"
-		if endsWithSymbol(part, ".") then
+		if ends_with_symbols(part, ".") then
 			table.insert(paragraphs, trim(par))
 			par = ""
-		elseif not endsWithSymbol(part, " ") then
+		elseif not ends_with_symbols(part, " ") then
 			par = par .. " "
 		end
 	end
@@ -45,36 +45,36 @@ end
 ---------------------------------- read big text and get topics ---------------------------------
 
 ------------------------------------------ seed tables ------------------------------------------
-local testId = repo.CreatePlan("test")
-repo.CreateTopic(testId, "test", 1)
+local testId = repo.create_plan("test")
+repo.create_topic(testId, "test", 1)
 
-local testId = repo.CreatePlan("test-2")
-repo.CreateTopic(testId, "test2", 1)
+local testId = repo.create_plan("test-2")
+repo.create_topic(testId, "test2", 1)
 
-local testId = repo.CreatePlan("test-3")
-repo.CreateTopic(testId, "test3", 1)
+local testId = repo.create_plan("test-3")
+repo.create_topic(testId, "test3", 1)
 
-local testId = repo.CreatePlan("test-4")
-repo.CreateTopic(testId, "test4", 1)
+local testId = repo.create_plan("test-4")
+repo.create_topic(testId, "test4", 1)
 
-local testId = repo.CreatePlan("test-5")
-repo.CreateTopic(testId, "test5", 1)
+local testId = repo.create_plan("test-5")
+repo.create_topic(testId, "test5", 1)
 
-local testId = repo.CreatePlan("test-6")
-repo.CreateTopic(testId, "test6", 1)
+local testId = repo.create_plan("test-6")
+repo.create_topic(testId, "test6", 1)
 
-local testId = repo.CreatePlan("test-7")
-repo.CreateTopic(testId, "test7", 1)
+local testId = repo.create_plan("test-7")
+repo.create_topic(testId, "test7", 1)
 
-local testId = repo.CreatePlan("test-8")
-repo.CreateTopic(testId, "test8", 1)
+local testId = repo.create_plan("test-8")
+repo.create_topic(testId, "test8", 1)
 
-local testId = repo.CreatePlan("test-9")
-repo.CreateTopic(testId, "test9", 1)
+local testId = repo.create_plan("test-9")
+repo.create_topic(testId, "test9", 1)
 
-local parts = getTopicsFromBigFile("../../texts/big.txt")
-local planId = repo.CreatePlan("book")
+local parts = get_topics_from_big_file("../../texts/big.txt")
+local plan_id = repo.create_plan("book")
 for k, v in ipairs(parts) do
-	repo.CreateTopic(planId, v, k)
+	repo.create_topic(plan_id, v, k)
 end
 ------------------------------------------ seed tables ------------------------------------------

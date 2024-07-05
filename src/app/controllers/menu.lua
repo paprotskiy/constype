@@ -1,70 +1,70 @@
 local view = require("app.ui.view.menu")
 local model = require("app.domain.menu")
 
-local MenuController = function(baseControllerInvoke, cfg)
-	local menuList = model:New()
+local menu_controller = function(base_controller_invoke, cfg)
+	local menu_list = model:new()
 
 	return {
-		Load = function()
-			local list = menuList:List()
+		load = function()
+			local list = menu_list:list()
 
 			-- todo DTO layer required
 			local val = {}
 			for _, v in ipairs(list) do
 				table.insert(val, {
-					Value = v.Title,
+					value = v.title,
 				})
 			end
 
-			view:Load(cfg, val)
+			view:load(cfg, val)
 		end,
 
-		Close = function()
-			view:Close()
+		close = function()
+			view:close()
 		end,
 
-		HandleSignal = function(self, atomicSignal)
-			local action = self[atomicSignal]
+		handle_signal = function(self, atomic_signal)
+			local action = self[atomic_signal]
 
 			if action == nil then
-				return self.Default
+				return self.default
 			end
 			return action
 		end,
 
-		Default = function(_, signalChar) end,
+		default = function(_, signalChar) end,
 
 		["j"] = function(_, _)
-			view:PickNext()
+			view:pick_next()
 		end,
 
 		["k"] = function(_, _)
-			view:PickPrev()
+			view:pick_prev()
 		end,
 
 		--  todo make backspace const
 		[string.char(127)] = function(_, _)
-			baseControllerInvoke:Bye()
+			base_controller_invoke:bye()
 		end,
 
 		-- todo make esc const
 		[string.char(27)] = function(_, _)
-			baseControllerInvoke:Bye()
+			base_controller_invoke:bye()
 		end,
 
 		--  todo make enter const
 		[string.char(10)] = function(_, _)
-			local curr = view:GetCurrent()
+			local curr = view:get_current()
 
-            if curr.Value == "pick-plan" then
-                baseControllerInvoke:PickPlan()
-            elseif curr.Value == "import-as-plan" then
-                baseControllerInvoke:ImportAsPlan()
+            if curr.value == "pick-plan" then
+                base_controller_invoke:pick_plan()
+            elseif curr.value == "import-as-plan" then
+                base_controller_invoke:import_as_plan()
             end
 		end,
 	}
 end
 
 return {
-	New = MenuController,
+	new = menu_controller,
 }

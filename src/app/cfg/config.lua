@@ -1,4 +1,4 @@
-local customAssert = require("utils.assert")
+local custom_assert = require("utils.assert")
 
 local errs = {}
 local function readEnv(key)
@@ -24,28 +24,28 @@ end
 
 local function fillEnvs()
 	local config = {
-		TerminalColors = {
-			Default = readEnv("COLOR_DEFAULT_IDX"),
-			Succ = readEnv("COLOR_SUCC_IDX"),
-			Fail = readEnv("COLOR_FAIL_IDX"),
-			Fixed = readEnv("COLOR_FIXED_IDX"),
+		terminal_colors = {
+			default = readEnv("COLOR_DEFAULT_IDX"),
+			succ = readEnv("COLOR_SUCC_IDX"),
+			fail = readEnv("COLOR_FAIL_IDX"),
+			fixed = readEnv("COLOR_FIXED_IDX"),
 			Active = readEnv("COLOR_ACTIVE_IDX"),
 		},
-		Thresholds = {
-			Errs = readNumEnv("ERRS_THRESHOLD"),
-			Fixed = readNumEnv("FIXED_THRESHOLD"),
+		thresholds = {
+			errs = readNumEnv("ERRS_THRESHOLD"),
+			fixed = readNumEnv("FIXED_THRESHOLD"),
 		},
-		PG = {
-			PgHost = readEnv("PG_HOST"),
-			PgPort = readEnv("PG_PORT"),
-			PgDatabase = readEnv("PG_DATABASE"),
-			PgUser = readEnv("PG_USER"),
-			PgPassword = readEnv("PG_PASSWORD"),
-			PgSslMode = readEnv("PG_SSL_MODE"),
+		pg = {
+			pg_host = readEnv("PG_HOST"),
+			pg_port = readEnv("PG_PORT"),
+			pg_database = readEnv("PG_DATABASE"),
+			pg_user = readEnv("PG_USER"),
+			pg_password = readEnv("PG_PASSWORD"),
+			pg_ssl_mode = readEnv("PG_SSL_MODE"),
 		},
 	}
 
-	customAssert(#errs == 0, table.concat(errs, "\n"))
+	custom_assert(#errs == 0, table.concat(errs, "\n"))
 	return config
 end
 

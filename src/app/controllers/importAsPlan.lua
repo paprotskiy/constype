@@ -1,44 +1,44 @@
 local view = require("app.ui.view.importAsPlan")
 
-local importAsPlanController = function(baseControllerInvoke)
+local import_as_plan_controller = function(base_controller_invoke)
 
 	return {
-		Load = function()
-			view.Load()
+		load = function()
+			view.load()
 		end,
 
-		Close = function()
-			view.Close()
+		close = function()
+			view.close()
 		end,
 
-		HandleSignal = function(self, atomicSignal)
-			local action = self[atomicSignal]
+		handle_signal = function(self, atomic_signal)
+			local action = self[atomic_signal]
 
 			if action == nil then
-				return self.Default
+				return self.default
 			end
 			return action
 		end,
 
-		Default = function(_, signalChar) end,
+		default = function(_, signalChar) end,
 
 		--  todo make backspace const
 		[string.char(127)] = function(_, _)
-			baseControllerInvoke:Bye()
+			base_controller_invoke:bye()
 		end,
 
 		-- todo make esc const
 		[string.char(27)] = function(_, _)
-			baseControllerInvoke:Bye()
+			base_controller_invoke:bye()
 		end,
 
 		--  todo make enter const
 		[string.char(10)] = function(_, _)
-			baseControllerInvoke:Menu()
+			base_controller_invoke:menu()
 		end,
 	}
 end
 
 return {
-	New = importAsPlanController,
+	new = import_as_plan_controller,
 }

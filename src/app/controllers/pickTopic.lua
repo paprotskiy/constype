@@ -1,27 +1,27 @@
-local overlayableChar = require("app.domain.lexic.char")
+local overlayable_char = require("app.domain.lexic.char")
 local view = require("app.ui.view.pickTopic")
 local model = require("app.domain.pickTopic")
 local pp = require("utils.print.pretty")
 
-local function pickTopicController(baseControllerInvoke, storage, planId)
+local function pick_topic_controller(base_controller_invoke, storage, plan_id)
 	return {
-		Load = function()
-			view:Load()
-			local topicData = model:FirstUnfinished(storage, planId)
-			if topicData == nil then
-				baseControllerInvoke:PlanReport(planId)
+		load = function()
+			view:load()
+			local topic_data = model:first_unfinished(storage, plan_id)
+			if topic_data == nil then
+				base_controller_invoke:plan_report(plan_id)
 				return
 			end
 
-			baseControllerInvoke:Exercise(planId, topicData)
+			base_controller_invoke:exercise(plan_id, topic_data)
 		end,
 
-		Close = function()
-			view:Close()
+		close = function()
+			view:close()
 		end,
 	}
 end
 
 return {
-	New = pickTopicController,
+	new = pick_topic_controller,
 }

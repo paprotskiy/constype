@@ -2,15 +2,15 @@ local file = require("app.io.fileSystem.file")
 local sqlDir = "./repo/sql"
 
 return {
-	New = function(pgConn)
+	new = function(pgConn)
 		return {
-			ApplyMigrationsIfNotExists = function()
-				local query = file.ReadFile(sqlDir .. "/migrations.sql")
+			apply_migrations_if_not_exists = function()
+				local query = file.read_file(sqlDir .. "/migrations.sql")
 
 				assert(pgConn:query(query))
 			end,
 
-			CreatePlan = function(title)
+			create_plan = function(title)
 				local query = [[
                INSERT INTO plans (
                   "title"
@@ -23,7 +23,7 @@ return {
 				return raw[1]["id"]
 			end,
 
-			GetPlans = function()
+			get_plans = function()
 				local query = [[
                select
                   "id" as id,
@@ -36,13 +36,13 @@ return {
 				for _, part in ipairs(raw) do
 					table.insert(res, {
 						Id = part["id"],
-						Title = part["title"],
+						title = part["title"],
 					})
 				end
 				return res
 			end,
 
-			CreateTopic = function(planId, topic, order)
+			create_topic = function(plan_id, topic, order)
 				local query = [[
                INSERT INTO topics (
                   "plan_id",
@@ -54,12 +54,12 @@ return {
                   $3
                ) RETURNING id
             ]]
-				local raw = assert(pgConn:query(query, planId, topic, order))
+				local raw = assert(pgConn:query(query, plan_id, topic, order))
 
 				return raw[1]["id"]
 			end,
 
-			GetFirstUnfinishedTopic = function(planId)
+			get_first_unfinished_topic = function(plan_id)
 				local query = [[
                SELECT
 						topic.id as topic_id,
@@ -78,20 +78,20 @@ return {
                LIMIT 1
             ]]
 
-				local raw = assert(pgConn:query(query, planId))
+				local raw = assert(pgConn:query(query, plan_id))
 				if #raw == 0 then
 					return nil
 				end
 
 				return {
-					TopicId = raw[1]["topic_id"],
+					topic_id = raw[1]["topic_id"],
 					Topic = raw[1]["topic"],
 					Order = raw[1]["order"],
-					-- PlanTitle = raw[1]["plan_title"],
+					-- plan_title = raw[1]["plan_title"],
 				}
 			end,
 
-			SaveTrainingRun = function(topicId, startTime, endTime, success, json)
+			save_training_run = function(topicId, startTime, endTime, success, json)
 				local query = [[
                INSERT INTO training_runs (
                   "topic_id",

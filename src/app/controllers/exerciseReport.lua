@@ -1,65 +1,65 @@
 local view = require("app.ui.view.exerciseReport")
 local model = require("app.domain.exerciseReport")
 
-local function designPostHandleOfReport(cfg, report)
-	local greenWrap = view.WrapTextToColor(cfg.Succ, cfg.Default)
-	local redWrap = view.WrapTextToColor(cfg.Fail, cfg.Default)
+local function design_post_handle_of_report(cfg, report)
+	local greenWrap = view.wrap_text_to_color(cfg.succ, cfg.default)
+	local redWrap = view.wrap_text_to_color(cfg.fail, cfg.default)
 
 	return {
-		Good = {
-			Value = report.Good,
-			StyleWrapp = nil,
+		good = {
+			value = report.good,
+			style_wrap = nil,
 		},
 
-		Fixed = {
-			Value = report.Fixed,
-			StyleWrap = function(txt)
-				if report.Fixed == 0 and report.Errors == 0 then
+		fixed = {
+			value = report.fixed,
+			style_wrap = function(txt)
+				if report.fixed == 0 and report.errors == 0 then
 					return greenWrap(txt)
 				end
 				return redWrap(txt)
 			end,
 		},
 
-		Errors = {
-			Value = report.Errors,
-			StyleWrap = function(txt)
-				if report.Errors == 0 then
+		errors = {
+			value = report.errors,
+			style_wrap = function(txt)
+				if report.errors == 0 then
 					return greenWrap(txt)
 				end
 				return redWrap(txt)
 			end,
 		},
 
-		TimeTotal = {
-			Value = report.TimeTotal,
-			StyleWrap = nil,
+		time_total = {
+			value = report.time_total,
+			style_wrap = nil,
 		},
 
-		TimeLostOnErrors = {
-			Value = report.TimeLostOnErrors,
-			StyleWrap = function(txt)
-				if report.TimeLostOnErrors == 0 then
+		time_lost_on_errors = {
+			value = report.time_lost_on_errors,
+			style_wrap = function(txt)
+				if report.time_lost_on_errors == 0 then
 					return greenWrap(txt)
 				end
 				return redWrap(txt)
 			end,
 		},
 
-		ErrorsRatio = {
-			Value = tostring(report.ErrorsRatio * 100) .. "%",
-			StyleWrap = function(txt)
-				if report.ErrorsRatio == 0 then
+		errors_ratio = {
+			value = tostring(report.errors_ratio * 100) .. "%",
+			style_wrap = function(txt)
+				if report.errors_ratio == 0 then
 					return greenWrap(txt)
 				end
 				return redWrap(txt)
 			end,
 		},
 
-		WastedTimeRatio = {
-			Value = tostring(report.WastedTimeRatio * 100) .. "%",
-			StyleWrap = function(txt)
-				if report.WastedTimeRatio == 0 then
+		wasted_time_ratio = {
+			value = tostring(report.wasted_time_ratio * 100) .. "%",
+			style_wrap = function(txt)
+				if report.wasted_time_ratio == 0 then
 					return greenWrap(txt)
 				end
 				return redWrap(txt)
@@ -68,47 +68,54 @@ local function designPostHandleOfReport(cfg, report)
 	}
 end
 
-local exerciseReportController = function(baseControllerInvoke, cfg, storage, topicData, topicWalkthrough, planId)
-	local report = model.BuildReport(cfg.Thresholds, storage, topicData, topicWalkthrough)
-	local styledReport = designPostHandleOfReport(cfg.TerminalColors, report)
+local exercise_report_controller = function(
+	 base_controller_invoke,
+	 cfg,
+	 storage,
+	 topic_data,
+	 topic_walkthrough,
+	 plan_id
+)
+	local report = model.build_report(cfg.thresholds, storage, topic_data, topic_walkthrough)
+	local styledReport = design_post_handle_of_report(cfg.terminal_colors, report)
 
 	return {
-		Load = function()
-			view:Load(styledReport)
+		load = function()
+			view:load(styledReport)
 		end,
 
-		Close = function()
-			view:Close()
+		close = function()
+			view:close()
 		end,
 
-		HandleSignal = function(self, atomicSignal)
-			local action = self[atomicSignal]
+		handle_signal = function(self, atomic_signal)
+			local action = self[atomic_signal]
 
 			if action == nil then
-				return self.Default
+				return self.default
 			end
 			return action
 		end,
 
-		Default = function(_, _) end,
+		default = function(_, _) end,
 
 		--  todo make backspace const
 		[string.char(127)] = function(_, _)
-			baseControllerInvoke:PickPlan()
+			base_controller_invoke:pick_plan()
 		end,
 
 		-- todo make esc const
 		[string.char(27)] = function(_, _)
-			baseControllerInvoke:PickPlan()
+			base_controller_invoke:pick_plan()
 		end,
 
 		--  todo make enter const
 		[string.char(10)] = function(_, _)
-			baseControllerInvoke:PickTopic(planId)
+			base_controller_invoke:pick_topic(plan_id)
 		end,
 	}
 end
 
 return {
-	New = exerciseReportController,
+	new = exercise_report_controller,
 }
