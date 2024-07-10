@@ -67,16 +67,12 @@ return {
             if curr_idx < #raw_list then
                curr_idx = curr_idx + 1
             end
-
-            print(curr_idx) --todo remove
          end,
 
          pick_prev = function()
             if curr_idx > 1 then
                curr_idx = curr_idx - 1
             end
-
-            print(curr_idx) --todo remove
          end,
 
          to_lines = function()
