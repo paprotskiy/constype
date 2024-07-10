@@ -32,8 +32,8 @@ local start_controller = function(base_controller_invoke)
 		end,
 
 		--  todo make enter const
-		[string.char(10)] = function(_, signal_char)
-			base_controller_invoke:pick_plan()
+		[string.char(10)] = function(_, signalChar)
+			base_controller_invoke:menu()
 		end,
 	}
 end

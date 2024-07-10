@@ -5,6 +5,8 @@ local pick_topic_controller = require("app.controllers.pickTopic")
 local exercise_controller = require("app.controllers.exercise")
 local exercise_report_controller = require("app.controllers.exerciseReport")
 local plan_report_controller = require("app.controllers.planReport")
+local menu_controller = require("app.controllers.menu")
+local import_as_plan_controller = require("app.controllers.importAsPlan")
 
 -- controllers with persistent state
 -- local startControllerImpl
@@ -40,6 +42,14 @@ local base_controller_factory = function(cfg, signal_stream, storage, stuff_for_
 
 		start = function(self)
 			self:__switch_and_run(start_controller.new, storage)
+		end,
+
+		menu = function(self)
+			self:__switch_and_run(menu_controller.new, cfg.terminal_colors)
+		end,
+
+		import_as_plan = function(self)
+			self:__switch_and_run(import_as_plan_controller.new, cfg.terminal_colors, storage)
 		end,
 
 		pick_plan = function(self)
