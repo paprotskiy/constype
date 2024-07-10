@@ -1,18 +1,28 @@
 local view = require("app.ui.view.menu")
-local model = require("app.domain.menu")
 
 local menu_controller = function(base_controller_invoke, cfg)
-	local menu_list = model:new()
+	local screen_mapping = {
+		{
+			name = "Pick Plan",
+			call = function()
+				base_controller_invoke:pick_plan()
+			end,
+		},
+		{
+			name = "Import as Plan",
+			call = function()
+				base_controller_invoke:import_as_plan()
+			end,
+		},
+	}
 
 	return {
 		load = function()
-			local list = menu_list:list()
-
 			-- todo DTO layer required
 			local val = {}
-			for _, v in ipairs(list) do
+			for _, v in ipairs(screen_mapping) do
 				table.insert(val, {
-					value = v.title,
+					value = v.name,
 				})
 			end
 
@@ -55,12 +65,12 @@ local menu_controller = function(base_controller_invoke, cfg)
 		--  todo make enter const
 		[string.char(10)] = function(_, _)
 			local curr = view:get_current()
-
-            if curr.value == "pick-plan" then
-                base_controller_invoke:pick_plan()
-            elseif curr.value == "import-as-plan" then
-                base_controller_invoke:import_as_plan()
-            end
+			for _, v in ipairs(screen_mapping) do
+				if v.name == curr.value then
+					v.call()
+					return
+				end
+			end
 		end,
 	}
 end

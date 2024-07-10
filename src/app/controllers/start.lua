@@ -34,7 +34,6 @@ local start_controller = function(base_controller_invoke)
 		--  todo make enter const
 		[string.char(10)] = function(_, signalChar)
 			base_controller_invoke:menu()
-
 		end,
 	}
 end
