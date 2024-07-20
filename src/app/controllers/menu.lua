@@ -2,13 +2,13 @@ local view = require("app.ui.view.menu")
 
 local menu_controller = function(base_controller_invoke, cfg)
 	local screen_mapping = {
-		{
+		[1] = {
 			name = "Pick Plan",
 			call = function()
 				base_controller_invoke:pick_plan()
 			end,
 		},
-		{
+		[2] = {
 			name = "Import as Plan",
 			call = function()
 				base_controller_invoke:import_as_plan()
@@ -18,15 +18,7 @@ local menu_controller = function(base_controller_invoke, cfg)
 
 	return {
 		load = function()
-			-- todo DTO layer required
-			local val = {}
-			for _, v in ipairs(screen_mapping) do
-				table.insert(val, {
-					value = v.name,
-				})
-			end
-
-			view:load(cfg, val)
+			view:load(cfg, screen_mapping)
 		end,
 
 		close = function()
@@ -64,13 +56,8 @@ local menu_controller = function(base_controller_invoke, cfg)
 
 		--  todo make enter const
 		[string.char(10)] = function(_, _)
-			local curr = view:get_current()
-			for _, v in ipairs(screen_mapping) do
-				if v.name == curr.value then
-					v.call()
-					return
-				end
-			end
+			local curr_idx = view:get_current()
+			screen_mapping[curr_idx].call()
 		end,
 	}
 end

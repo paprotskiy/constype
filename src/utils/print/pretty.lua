@@ -1,5 +1,4 @@
-local pretty_print
-pretty_print = function(val, intendance, offset)
+local function pretty_print(val, intendance, offset)
 	intendance = intendance or ""
 	offset = offset or "\t"
 

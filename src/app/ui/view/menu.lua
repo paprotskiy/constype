@@ -80,7 +80,7 @@ return {
 		tty.clear_screen()
 
 		for idx = 1, #list, 1 do
-			list[idx].value = trimText(list[idx].value, word_max_width)
+			list[idx].value = trimText(list[idx].name, word_max_width)
 		end
 
 		if menu_list == nil then
@@ -101,6 +101,6 @@ return {
 	end,
 
 	get_current = function(self)
-		return menu_list.get_current()
+		return menu_list.get_current_idx()
 	end,
 }

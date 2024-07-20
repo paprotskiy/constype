@@ -93,6 +93,10 @@ return {
          get_current = function()
             return raw_list[curr_idx]
          end,
+
+         get_current_idx = function()
+            return curr_idx
+         end,
       }
    end,
 }
