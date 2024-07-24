@@ -26,27 +26,27 @@ local function render(trimmed_list)
 	local list = trimmed_list:to_lines()
 
 	local template_top = {
-		"╔══════════════════════════════════════════════════╗",
-		"║ ----------------- Import plan ------------------ ║",
-		"╠══════════════════════════════════════════════════╣",
-		"║ ┌──────────────────────────────────────────────┐ ║",
+		"╔════════════════════════════════════════════════════════════════════════════════════════════════════╗",
+		"║ -----------------------------------  Select a plan to import   ----------------------------------- ║",
+		"╠════════════════════════════════════════════════════════════════════════════════════════════════════╣",
+		"║ ┌────────────────────────────────────────────────────────────────────────────────────────────────┐ ║",
 	}
 
 	local template_row = {
-		"║ │                                              │ ║",
-		"║ ├──────────────────────────────────────────────┤ ║",
+		"║ │                                                                                                │ ║",
+		"║ ├────────────────────────────────────────────────────────────────────────────────────────────────┤ ║",
 	}
 
 	local template_bottom = {
-		"║ └──────────────────────────────────────────────┘ ║",
-		"╚══════════════════════════════════════════════════╝",
+		"║ └────────────────────────────────────────────────────────────────────────────────────────────────┘ ║",
+		"╚════════════════════════════════════════════════════════════════════════════════════════════════════╝",
 	}
 
 	local lines = {}
 	table.move(template_top, 1, #template_top, 1, lines)
 	for _, v in ipairs(list) do
 		table.insert(lines, insertIntoTemplate(template_row[1], v, 5))
-		table.insert(lines, template_row[2])
+		-- table.insert(lines, template_row[2])
 	end
 	if #lines > #template_top then
 		table.remove(lines, #lines)
@@ -64,7 +64,7 @@ local function render(trimmed_list)
 end
 
 local import_list = nil
-local word_max_width = 44
+local word_max_width = 88
 
 return {
 	close = function()
@@ -84,7 +84,7 @@ return {
 		end
 
 		if import_list == nil then
-			import_list = elementList.new_trimmed_list(colorsCfg.Active, colorsCfg.default, list, 4)
+			import_list = elementList.new_trimmed_list(colorsCfg.Active, colorsCfg.default, list, 25)
 		end
 
 		render(import_list)

@@ -1,33 +1,17 @@
 local view = require("app.ui.view.importAsPlan")
+local model = require("app.domain.importAsPlan")
+
 
 local import_as_plan_controller = function(base_controller_invoke, cfg)
-
-	local function get_files_list(directory)
-		local files = {}
-		local cmd = 'ls "' .. directory .. '"' .. '| grep txt'
-		local handle = io.popen(cmd)
-
-		if handle then
-			for file in handle:lines() do
-				table.insert(files, {
-						name = file,
-						call = function() end,	
-					})
-			end
-			handle:close()
-		end
-	
-		return files
-	end
-
-	local list = get_files_list("../../../texts")
+	local dir = "../../../texts"
+	local files_list = model.get_list(dir)
 
 	return {
 		load = function()
 			local val = {}
-			for _, v in ipairs(list) do
+			for _, v in ipairs(files_list) do
 				table.insert(val, {
-					value = v.name,
+					value = v.rendered,
 				})
 			end
 
@@ -69,13 +53,13 @@ local import_as_plan_controller = function(base_controller_invoke, cfg)
 
 		--  todo make enter const
 		[string.char(10)] = function(_, _)
-			local curr = view:get_current()
-			for _, v in pairs(list) do
-				if v.name == curr.value then
-					v.call()
-					return
-				end
-			end
+			-- local curr = view:get_current()
+			-- for _, v in pairs(files_list) do
+			-- 	if v.name == curr.value then
+			-- 		v.call()
+			-- 		return
+			-- 	end
+			-- end
 		end,
 	}
 end
