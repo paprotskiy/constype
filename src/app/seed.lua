@@ -72,7 +72,7 @@ repo.create_topic(testId, "test8", 1)
 local testId = repo.create_plan("test-9")
 repo.create_topic(testId, "test9", 1)
 
-local parts = get_topics_from_big_file("../../texts/big.txt")
+local parts = get_topics_from_big_file("../../persistent/big.txt")
 local plan_id = repo.create_plan("book")
 for k, v in ipairs(parts) do
 	repo.create_topic(plan_id, v, k)

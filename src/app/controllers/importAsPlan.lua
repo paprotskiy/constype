@@ -1,9 +1,8 @@
 local view = require("app.ui.view.importAsPlan")
 local model = require("app.domain.importAsPlan")
 
-
 local import_as_plan_controller = function(base_controller_invoke, cfg)
-	local dir = "../../../texts"
+	local dir = "../../../persistent"
 	local files_list = model.get_list(dir)
 
 	return {

@@ -37,7 +37,7 @@ services:
     # stdin_open: true
     # tty: true
     volumes:
-      - ./persistent/:/texts
+      - ./persistent/:/persistent
     env_file:
       - .env
 
@@ -54,7 +54,7 @@ services:
     stdin_open: true
     tty: true
     volumes:
-      - ./persistent/:/texts
+      - ./persistent/:/persistent
     env_file:
       - .env
     # environment:

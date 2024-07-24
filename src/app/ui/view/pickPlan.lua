@@ -1,5 +1,5 @@
 local tty = require("app.ui.tty.tty")
-local elementCross = require("app.ui.view.standardComponents.cross")
+local element_cross = require("app.ui.view.standardComponents.cross")
 local element_list = require("app.ui.view.standardComponents.list")
 
 local function insertIntoTemplate(base, insertion, offsetIdx)
@@ -55,7 +55,7 @@ local function render(trimmed_list)
 	table.insert(lines, template_bottom[2])
 
 	local winsize = tty:wins_size()
-	local offseted = elementCross.offset_row_pool(lines, winsize)
+	local offseted = element_cross.offset_row_pool(lines, winsize)
 
 	for _, row in pairs(offseted) do
 		tty.jump(row.X, row.Y)

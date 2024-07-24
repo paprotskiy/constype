@@ -1,5 +1,5 @@
 local tty = require("app.ui.tty.tty")
-local elementCross = require("app.ui.view.standardComponents.cross")
+local element_cross = require("app.ui.view.standardComponents.cross")
 
 local function split_by_substring(str, substr)
 	local parts = {}
@@ -87,7 +87,7 @@ return {
 		local winsize = tty:wins_size()
 
 		local drawedStats = draw_stats(report)
-		local offseted = elementCross.offset_row_pool(drawedStats, winsize)
+		local offseted = element_cross.offset_row_pool(drawedStats, winsize)
 
 		for _, row in pairs(offseted) do
 			tty.jump(row.X, row.Y)

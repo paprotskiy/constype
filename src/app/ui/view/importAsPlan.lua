@@ -1,5 +1,5 @@
 local tty = require("app.ui.tty.tty")
-local elementCross = require("app.ui.view.standardComponents.cross")
+local element_cross = require("app.ui.view.standardComponents.cross")
 local elementList = require("app.ui.view.standardComponents.list")
 
 local function insertIntoTemplate(base, insertion, offsetIdx)
@@ -46,16 +46,12 @@ local function render(trimmed_list)
 	table.move(template_top, 1, #template_top, 1, lines)
 	for _, v in ipairs(list) do
 		table.insert(lines, insertIntoTemplate(template_row[1], v, 5))
-		-- table.insert(lines, template_row[2])
-	end
-	if #lines > #template_top then
-		table.remove(lines, #lines)
 	end
 	table.insert(lines, template_bottom[1])
 	table.insert(lines, template_bottom[2])
 
 	local winsize = tty:wins_size()
-	local offseted = elementCross.offset_row_pool(lines, winsize)
+	local offseted = element_cross.offset_row_pool(lines, winsize)
 
 	for _, row in pairs(offseted) do
 		tty.jump(row.X, row.Y)
@@ -84,7 +80,7 @@ return {
 		end
 
 		if import_list == nil then
-			import_list = elementList.new_trimmed_list(colorsCfg.Active, colorsCfg.default, list, 25)
+			import_list = elementList.new_trimmed_list(colorsCfg.Active, colorsCfg.default, list, 35)
 		end
 
 		render(import_list)
