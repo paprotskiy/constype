@@ -48,9 +48,9 @@ local function render(trimmed_list)
 		table.insert(lines, insertIntoTemplate(template_row[1], v, 5))
 		-- table.insert(lines, template_row[2])
 	end
-	if #lines > #template_top then
-		table.remove(lines, #lines)
-	end
+	-- if #lines > #template_top then
+	-- 	table.remove(lines, #lines)
+	-- end
 	table.insert(lines, template_bottom[1])
 	table.insert(lines, template_bottom[2])
 

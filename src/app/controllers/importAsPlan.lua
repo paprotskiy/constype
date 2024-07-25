@@ -48,7 +48,7 @@ local import_as_plan_controller = function(base_controller_invoke, cfg)
 
 		-- todo make esc const
 		[string.char(27)] = function(_, _)
-			base_controller_invoke:bye()
+			base_controller_invoke:menu()
 		end,
 
 		--  todo make enter const
