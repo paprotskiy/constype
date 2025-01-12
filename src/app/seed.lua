@@ -16,7 +16,7 @@ repo.apply_migrations_if_not_exists()
 
 ---------------------------------- read big text and get topics ---------------------------------
 local function ends_with_symbols(str, symb)
-	return str:sub(- #symb) == symb
+	return str:sub(-#symb) == symb
 end
 
 local function get_topics_from_big_file(address)
@@ -33,7 +33,8 @@ local function get_topics_from_big_file(address)
 	for _, part in ipairs(rows) do
 		par = par .. part .. "\n"
 		if ends_with_symbols(part, ".") then
-			table.insert(paragraphs, trim(par))
+			local trimmed = par:gsub("%s%s+", " ") -- replaces multiple spaces with single
+			table.insert(paragraphs, trim(trimmed))
 			par = ""
 		elseif not ends_with_symbols(part, " ") then
 			par = par .. " "

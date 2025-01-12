@@ -3,7 +3,7 @@ local custom_assert = require("utils.assert")
 local errs = {}
 local function readEnv(key)
 	local val = os.getenv(key)
-	if #val == 0 then
+	if val == nil or #val == 0 then
 		table.insert(errs, 'env "' .. key .. '" not found')
 		return nil
 	end
@@ -45,7 +45,10 @@ local function fillEnvs()
 		},
 	}
 
-	custom_assert(#errs == 0, table.concat(errs, "\n"))
+	for k, _ in pairs(errs) do
+		errs[k] = "\n" .. errs[k]
+	end
+	custom_assert(#errs == 0, table.concat(errs))
 	return config
 end
 

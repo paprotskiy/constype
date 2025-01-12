@@ -68,6 +68,9 @@ services:
     #   - COLOR_SUCC_IDX=92
     #   - COLOR_FAIL_IDX=91
     #   - COLOR_FIXED_IDX=93
+    #   - COLOR_ACTIVE_IDX=95
+    #   - ERRS_THRESHOLD=0 
+    #   - FIXED_THRESHOLD=0.99 
 
     # reset   = 0
     # black   = 30 (90 for bright)
