@@ -15,8 +15,9 @@ RUN apk add            \
     gcc                \
     make               \
     wget               \
+    shadow             \
     git
-                       
+
 RUN cd /tmp \
     && wget https://www.lua.org/ftp/lua-${LUA_VER}.tar.gz \
     && tar zxf lua-${LUA_VER}.tar.gz \
@@ -46,3 +47,8 @@ RUN luarocks install --server=https://luarocks.org/dev lua-hashings \
     && luarocks install pgmoon   
 
 COPY ./src ./src
+
+RUN groupadd -g 1000 appgroup && \
+    useradd -m -u 1000 -g appgroup -s /bin/bash appuser
+
+USER appuser
