@@ -151,28 +151,38 @@ return {
 					{ Three = function() end, One = 1, Two = "q" }
 				)
 				:Equal(nil)
-				-- todo: buggy behavior on next 3 tests!!
+				--
+				-- explicit indexing according to lua table logic
 				:AssertSutWithParams(
-					{ Val = " ", { 1, { 2, function() end } } }, --
-					{ Val = " ", { 1, { 2 } } }
+					{ Val = " ", { 1, { [1] = 2 } } }, --
+					{ Val = " ", { 1, { [1] = 2, [2] = function() end } } }
 				)
-				:Equal(nil)              -- !!! todo: fix
+				:Equal(nil)
 				:AssertSutWithParams(
-					{ Val = " ", { 1, { 2 } } }, --
-					{ Val = " ", { 1, { 2, function() end } } }
+					{ Val = " ", { 1, { [1] = 2 } } }, --
+					{ Val = " ", { 1, { [1] = function() end, [2] = 2 } } }
 				)
-				:Equal(nil)              -- !!! todo: fix
+				:Equal("[1]:[2]:[1]:(nested) types mismatch")
+				-- explicit indexing according to lua table logic
+				--
+				-- implicit indexing according to lua table logic
 				:AssertSutWithParams(
 					{ Val = " ", { 1, { 2 } } }, --
 					{ Val = " ", { 1, { function() end, 2 } } }
 				)
 				:Equal("[1]:[2]:[1]:(nested) types mismatch")
 				:AssertSutWithParams(
-					{ 1, "q", "!", " ", nil, "a" },     -- todo: buddy
-					{ 1, "q", "!", " ", function() end, "a" } -- todo: buggy
+					{ Val = " ", { 1, { 2 } } }, --
+					{ Val = " ", { 1, { 2, function() end } } }
 				)
 				:Equal(nil)
-				-- todo: buggy behavior on previous 3 tests!!
+				:AssertSutWithParams(
+					{ 1, "q", "!", " ", nil, "a" }, --
+					{ 1, "q", "!", " ", function() end, "a" }
+				)
+				:Equal(nil)
+				-- implicit indexing according to lua table logic
+				--
 				:AssertSutWithParams(
 					{ 1, "q", " ", { 1, "\n", { 1, 2, "a" } }, "!" }, --
 					{ 1, "q", " ", { 1, "\n", { 1, 2, "a" } }, "!" }
