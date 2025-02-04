@@ -11,7 +11,7 @@ local function insertIntoTemplate(base, insertion, offsetIdx)
 	return prefix .. insertion .. suffix
 end
 
--- todo must be extracted and tested
+-- todo: must be extracted and tested
 local function trimText(txt, max_length)
 	if utf8.len(txt) > max_length then
 		local truncated_len = max_length - 3

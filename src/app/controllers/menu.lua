@@ -18,7 +18,7 @@ local menu_controller = function(base_controller_invoke, cfg)
 
 	return {
 		load = function()
-			-- todo DTO layer required
+			-- todo: DTO layer required
 			local val = {}
 			for _, v in ipairs(screen_mapping) do
 				table.insert(val, {
@@ -52,17 +52,17 @@ local menu_controller = function(base_controller_invoke, cfg)
 			view:pick_prev()
 		end,
 
-		--  todo make backspace const
+		--  todo: make backspace const
 		[string.char(127)] = function(_, _)
 			base_controller_invoke:bye()
 		end,
 
-		-- todo make esc const
+		-- todo: make esc const
 		[string.char(27)] = function(_, _)
 			base_controller_invoke:bye()
 		end,
 
-		--  todo make enter const
+		--  todo: make enter const
 		[string.char(10)] = function(_, _)
 			local curr = view:get_current()
 			for _, v in ipairs(screen_mapping) do

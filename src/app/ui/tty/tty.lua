@@ -74,7 +74,7 @@ return {
 		return prefix .. text .. postfix
 	end,
 
-	-- todo proper testing required
+	-- todo: proper testing required
 	drop_color_wrap = function(text)
 		local ansi_escape_pattern = "\27%[[%d;]*m"
 		return text:gsub(ansi_escape_pattern, "")

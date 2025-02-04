@@ -79,7 +79,7 @@ local function newSUT()
 			for idx, assert in pairs(self.__asserts) do
 				local err = assert()
 				if err ~= nil then
-					-- todo implement wrapping
+					-- todo: implement wrapping
 					return scaffold.newTestErr("assert #" .. tostring(idx) .. " failed: " .. err.ErrMessage)
 				end
 			end

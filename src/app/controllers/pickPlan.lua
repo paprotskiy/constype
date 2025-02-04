@@ -8,7 +8,7 @@ local pick_plan_controller = function(base_controller_invoke, cfg, storage)
 		load = function()
 			local plans = plan_list:list()
 
-			-- todo DTO layer required
+			-- todo: DTO layer required
 			local keyval = {}
 			for _, v in ipairs(plans) do
 				table.insert(keyval, {
@@ -43,17 +43,17 @@ local pick_plan_controller = function(base_controller_invoke, cfg, storage)
 			view:pick_prev()
 		end,
 
-		--  todo make backspace const
+		--  todo: make backspace const
 		[string.char(127)] = function(_, _)
 			base_controller_invoke:bye()
 		end,
 
-		-- todo make esc const
+		-- todo: make esc const
 		[string.char(27)] = function(_, _)
 			base_controller_invoke:bye()
 		end,
 
-		--  todo make enter const
+		--  todo: make enter const
 		[string.char(10)] = function(_, _)
 			local curr = view:get_current()
 			base_controller_invoke:pick_topic(curr.Key)

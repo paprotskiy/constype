@@ -1,6 +1,6 @@
 local tty = require("app.ui.tty.tty")
 
--- todo testing needed
+-- todo: testing needed
 local function center_row_pool(winsize, two_dim_table)
 	local heigth = #two_dim_table
 	local width = 0

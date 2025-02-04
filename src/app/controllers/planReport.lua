@@ -21,17 +21,17 @@ local plan_report_controller = function(base_controller_invoke, cfg, wholeplan_r
 
 		default = function(_, _) end,
 
-		--  todo make backspace const
+		--  todo: make backspace const
 		[string.char(127)] = function(_, _)
 			base_controller_invoke:bye()
 		end,
 
-		-- todo make esc const
+		-- todo: make esc const
 		[string.char(27)] = function(_, _)
 			base_controller_invoke:bye()
 		end,
 
-		--  todo make enter const
+		--  todo: make enter const
 		[string.char(10)] = function(_, _)
 			base_controller_invoke:pick_plan()
 		end,

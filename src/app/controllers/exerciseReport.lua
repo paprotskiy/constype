@@ -69,12 +69,12 @@ local function design_post_handle_of_report(cfg, report)
 end
 
 local exercise_report_controller = function(
-	 base_controller_invoke,
-	 cfg,
-	 storage,
-	 topic_data,
-	 topic_walkthrough,
-	 plan_id
+		base_controller_invoke,
+		cfg,
+		storage,
+		topic_data,
+		topic_walkthrough,
+		plan_id
 )
 	local report = model.build_report(cfg.thresholds, storage, topic_data, topic_walkthrough)
 	local styledReport = design_post_handle_of_report(cfg.terminal_colors, report)
@@ -99,17 +99,17 @@ local exercise_report_controller = function(
 
 		default = function(_, _) end,
 
-		--  todo make backspace const
+		--  todo: make backspace const
 		[string.char(127)] = function(_, _)
 			base_controller_invoke:pick_plan()
 		end,
 
-		-- todo make esc const
+		-- todo: make esc const
 		[string.char(27)] = function(_, _)
 			base_controller_invoke:pick_plan()
 		end,
 
-		--  todo make enter const
+		--  todo: make enter const
 		[string.char(10)] = function(_, _)
 			base_controller_invoke:pick_topic(plan_id)
 		end,

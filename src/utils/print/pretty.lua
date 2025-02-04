@@ -8,7 +8,7 @@ pretty_print = function(val, intendance, offset)
 		for k, v in pairs(val) do
 			local newIntendance = intendance .. offset
 			local subprint = pretty_print(v, newIntendance)
-			fields = fields .. newIntendance .. "[" .. k .. "]: " .. subprint .. "\n" -- todo make prettier
+			fields = fields .. newIntendance .. "[" .. k .. "]: " .. subprint .. "\n" -- todo: make prettier
 		end
 		return "{\n" .. fields .. intendance .. "}"
 	else

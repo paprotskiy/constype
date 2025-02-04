@@ -32,7 +32,7 @@ return {
 		}
 	end,
 
-	-- todo maybe should not be moved automatically
+	-- todo: maybe should not be moved automatically
 	refresh = function(_, tokens)
 		for _, v in pairs(tokens) do
 			tty.jump(v.x, v.y)

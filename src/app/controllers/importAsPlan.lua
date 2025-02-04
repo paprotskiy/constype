@@ -1,7 +1,6 @@
 local view = require("app.ui.view.importAsPlan")
 
 local import_as_plan_controller = function(base_controller_invoke)
-
 	return {
 		load = function()
 			view.load()
@@ -22,17 +21,17 @@ local import_as_plan_controller = function(base_controller_invoke)
 
 		default = function(_, signalChar) end,
 
-		--  todo make backspace const
+		--  todo: make backspace const
 		[string.char(127)] = function(_, _)
 			base_controller_invoke:bye()
 		end,
 
-		-- todo make esc const
+		-- todo: make esc const
 		[string.char(27)] = function(_, _)
 			base_controller_invoke:bye()
 		end,
 
-		--  todo make enter const
+		--  todo: make enter const
 		[string.char(10)] = function(_, _)
 			base_controller_invoke:menu()
 		end,

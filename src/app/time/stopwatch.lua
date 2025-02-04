@@ -1,7 +1,7 @@
 local socket = require("socket")
 local period = require("app.time.period")
 
--- todo threadsafe welcomed
+-- todo: threadsafe welcomed
 return {
 	new = function()
 		return {

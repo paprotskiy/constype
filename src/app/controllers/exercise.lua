@@ -48,7 +48,7 @@ local exercise_controller = function(base_controller_invoke, cfg, plan_id, topic
 
 	return {
 		load = function()
-			-- todo leaking abstraction - connection via plain text
+			-- todo: leaking abstraction - connection via plain text
 			view:load(exercise:plain_text())
 		end,
 
@@ -77,19 +77,19 @@ local exercise_controller = function(base_controller_invoke, cfg, plan_id, topic
 			end
 		end,
 
-		--  todo make backspace const
+		--  todo: make backspace const
 		[string.char(127)] = function(_, _)
 			local domain_dto = exercise:erase_symbol()
 			local view_dto = convert_symbol_dto(domain_dto)
 			view:refresh(view_dto)
 		end,
 
-		-- todo make esc const
+		-- todo: make esc const
 		[string.char(27)] = function(_, signal_char)
 			base_controller_invoke:pick_plan()
 		end,
 
-		--  todo make enter const
+		--  todo: make enter const
 		[string.char(10)] = function(_, _) end,
 	}
 end

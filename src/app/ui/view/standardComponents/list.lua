@@ -1,7 +1,7 @@
 local tty = require("app.ui.tty.tty")
 
 local function out_of_visible_range(elem)
-   -- todo factory method required
+   -- todo: factory method required
    return {
       Key = elem.Key,
       value = "...",

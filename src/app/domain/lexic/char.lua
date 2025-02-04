@@ -51,7 +51,7 @@ local status_switches = {
 }
 
 return {
-	-- todo cover with tests
+	-- todo: cover with tests
 	new = function(char, ticker)
 		return {
 			__base = char,
@@ -64,7 +64,7 @@ return {
 	end,
 
 	statuses = function()
-		-- todo extract to deepCopy package?
+		-- todo: extract to deepCopy package?
 		local res = {}
 		for k, v in pairs(overlay_statuses) do
 			res[k] = v
