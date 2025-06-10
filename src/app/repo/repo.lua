@@ -62,11 +62,11 @@ return {
 			get_first_unfinished_topic = function(plan_id)
 				local query = [[
                SELECT
-						topic.id as topic_id,
-						plan.id,
-						plan.title as plan_title,
-						topic.order,
-						topic.topic
+									topic.id as topic_id,
+									plan.id,
+									plan.title as plan_title,
+									topic.order,
+									topic.topic
                FROM topics AS topic
                INNER JOIN plans AS plan ON topic.plan_id = plan.id
                LEFT JOIN training_runs AS run ON run.topic_id = topic.id
